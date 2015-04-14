@@ -1,33 +1,25 @@
 Package: ENmix
-Version: 0.99.6
+Version: 0.99.7
 Date: 2015-03-30
-Title: ENmix low level data preprocessing for Illumina
-        HumanMethylation450 BeadChip
+Title: ENmix low level data preprocessing for Illumina HumanMethylation450 BeadChip
 Type: Package
-Authors@R:
-        c(person("Zongli","Xu",role=c("cre","aut"),email="xuz@niehs.nih.gov"),
-        person("Liang","Niu",role=c("aut"),email="niulg@ucmail.uc.edu"),
-        person("Leping","Li",role=c("ctb"),email="li3@niehs.nih.gov"),
-        person("Jack","Taylor",role=c("ctb"),email="taylor@niehs.nih.gov"))
-Description: Illumina HumanMethylation450 BeadChip has a complex array
-        design, and the measurement is subject to experimental
-        variations. The ENmix R package provides tools for low level
-        data preprocessing to improve data quality. It incorporates a
-        model based background correction method ENmix, and functions
-        for inter-array quantile normalization, data quality checking,
-        exploration of multimodally distributed CpGs and source of data
-        variation. To support large scale data analysis, the package
-        also provides multi-processor parallel computing wrappers for
-        some commonly used data preprocessing methods, such as BMIQ
-        probe design type bias correction and ComBat batch effect
-        correction.
+Authors@R: c(person("Zongli","Xu",role=c("cre","aut"),email="xuz@niehs.nih.gov"),
+	person("Liang","Niu",role=c("aut"),email="niulg@ucmail.uc.edu"),
+	person("Leping","Li",role=c("ctb"),email="li3@niehs.nih.gov"),
+	person("Jack","Taylor",role=c("ctb"),email="taylor@niehs.nih.gov"))
+Description: Illumina HumanMethylation450 BeadChip has a complex array design, and 
+    the measurement is subject to experimental variations. The ENmix R package 
+    provides tools for low level data preprocessing to improve data quality. It 
+    incorporates a model based background correction method ENmix, and functions 
+    for inter-array quantile normalization, data quality checking,
+    exploration of multimodally distributed CpGs and source of data variation.
+    To support large scale data analysis, the package also provides 
+    multi-processor parallel computing wrappers for some commonly used data 
+    preprocessing methods, such as BMIQ probe design type bias correction and 
+    ComBat batch effect correction. 
 Depends: minfi,parallel,doParallel,Biobase (>= 2.17.8),foreach
-Imports: MASS,preprocessCore,wateRmelon,sva,geneplotter
+Imports:MASS,preprocessCore,wateRmelon,sva,geneplotter
 Suggests: minfiData (>= 0.4.1), RPMM, RUnit, BiocGenerics
-biocViews: DNAMethylation, Preprocessing, QualityControl, TwoChannel,
-        Microarray, OneChannel, MethylationArray, BatchEffect,
-        Normalization, DataImport
+biocViews: DNAMethylation, Preprocessing, QualityControl, TwoChannel, Microarray,
+      OneChannel, MethylationArray, BatchEffect, Normalization, DataImport
 License: Artistic-2.0
-Author: Zongli Xu [cre, aut], Liang Niu [aut], Leping Li [ctb], Jack
-        Taylor [ctb]
-Maintainer: Zongli Xu <xuz@niehs.nih.gov>

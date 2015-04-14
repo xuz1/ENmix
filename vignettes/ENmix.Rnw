@@ -60,7 +60,7 @@ If you are using \Rpackage{ENmix} package, please cite the following
 Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor
 ENmix: a novel background correction method for Illumina 
 HumanMethylation450 BeadChip, Under review.
-  \item Function \Rfunction{normalization}:  \\
+  \item Function \Rfunction{normalize.quantile.450k}:  \\
 Pidsley R, Y Wong CC, Volta M, Lunnon K, Mill J, Schalkwyk LC.
 A data-driven approach to preprocessing Illumina 450K methylation array data,
 BMC Genomics, 2013, 14:293
@@ -184,22 +184,22 @@ mraw<-QCfilter(mraw, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
 @
 
 \section{Background correction}
-Function \Rfunction{bgcorrect} incorporated a model based background
+Function \Rfunction{preprocessENmix} incorporated a model based background
  correction method ENmix, which models methylation signal intensities 
 with a flexible exponential-normal mixture distribution, together
  with a truncated normal distribution to model background noise. 
-<<bgcorrect, eval=FALSE>>=
-mdat<-bgcorrect(rgSet, bgParaEst="oob", nCores=6)
+<<preprocessENmix, eval=FALSE>>=
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", nCores=6)
 mdat<-QCfilter(mdat, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
     ,bisulthre=5000,plot=TRUE, outid=NULL, outCpG=NULL)
 @
 
 \section{Inter-array normalization}
-Function \Rfunction{normalization} can be used to perform quantile 
+Function \Rfunction{normalize.quantile.450k} can be used to perform quantile 
 normalization on methylation intensity value
 
-<<normalization, eval=FALSE>>=
-mdat<-normalization(mdat, method="quantile1")
+<<normalize.quantile.450k, eval=FALSE>>=
+mdat<-normalize.quantile.450k(mdat, method="quantile1")
 @
 
 \section{Probe type bias correction}
@@ -314,7 +314,7 @@ plotCtrl(rgSet)
 #QC info
 qc<-QCinfo(rgSet)
 #background correction
-mdat<-bgcorrect(rgSet, bgParaEst="oob", nCores=6)
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", nCores=6)
 #filter out low quality samples and probes
 mdat<-QCfilter(mdat, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
     ,bisulthre=5000,plot=TRUE, outid=NULL, outCpG=NULL)
@@ -324,7 +324,7 @@ mdat<-QCfilter(mdat, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
 beta<-getBeta(mdat, "Illumina")
 nmode<-nmode.mc(beta, minN = 3, modedist=0.2, nCores = 6)
 #between-array normalization
-mdat<-normalization(mdat, method="quantile1")
+mdat<-normalize.quantile.450k(mdat, method="quantile1")
 #probe type bias correction
 beta<-bmiq.mc(mdat, nCores=6)
 # Principal component regression analysis plot

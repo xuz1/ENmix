@@ -5,8 +5,8 @@ importFrom(wateRmelon,BMIQ)
 importFrom(sva,ComBat)
 importFrom(geneplotter, multidensity)
 
-export(bgcorrect, bmiq.mc, ComBat.mc, 
-	nmode.mc,  normalization,  plotCtrl,
+export(preprocessENmix, bmiq.mc, ComBat.mc, 
+	nmode.mc,  normalize.quantile.450k,  plotCtrl,
 	QCfilter, QCinfo, pcrplot)
 
 

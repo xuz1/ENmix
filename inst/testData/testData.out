@@ -84,14 +84,14 @@ Ploting qc_sample_1.jpg ...Done
 Ploting qc_sample_2.jpg ...Done
 Ploting qc_CpG.jpg ...Done
 > mdat <- preprocessRaw(rgSet)
-> mdat.bg=bgcorrect(rgSet,bgParaEst="oob",nCores=6)
+> mdat.bg=preprocessENmix(rgSet,bgParaEst="oob",nCores=6)
 Analysis is running, please wait...! 
 > mdat.filter=QCfilter(mdat,qcinfo=qc, samplethre = 0.01, CpGthre = 0.05)
 1  samples with percentage of low quanlity CpG value greater
 	 than  0.01  or bisulfite intensity less than  1 
 Low quality samples:  5723646053_R06C02  was excluded 
 1461  CpGs with percentage of low quanlity CpG value greater than  0.05  were excluded 
-> mdat.quantile=normalization(mdat,method="quantile1")
+> mdat.quantile=normalize.quantile.450k(mdat,method="quantile1")
 Analysis is running, please wait...! 
 > 
 > testDigests <- list(

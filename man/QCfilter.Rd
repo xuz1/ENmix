@@ -43,7 +43,7 @@ if (require(minfiData)) {
 sheet <- read.450k.sheet(file.path(find.package("minfiData"),"extdata"), pattern = "csv$")
 rgSet <- read.450k.exp(targets = sheet,extended = TRUE)
 qcscore<-QCinfo(rgSet)
-mdat=bgcorrect(rgSet,bgParaEst="oob",nCores=6)
+mdat=preprocessENmix(rgSet,bgParaEst="oob",nCores=6)
 #filter low quality samples and probes
 mdat1=QCfilter(mdat,qcinfo=qcscore)
 }}

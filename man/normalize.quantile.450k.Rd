@@ -1,5 +1,5 @@
-\name{normalization}
-\alias{normalization}
+\name{normalize.quantile.450k}
+\alias{normalize.quantile.450k}
 \title{
 Quantile normalization.
 }
@@ -7,7 +7,7 @@ Quantile normalization.
 Quantile normalization of methylation intensity data across samples for Illumina Infinium HumanMethylation450 BeadChip.
 }
 \usage{
-normalization(mdat, method = "quantile1")
+normalize.quantile.450k(mdat, method = "quantile1")
 }
 \arguments{
   \item{mdat}{An object of class \code{MethylSet}.}
@@ -30,8 +30,8 @@ Zongli Xu
 \examples{
 if(FALSE){
 if (require(minfiData)) {
-mdat=bgcorrect(RGsetEx,bgParaEst="oob",nCores=6)
-mdatq1=normalization(mdat,method="quantile1")
+mdat=preprocessENmix(RGsetEx,bgParaEst="oob",nCores=6)
+mdatq1=normalize.quantile.450k(mdat,method="quantile1")
 }}
 }
 
