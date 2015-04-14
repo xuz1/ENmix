@@ -11,7 +11,7 @@ normalize.q <- function(x)
 }
 
 
-normalization <- function(mdat,method="quantile1")
+normalize.quantile.450k <- function(mdat,method="quantile1")
 {
     if(!is(mdat, "MethylSet")){stop("object needs to be of class 'MethylSet'")}
     cat("Analysis is running, please wait...!","\n")

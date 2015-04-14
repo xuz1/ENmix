@@ -12,7 +12,7 @@ c(bibentry(bibtype = "Article",
 	   header = "ENmix R pacakge"),
 
   bibentry(bibtype = "Article",
-           key = "normalization",
+           key = "normalize.quantile.450k",
            author = c(
 	   person( "Ruth",  "Pidsley1"),
 	   person("Chloe,C.Y." ,  "Wong"),

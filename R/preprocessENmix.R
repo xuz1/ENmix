@@ -66,7 +66,7 @@ function(lambda,mu2,sigma2,p1,p2,mu,sigma,s){
     (denom_1+denom_2)/(num_1+num_2)
 }
 
-firstmode <- function(x,y,sn,dat)
+firstpeak <- function(x,y,sn,dat)
 {
     n <- length(y)
 ##sn to avoid using small peak position
@@ -91,7 +91,7 @@ enmix_adj <- function(i,meth_i=NULL,bg_i=NULL,bgParaEst)
 {
     if(sum(is.na(meth_i))>0)
     {stop("ENmix background correction does not allow missing value")}
-    meth_i[meth_i<=0]=1e-06
+    meth_i[meth_i <= 0]=1
     mu <- bg_i$mu[1]
     sigma <- bg_i$sigma[1]
 if(bgParaEst == "est" | bgParaEst == "neg" | bgParaEst == "oob")
@@ -104,10 +104,11 @@ if(bgParaEst == "est" | bgParaEst == "neg" | bgParaEst == "oob")
     p1 <- (sum(meth_i<mu)+temp[[4]]*length(x))/length(meth_i)
     p2 <- 1-p1
     meth_adj <- new_cm(lambda,mu2,sigma2,p1,p2,mu,sigma,meth_i)
+    meth_adj[meth_adj <= 0]=0.01 #restrict to positive values, only a few
 }else if (bgParaEst == "subtract_neg" | bgParaEst == "subtract_estBG"  | bgParaEst == "subtract_q5neg" 
      | bgParaEst == "subtract_oob"){
     meth_adj=meth_i-mu
-    meth_adj[meth_adj<=0]=0.01 #restrict to positive values
+    meth_adj[meth_adj <= 0]=0.01 #restrict to positive values
 }
     meth_adj
 }
@@ -133,14 +134,14 @@ estBG  <- function(meth_i)
     temp$x <- temp$x[flag];temp$y=temp$y[flag]
     mu <- temp$x[which.max(temp$y)]
     ##first mode
-    if((sum(meth_i<mu)/length(meth_i))>=0.15){mu=firstmode(temp$x,temp$y,sn=5,meth_i)}
+    if((sum(meth_i<mu)/length(meth_i))>=0.15){mu=firstpeak(temp$x,temp$y,sn=5,meth_i)}
     perc <- sum(meth_i<mu)/length(meth_i)
     sigma <- sqrt(sum((meth_i[meth_i<mu]-mu)^2)/sum(meth_i<mu))
     c(mu,sigma,perc)
 }
 
 ##background correction
-bgcorrect  <- function(rgSet,bgParaEst="oob",dyeCorr=FALSE,nCores=2)
+preprocessENmix  <- function(rgSet,bgParaEst="oob",dyeCorr=FALSE,nCores=2)
 {
     if(is(rgSet, "RGChannelSet")){mdat <- preprocessRaw(rgSet)}
     else if(is(mdat, "MethylSet")){mdat=rgSet;bgParaEst="est"}
@@ -288,7 +289,7 @@ bgcorrect  <- function(rgSet,bgParaEst="oob",dyeCorr=FALSE,nCores=2)
     assayDataElement(mdat, "Unmeth") <- unmeth
 }
 
-    mdat@preprocessMethod <- c(rg.norm=sprintf("Background correction method: %s",bgParaEst),
+    mdat@preprocessMethod <- c(rg.norm=sprintf("Background correction method: ENmix %s",bgParaEst),
         ENmix=as.character(packageVersion("ENmix")),
         manifest=as.character(packageVersion("IlluminaHumanMethylation450kmanifest")))
     mdat
