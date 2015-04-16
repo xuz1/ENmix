@@ -1,0 +1,14 @@
+import(Biobase,minfi,parallel,doParallel,foreach)
+importFrom(MASS, huber)
+importFrom(preprocessCore,normalize.quantiles)
+importFrom(wateRmelon,BMIQ)
+importFrom(sva,ComBat)
+importFrom(geneplotter, multidensity)
+
+export(preprocessENmix, bmiq.mc, ComBat.mc, 
+	nmode.mc,  normalize.quantile.450k,  plotCtrl,
+	QCfilter, QCinfo, pcrplot)
+
+
+
+

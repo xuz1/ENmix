@@ -1,0 +1,69 @@
+c(bibentry(bibtype = "Article",
+           key = "ENmix",
+           title = "ENmix: a novel background correction method for Illumina HumanMethylation450 BeadChip",
+           author = c(
+           person("Zongli", "Xu"),
+           person("Liang", "Niu"),
+           person("Leping", "Li"),
+           person("Jack,A.", "Taylor")
+           ),
+           year = 2015,
+           journal = "Under review",
+	   header = "ENmix R pacakge"),
+
+  bibentry(bibtype = "Article",
+           key = "normalize.quantile.450k",
+           author = c(
+	   person( "Ruth",  "Pidsley1"),
+	   person("Chloe,C.Y." ,  "Wong"),
+	   person("Manuela" ,  "Volta1"),
+	   person("Katie",  "Lunnon1"),
+	   person("Jonathan",  "Mill"),
+	   person("Leonard,C.",  "Schalkwyk")
+		),
+           title = "A data-driven approach to preprocessing Illumina 450K methylation array data",
+           journal = "BMC Genomics",
+           year = "2013",
+           volume = "14",
+           pages = "293",
+           doi = "10.1186/1471-2164-14-293",
+           pubmed = "23631413",
+           header = "Between-array quantile normalization"),
+
+  bibentry(bibtype = "Article",
+           key = "bmiq.mc",
+           author = c(
+	   person( "Andrew, E.",  "Teschendorff"),
+	   person( "Francesco",  "Marabita"),
+	   person( "Matthias",  "Lechner"),
+	   person( "Thomas",  "Bartlett"),
+	   person( "Jesper",  "Tegner"),
+	   person( "David",  "Gomez-Cabrero"),
+	   person( "Stephan",  "Beck")
+		),
+           title = "beta-mixture quantile normalization method for correcting probe design bias in Illumina Infinium 450 k DNA methylation data",
+           journal = "Bioinformatics",
+           year = "2013",
+           volume = "15",
+           number = "2",
+           pages = "189-96",
+           doi = "10.1093/bioinformatics/bts680",
+           pubmed = "23175756",
+           header = "BMIQ probe design bias correction"),
+
+  bibentry(bibtype = "Article",
+           key = "ComBat.mc",
+           author = c(
+	   person( "Evan,E.",  "Johnson"),
+	   person( "Cheng" ,  "Li")
+		),
+           title = "Adjusting batch effects in microarray expression data using empirical Bayes methods",
+           journal = "Biostatistics",
+           year = "2007",
+           volume = "8",
+           number = "1",
+           pages = "118-27",
+           pubmed = "16632515",
+           header = "ComBat batch effects adjustment")
+  )
+
