@@ -46,9 +46,9 @@ nmode.mc <-function(x,minN=3,modedist=0.2,nCores=1)
     }
     cat("Analysis is running, please wait...!","\n")
 
+    CpG <- rownames(x)
     c1 <- makeCluster(nCores)
     registerDoParallel(c1)
-    CpG <- rownames(x)
     nmode <- foreach(i = 1:nrow(x),.combine=c,.export=c("nmode_est")) %dopar% 
     {i=i;nmode_est(x[i,], minN,modedist)}
     stopCluster(c1)
