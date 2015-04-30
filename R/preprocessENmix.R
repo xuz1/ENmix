@@ -113,11 +113,14 @@ if(bgParaEst == "est" | bgParaEst == "neg" | bgParaEst == "oob")
     meth_adj
 }
 
-enmix <- function(meth,bg,bgParaEst)
+enmix <- function(meth,bg,bgParaEst,nCores)
 {
     colnm <- colnames(meth)
+    c1 <- makeCluster(nCores)
+    registerDoParallel(c1)
     meth <- foreach(i=1:ncol(meth),.combine=cbind,.export=c("EM_estimate","new_cm","enmix_adj")) %dopar% {
     i=i;enmix_adj(i,meth[,i],bg[i,],bgParaEst)}
+    stopCluster(c1)
     colnames(meth)=colnm
     meth
 }
@@ -236,16 +239,12 @@ preprocessENmix  <- function(rgSet,bgParaEst="oob",dyeCorr=FALSE,nCores=2)
         bgRII$sigma <- (bgII$sigma+bgRII$mu*bgRI$sigma/bgRI$mu)/2
     }
 
-    c1 <- makeCluster(nCores)
-    registerDoParallel(c1)
-    m_I_red <- enmix(m_I_red,bgRI,bgParaEst)
-    assayDataElement(mdat_I_red, "Meth") <- enmix(assayData(mdat_I_red)$Meth,bgRI,bgParaEst)
-    assayDataElement(mdat_I_red, "Unmeth") <- enmix(assayData(mdat_I_red)$Unmeth,bgRI,bgParaEst)
-    assayDataElement(mdat_I_grn, "Meth") <- enmix(assayData(mdat_I_grn)$Meth,bgGI,bgParaEst)
-    assayDataElement(mdat_I_grn, "Unmeth") <- enmix(assayData(mdat_I_grn)$Unmeth,bgGI,bgParaEst)
-    assayDataElement(mdat_II, "Meth") <- enmix(assayData(mdat_II)$Meth,bgGII,bgParaEst)
-    assayDataElement(mdat_II, "Unmeth") <- enmix(assayData(mdat_II)$Unmeth,bgRII,bgParaEst)
-    stopCluster(c1)
+    assayDataElement(mdat_I_red, "Meth") <- enmix(assayData(mdat_I_red)$Meth,bgRI,bgParaEst,nCores)
+    assayDataElement(mdat_I_red, "Unmeth") <- enmix(assayData(mdat_I_red)$Unmeth,bgRI,bgParaEst,nCores)
+    assayDataElement(mdat_I_grn, "Meth") <- enmix(assayData(mdat_I_grn)$Meth,bgGI,bgParaEst,nCores)
+    assayDataElement(mdat_I_grn, "Unmeth") <- enmix(assayData(mdat_I_grn)$Unmeth,bgGI,bgParaEst,nCores)
+    assayDataElement(mdat_II, "Meth") <- enmix(assayData(mdat_II)$Meth,bgGII,bgParaEst,nCores)
+    assayDataElement(mdat_II, "Unmeth") <- enmix(assayData(mdat_II)$Unmeth,bgRII,bgParaEst,nCores)
     methData <- rbind(assayData(mdat_I_red)$Meth,assayData(mdat_I_grn)$Meth,assayData(mdat_II)$Meth)
     unmethData <- rbind(assayData(mdat_I_red)$Unmeth,assayData(mdat_I_grn)$Unmeth,
               assayData(mdat_II)$Unmeth)
