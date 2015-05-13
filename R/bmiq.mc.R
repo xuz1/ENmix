@@ -9,7 +9,7 @@ bmiq.mc <-function(mdat,nCores=1,...)
 
     anno <- getAnnotation(mdat)
     beta.b <- getBeta(mdat, "Illumina")
-    beta.b[beta.b == 0] <- 1e-06
+    beta.b[beta.b <= 0] <- 1e-06
     design.v <- as.vector(anno$Type);
     design.v[design.v == "I"]=1
     design.v[design.v == "II"]=2 

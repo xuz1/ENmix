@@ -100,7 +100,8 @@ if(bgParaEst == "est" | bgParaEst == "neg" | bgParaEst == "oob")
     temp <- EM_estimate(x)
     lambda <- temp[[1]]
     mu2 <- temp[[2]]
-    sigma2 <- sqrt(temp[[3]]^2-sigma^2)
+    sigma2<-ifelse(temp[[3]] <= sigma, 0.1, sqrt(temp[[3]]^2-sigma^2))
+
     p1 <- (sum(meth_i<mu)+temp[[4]]*length(x))/length(meth_i)
     p2 <- 1-p1
     meth_adj <- new_cm(lambda,mu2,sigma2,p1,p2,mu,sigma,meth_i)
@@ -146,22 +147,19 @@ estBG  <- function(meth_i)
 ##background correction
 preprocessENmix  <- function(rgSet,bgParaEst="oob",dyeCorr=FALSE,nCores=2)
 {
-    if(is(rgSet, "RGChannelSet")){mdat <- preprocessRaw(rgSet)}
-    else if(is(mdat, "MethylSet")){mdat=rgSet;bgParaEst="est"}
-    else{stop("object needs to be of class 'RGChannelSet' or 'MethylSet'")}
+    if(is(rgSet, "RGChannelSet")){
+        mdat <- preprocessRaw(rgSet)
+    }else if(is(mdat, "MethylSet")){
+        mdat=rgSet; bgParaEst="est"; dyeCorr=FALSE
+        if(dyeCorr){cat("Warning: Input data need to be a RGChannelSet for dye bias correction\n");
+                   cat("Warning: dyeCorr option was ignored\n")}
+    }else{stop("Error: object needs to be of class 'RGChannelSet' or 'MethylSet'")}
     if(nCores>detectCores()){
-    nCores=detectCores(); 
-    cat("Only ",detectCores()," cores avialable, nCores was reset to ",detectCores(),"\n")
+        nCores=detectCores(); 
+        cat("Only ",detectCores(), " cores avialable, nCores was reset to ",detectCores(),"\n")
     }
     cat("Analysis is running, please wait...!","\n")
     probe_type <- getProbeType(mdat, withColor=TRUE)
-    mdat_I_red <- mdat[probe_type == "IRed",]
-    mdat_I_grn <- mdat[probe_type == "IGrn",]
-    mdat_II <- mdat[probe_type == "II",]
-
-    m_I_red <- rbind(assayData(mdat_I_red)$Meth,assayData(mdat_I_red)$Unmeth)
-    m_I_grn <- rbind(assayData(mdat_I_grn)$Meth,assayData(mdat_I_grn)$Unmeth)
-    mII <- rbind(assayData(mdat_II)$Meth,assayData(mdat_II)$Unmeth)
 
 ##estimate background parameters
     if(bgParaEst == "neg" | bgParaEst == "subtract_neg")
@@ -181,42 +179,51 @@ preprocessENmix  <- function(rgSet,bgParaEst="oob",dyeCorr=FALSE,nCores=2)
         bgRII <- bgRI;bgGII <- bgGI
     }else if (bgParaEst == "oob" | bgParaEst == "subtract_oob")
     {
-    I_probe <- getProbeInfo(rgSet, type="I-Red")
-    I_green_bg_M <-  getGreen(rgSet)[I_probe$AddressB,]
-    I_green_bg_U <-  getGreen(rgSet)[I_probe$AddressA,]
-    ctrl_g <- rbind(I_green_bg_M,I_green_bg_U)
-    I_probe <- getProbeInfo(rgSet, type="I-Green")
-    I_red_bg_M <-  getRed(rgSet)[I_probe$AddressB,]
-    I_red_bg_U <-  getRed(rgSet)[I_probe$AddressA,]
-    ctrl_r <- rbind(I_red_bg_M,I_red_bg_U)
-    ctrl_r[ctrl_r<=0]=1e-06;ctrl_g[ctrl_g<=0]=1e-06
-    temp <- apply(ctrl_r,2,huber_mus)
-    mu <- temp["mu",];sigma=temp["s",]
-    bgRI <- as.data.frame(cbind(mu,sigma))
-    temp <- apply(ctrl_g,2,huber_mus);
-    mu <- temp["mu",];sigma=temp["s",]
-    bgGI <- as.data.frame(cbind(mu,sigma))
-    bgRII <- bgRI;bgGII=bgGI
+        I_probe <- getProbeInfo(rgSet, type="I-Red")
+        I_green_bg_M <-  getGreen(rgSet)[I_probe$AddressB,]
+        I_green_bg_U <-  getGreen(rgSet)[I_probe$AddressA,]
+        ctrl_g <- rbind(I_green_bg_M,I_green_bg_U)
+        I_probe <- getProbeInfo(rgSet, type="I-Green")
+        I_red_bg_M <-  getRed(rgSet)[I_probe$AddressB,]
+        I_red_bg_U <-  getRed(rgSet)[I_probe$AddressA,]
+        ctrl_r <- rbind(I_red_bg_M,I_red_bg_U)
+        ctrl_r[ctrl_r<=0]=1e-06;ctrl_g[ctrl_g<=0]=1e-06
+        temp <- apply(ctrl_r,2,huber_mus)
+        mu <- temp["mu",];sigma=temp["s",]
+        bgRI <- as.data.frame(cbind(mu,sigma))
+        temp <- apply(ctrl_g,2,huber_mus);
+        mu <- temp["mu",];sigma=temp["s",]
+        bgGI <- as.data.frame(cbind(mu,sigma))
+        bgRII <- bgRI;bgGII=bgGI
+        rm(list=c("I_green_bg_M","I_green_bg_U","ctrl_g","I_red_bg_M","I_red_bg_U","ctrl_r"))
 
     }else if (bgParaEst == "subtract_q5neg"){
-    ctrls <- getProbeInfo(rgSet,type="Control")
-    ctrls <- ctrls[ctrls$Address %in% rownames(rgSet),]
-    ctrl_address <- as.vector(ctrls$Address[ctrls$Type %in% "NEGATIVE"])
-    ctrl_r <- getRed(rgSet)[ctrl_address,]
-    ctrl_g <- getGreen(rgSet)[ctrl_address,]
-    ctrl_r[ctrl_r<=0]=1e-06;ctrl_g[ctrl_g<=0]=1e-06  ## may not need this
-    mu <- apply(ctrl_r,2,function(x) quantile(x,probs=0.05,na.rm=TRUE));
-    sigma <- apply(ctrl_r,2,function(x)sd(x,na.rm=TRUE));
-    bgRI <- as.data.frame(cbind(mu,sigma))
-    mu <- apply(ctrl_g,2,function(x) quantile(x,probs=0.05,na.rm=TRUE));
-    sigma <- apply(ctrl_g,2,function(x)sd(x,na.rm=TRUE));
-    bgGI <- as.data.frame(cbind(mu,sigma))
-    bgRII <- bgRI;bgGII=bgGI
+        ctrls <- getProbeInfo(rgSet,type="Control")
+        ctrls <- ctrls[ctrls$Address %in% rownames(rgSet),]
+        ctrl_address <- as.vector(ctrls$Address[ctrls$Type %in% "NEGATIVE"])
+        ctrl_r <- getRed(rgSet)[ctrl_address,]
+        ctrl_g <- getGreen(rgSet)[ctrl_address,]
+        ctrl_r[ctrl_r<=0]=1e-06;ctrl_g[ctrl_g<=0]=1e-06  ## may not need this
+        mu <- apply(ctrl_r,2,function(x) quantile(x,probs=0.05,na.rm=TRUE));
+        sigma <- apply(ctrl_r,2,function(x)sd(x,na.rm=TRUE));
+        bgRI <- as.data.frame(cbind(mu,sigma))
+        mu <- apply(ctrl_g,2,function(x) quantile(x,probs=0.05,na.rm=TRUE));
+        sigma <- apply(ctrl_g,2,function(x)sd(x,na.rm=TRUE));
+        bgGI <- as.data.frame(cbind(mu,sigma))
+        bgRII <- bgRI;bgGII=bgGI
     }else if(bgParaEst == "est" | bgParaEst == "subtract_estBG"){
+    
+        mdat_subset <- mdat[probe_type == "IRed",]
+        m_I_red <- rbind(assayData(mdat_subset)$Meth,assayData(mdat_subset)$Unmeth)
+        mdat_subset <- mdat[probe_type == "IGrn",]
+        m_I_grn <- rbind(assayData(mdat_subset)$Meth,assayData(mdat_subset)$Unmeth)
+        mdat_subset <- mdat[probe_type == "II",]
+        mII <- rbind(assayData(mdat_subset)$Meth,assayData(mdat_subset)$Unmeth)
+        rm(mdat_subset)
         bgRI <- as.data.frame(t(apply(m_I_red,2,estBG)));names(bgRI) <- c("mu","sigma","perc")
         bgGI <- as.data.frame(t(apply(m_I_grn,2,estBG)));names(bgGI) <- c("mu","sigma","perc")
         bgII <- as.data.frame(t(apply(mII,2,estBG)));names(bgII) <- c("mu","sigma","perc")
-##empirically adjusting the estimates
+        ##empirically adjusting the estimates
         pp <- apply(cbind(bgRI$perc,bgGI$perc,bgII$perc),1,max)-apply(cbind(bgRI$perc,
         bgGI$perc,bgII$perc),1,min)
         avgp <- apply(cbind(bgRI$perc,bgGI$perc,bgII$perc),1,mean)
@@ -229,64 +236,50 @@ preprocessENmix  <- function(rgSet,bgParaEst="oob",dyeCorr=FALSE,nCores=2)
         bgRI <- bgRI[,c("mu","sigma")]
         bgGI <- bgGI[,c("mu","sigma")]
         bgII <- bgII[,c("mu","sigma")]
-        A <- sum(bgRI$mu)/sum(bgGI$mu)
-        bgGII <- bgII;bgRII=bgII;
-##assume same difference
-        bgGII$mu <- bgII$mu-(bgRI$mu-bgGI$mu)/2
-        bgRII$mu <- bgII$mu+(bgRI$mu-bgGI$mu)/2
-##assume save CV and balance using actual estimates
-        bgGII$sigma <- (bgII$sigma+bgGII$mu*bgGI$sigma/bgGI$mu)/2
-        bgRII$sigma <- (bgII$sigma+bgRII$mu*bgRI$sigma/bgRI$mu)/2
+	A1=sum(bgII$mu)*2/(sum(bgRI$mu)+sum(bgGI$mu))
+	A2=sum(bgII$sigma)*2/(sum(bgRI$sigma)+sum(bgGI$sigma))
+	bgGII=bgGI;bgGII$mu=bgGII$mu*A1;bgGII$sigma=bgGII$sigma*A2
+	bgRII=bgRI;bgRII$mu=bgRII$mu*A1;bgRII$sigma=bgRII$sigma*A2
+        rm(list=c("m_I_red","m_I_grn","mII"))
     }
 
-    assayDataElement(mdat_I_red, "Meth") <- enmix(assayData(mdat_I_red)$Meth,bgRI,bgParaEst,nCores)
-    assayDataElement(mdat_I_red, "Unmeth") <- enmix(assayData(mdat_I_red)$Unmeth,bgRI,bgParaEst,nCores)
-    assayDataElement(mdat_I_grn, "Meth") <- enmix(assayData(mdat_I_grn)$Meth,bgGI,bgParaEst,nCores)
-    assayDataElement(mdat_I_grn, "Unmeth") <- enmix(assayData(mdat_I_grn)$Unmeth,bgGI,bgParaEst,nCores)
-    assayDataElement(mdat_II, "Meth") <- enmix(assayData(mdat_II)$Meth,bgGII,bgParaEst,nCores)
-    assayDataElement(mdat_II, "Unmeth") <- enmix(assayData(mdat_II)$Unmeth,bgRII,bgParaEst,nCores)
-    methData <- rbind(assayData(mdat_I_red)$Meth,assayData(mdat_I_grn)$Meth,assayData(mdat_II)$Meth)
-    unmethData <- rbind(assayData(mdat_I_red)$Unmeth,assayData(mdat_I_grn)$Unmeth,
-              assayData(mdat_II)$Unmeth)
-    CpGID <- rownames(mdat)
-    ##SampleID <- colnames(mdat)
-    methData <- methData[CpGID,]
-    unmethData <- unmethData[CpGID,]
-    assayDataElement(mdat, "Meth") <- methData
-    assayDataElement(mdat, "Unmeth") <- unmethData
+    methData <- getMeth(mdat)
+    unmethData <- getUnmeth(mdat)
+    methData[probe_type == "IGrn",] <- enmix(methData[probe_type == "IGrn",], bgGI, bgParaEst, nCores)
+    unmethData[probe_type == "IGrn",] <- enmix(unmethData[probe_type == "IGrn",], bgGI, bgParaEst, nCores)
+    methData[probe_type == "II",] <- enmix(methData[probe_type == "II",], bgGII, bgParaEst, nCores)
+    methData[probe_type == "IRed",] <- enmix(methData[probe_type == "IRed",], bgRI, bgParaEst, nCores)
+    unmethData[probe_type == "IRed",] <- enmix(unmethData[probe_type == "IRed",], bgRI, bgParaEst, nCores)
+    unmethData[probe_type == "II",] <- enmix(unmethData[probe_type == "II",], bgRII, bgParaEst, nCores)
 
     if (dyeCorr){
-    meth <- getMeth(mdat)
-    unmeth <- getUnmeth(mdat)
-    probe.type <- getProbeType(mdat, withColor=TRUE)
-    ctrls <- getProbeInfo(rgSet, type="Control")
-    ctrls <- ctrls[ctrls$Address %in% featureNames(rgSet),]
-    ctrl_r <- getRed(rgSet)[ctrls$Address,]
-    ctrl_g <- getGreen(rgSet)[ctrls$Address,]
-    CG.controls <- ctrls$Type %in% c("NORM_C", "NORM_G")
-    AT.controls <- ctrls$Type %in% c("NORM_A", "NORM_T")
-    Green.avg <- apply(ctrl_g[CG.controls,],2,huber_mu)
-    Red.avg <- apply(ctrl_r[AT.controls,],2,huber_mu)
-    ref <- mean(c(Red.avg,Green.avg))
-    Grn.factor <- ref/Green.avg
-    Red.factor <- ref/Red.avg
-    Grn <- list(Im=as.matrix(meth[probe.type == "IGrn",]),
-            Iu=as.matrix(unmeth[probe.type == "IGrn",]),
-            II=as.matrix(meth[probe.type == "II",]))
-    Red <- list(Im=as.matrix(meth[probe.type == "IRed",]),
-            Iu=as.matrix(unmeth[probe.type == "IRed",]),
-            II=as.matrix(unmeth[probe.type == "II",]))
-    Grn <- lapply(Grn, function(y) sweep(y, 2, FUN="*", Grn.factor))
-    Red <- lapply(Red, function(y) sweep(y, 2, FUN="*", Red.factor))
-    meth[probe.type == "IGrn",] <- Grn$Im
-    unmeth[probe.type == "IGrn",] <- Grn$Iu
-    meth[probe.type == "II",] <- Grn$II
-    meth[probe.type == "IRed",] <- Red$Im
-    unmeth[probe.type == "IRed",] <- Red$Iu
-    unmeth[probe.type == "II",] <- Red$II
-    assayDataElement(mdat, "Meth") <- meth
-    assayDataElement(mdat, "Unmeth") <- unmeth
-}
+      ctrls <- getProbeInfo(rgSet, type="Control")
+      ctrls <- ctrls[ctrls$Address %in% featureNames(rgSet),]
+      ctrl_r <- getRed(rgSet)[ctrls$Address,]
+      ctrl_g <- getGreen(rgSet)[ctrls$Address,]
+      CG.controls <- ctrls$Type %in% c("NORM_C", "NORM_G")
+      AT.controls <- ctrls$Type %in% c("NORM_A", "NORM_T")
+
+      cg_grn=ctrl_g[CG.controls,]
+      at_red=ctrl_r[AT.controls,]
+      cg_grn <- enmix(cg_grn,bgGI,bgParaEst,nCores)
+      at_red <- enmix(at_red,bgRI,bgParaEst,nCores)
+
+      Green.avg <- apply(cg_grn,2,huber_mu)
+      Red.avg <- apply(at_red,2,huber_mu)
+      ref <- mean(c(Red.avg,Green.avg))
+      Grn.factor <- sqrt(ref/Green.avg)
+      Red.factor <- sqrt(ref/Red.avg)
+      methData[probe_type == "IGrn",] <- sweep(methData[probe_type == "IGrn",], 2, FUN="*", Grn.factor)
+      unmethData[probe_type == "IGrn",] <- sweep(unmethData[probe_type == "IGrn",], 2, FUN="*", Grn.factor)
+      methData[probe_type == "II",] <- sweep(methData[probe_type == "II",], 2, FUN="*", Grn.factor)
+      methData[probe_type == "IRed",] <- sweep(methData[probe_type == "IRed",], 2, FUN="*", Red.factor)
+      unmethData[probe_type == "IRed",] <- sweep(unmethData[probe_type == "IRed",], 2, FUN="*", Red.factor)
+      unmethData[probe_type == "II",] <- sweep(unmethData[probe_type == "II",], 2, FUN="*", Red.factor)
+    }
+    
+    assayDataElement(mdat, "Meth") <- methData
+    assayDataElement(mdat, "Unmeth") <- unmethData
 
     mdat@preprocessMethod <- c(rg.norm=sprintf("Background correction method: ENmix %s",bgParaEst),
         ENmix=as.character(packageVersion("ENmix")),
