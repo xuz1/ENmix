@@ -18,6 +18,8 @@ mdat=QCfilter(mdat,qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
 #should not use beta matrix after ComBat analysis for this purpose!
 beta=getBeta(mdat, "Illumina")
 nmode=nmode.mc(beta, minN = 3,modedist=0.2, nCores = 6)
+#Frequency polygon plot for beta values
+multifreqpoly(beta)
 #between-array normalization
 mdat=normalize.quantile.450k(mdat,method="quantile1")
 #probe type bias correction
