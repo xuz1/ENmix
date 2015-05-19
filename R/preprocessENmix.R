@@ -268,8 +268,8 @@ preprocessENmix  <- function(rgSet,bgParaEst="oob",dyeCorr=FALSE,nCores=2)
       Green.avg <- apply(cg_grn,2,huber_mu)
       Red.avg <- apply(at_red,2,huber_mu)
       ref <- mean(c(Red.avg,Green.avg))
-      Grn.factor <- sqrt(ref/Green.avg)
-      Red.factor <- sqrt(ref/Red.avg)
+      Grn.factor <- ref/Green.avg
+      Red.factor <- ref/Red.avg
       methData[probe_type == "IGrn",] <- sweep(methData[probe_type == "IGrn",], 2, FUN="*", Grn.factor)
       unmethData[probe_type == "IGrn",] <- sweep(unmethData[probe_type == "IGrn",], 2, FUN="*", Grn.factor)
       methData[probe_type == "II",] <- sweep(methData[probe_type == "II",], 2, FUN="*", Grn.factor)

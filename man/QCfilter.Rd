@@ -8,7 +8,7 @@ Filter samples and probes with low data quality measured based on detection P va
 }
 \usage{
 QCfilter(mdat, qcinfo, detPthre = 0.05, nbthre = 3, 
-	samplethre = 0.01, CpGthre = 0.05,bisulthre=1,plot=FALSE,
+	samplethre = 0.01, CpGthre = 0.05,bisulthre=1,plot=TRUE,
         outid=NULL, outCpG=NULL)
 }
 \arguments{
@@ -19,15 +19,15 @@ QCfilter(mdat, qcinfo, detPthre = 0.05, nbthre = 3,
   \item{samplethre}{Threshold for filtering samples, the percentage of low quality methylation data points across probes for each sample}
   \item{CpGthre}{Threshold for filtering probes, for percentage of low quality methylation data points across samples for each probe}
   \item{bisulthre}{Threshold for bisulfite to exclude samples.}
-  \item{plot}{Whether to plot total intensity and beta value density plot before and after QC.}
+  \item{plot}{Whether to plot total intensity and beta value distribution plot before and after QC.}
   \item{outid}{User specified sample list to be filtered out. Valid ids are selected from colnames(mdat).}
   \item{outCpG}{User specified CpG list to be filtered out. Valid ids are selected from rownames(mdat).}
 }
 \value{
 An object of class \code{MethylSet} with low data quality samples and probes filtered. 
 
-If option plot=TRUE, four figures will be produced:  density_total_intensity_beforeQC.jpg, density_total_beta_beforeQC.jpg,
-density_total_intensity_afterQC.jpg, density_total_beta_afterQC.jpg.
+If option plot=TRUE, four figures will be produced:  freqpolygon_total_intensity_beforeQC.jpg, freqpolygon_total_beta_beforeQC.jpg,
+freqpolygon_total_intensity_afterQC.jpg, freqpolygon_total_beta_afterQC.jpg.
 }
 \references{
 Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor,
