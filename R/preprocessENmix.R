@@ -145,7 +145,7 @@ estBG  <- function(meth_i)
 }
 
 ##background correction
-preprocessENmix  <- function(rgSet,bgParaEst="oob",dyeCorr=FALSE,nCores=2)
+preprocessENmix  <- function(rgSet,bgParaEst="oob",dyeCorr=TRUE,nCores=2)
 {
     if(is(rgSet, "RGChannelSet")){
         mdat <- preprocessRaw(rgSet)
