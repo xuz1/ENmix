@@ -7,12 +7,13 @@ The ENmix background correction for HumanMethylation450k BeadChip
 ENmix models methylation signal intensities with a flexible exponential-normal mixture distribution, and models background noise with a truncated normal distribution. ENmix will split 450k BeadChip intensity data into 6 parts and separately model methylated and unmethylated intensities, 2 different color channels and 2 different probe designs.
 }
 \usage{
-preprocessENmix(rgSet, bgParaEst = "oob", dyeCorr=TRUE, nCores = 2)
+preprocessENmix(rgSet, bgParaEst = "oob", dyeCorr=TRUE, exCpG=NULL, nCores = 2)
 }
 \arguments{
   \item{rgSet}{An object of class \code{RGChannelSetExtended}, \code{RGChannelSet} or \code{MethylSet}.}
   \item{bgParaEst}{Optional method to estimate background normal distribution parameters. This must be one of the strings: "oob","est", or "neg".}
   \item{dyeCorr}{Dye bias correction: "TRUE" or "FALSE"}
+  \item{exCpG}{User specified probe list to be excluded before background correction}
   \item{nCores}{Number of cores will be used for computation}
 }
 \details{

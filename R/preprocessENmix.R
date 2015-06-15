@@ -145,7 +145,7 @@ estBG  <- function(meth_i)
 }
 
 ##background correction
-preprocessENmix  <- function(rgSet,bgParaEst="oob",dyeCorr=TRUE,nCores=2)
+preprocessENmix  <- function(rgSet,bgParaEst="oob",dyeCorr=TRUE,exCpG=NULL,nCores=2)
 {
     if(is(rgSet, "RGChannelSet")){
         mdat <- preprocessRaw(rgSet)
@@ -159,6 +159,7 @@ preprocessENmix  <- function(rgSet,bgParaEst="oob",dyeCorr=TRUE,nCores=2)
         cat("Only ",detectCores(), " cores avialable, nCores was reset to ",detectCores(),"\n")
     }
     cat("Analysis is running, please wait...!","\n")
+    mdat=mdat[!(rownames(mdat) %in% exCpG),]
     probe_type <- getProbeType(mdat, withColor=TRUE)
 
 ##estimate background parameters

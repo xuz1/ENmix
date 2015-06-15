@@ -13,9 +13,8 @@ bincount <- function(x,breaks)
 multifreqpoly <- function(mat, nbreaks=100, col=NULL, xlab="", ylab="Frequency", ...)
 {
     if(!is.matrix(mat)) stop("Warning: input data is not a numeric matrix\n")
-    if(is.null(col)) col=rep("black",ncol(mat))
-    if(ncol(mat) != length(col)) 
-    stop("Warning: number of color code is not equal to number of columns in data matrix")
+    if(is.null(col)) col="black"
+    col=rep(col,ceiling(ncol(mat)/length(col)))
     if(nbreaks > nrow(mat)) nbreaks=min(15,round(nrow(mat)/2))
 
     breaks <- seq(min(mat,na.rm=TRUE), max(mat,na.rm=TRUE), 
