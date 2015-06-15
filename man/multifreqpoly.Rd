@@ -7,7 +7,7 @@ Frequency polygon plot to display data distribution.
 Produce Frequency polygon plot for each column of a numeric data matrix.
 }
 \usage{
-multifreqpoly <- function(mat, nbreaks=100, col=NULL, xlab="", ylab="Frequency", ...)
+multifreqpoly(mat, nbreaks=100, col=NULL, xlab="", ylab="Frequency", ...)
 }
 \arguments{
   \item{mat}{A numeric matrix}

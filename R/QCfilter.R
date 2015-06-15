@@ -7,7 +7,7 @@ function(mdat,qcinfo,detPthre=0.05,nbthre=3,samplethre=0.01,CpGthre=0.05,
 	 matrix dimension, check qcinfo!")}
     if(sum(!colnames(qcinfo$nbead)==colnames(mdat))>0){stop("Error: different
 	 matrix dimension, check qcinfo!")}
-
+    if(bisulthre == 1){bisulthre=mean(qcinfo$bisul,na.rm=TRUE)-3*sd(qcinfo$bisul,na.rm=TRUE)}
     ##Frequency polygon plot before QC
     if(plot)
     {

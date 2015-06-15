@@ -18,7 +18,7 @@ QCfilter(mdat, qcinfo, detPthre = 0.05, nbthre = 3,
   \item{nbthre}{Number of bead threshold}
   \item{samplethre}{Threshold for filtering samples, the percentage of low quality methylation data points across probes for each sample}
   \item{CpGthre}{Threshold for filtering probes, for percentage of low quality methylation data points across samples for each probe}
-  \item{bisulthre}{Threshold for bisulfite to exclude samples.}
+  \item{bisulthre}{Threshold of bisulfite intensity for identification of low quality samples. By default, Mean - 3 x SD of sample bisufite control intensities will be used as the threshold.}
   \item{plot}{Whether to plot total intensity and beta value distribution plot before and after QC.}
   \item{outid}{User specified sample list to be filtered out. Valid ids are selected from colnames(mdat).}
   \item{outCpG}{User specified CpG list to be filtered out. Valid ids are selected from rownames(mdat).}
