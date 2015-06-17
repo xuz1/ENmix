@@ -22,7 +22,7 @@ outCpG = names(nmode)[nmode>1]
 #exclude non-specific binding probes or probes affected by SNP et al.
 #outCpG = unique(c(outCpG,non-specific bind probes,snp probes,...))
 #filter out low quality samples and probes
-mraw<-QCfilter(mdat, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
+mdat<-QCfilter(mdat, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
     ,plot=TRUE, outid=NULL, outCpG=outCpG)
 #between-array normalization
 mdat<-normalize.quantile.450k(mdat, method="quantile1")
