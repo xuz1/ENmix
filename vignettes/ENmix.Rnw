@@ -243,8 +243,9 @@ Function \Rfunction{nmode.mc} uses an empirical approach to identify
  modes and greater between-person variation. These multimodal distributed 
 data are usually caused by SNP effect, problematic probe design or some
  other unknown artifacts instead of actual methylation level and thus 
-should be excluded from DNA methylation analysis. Although researchers
- have often excluded CpGs based on SNP annotation information, we found
+should be excluded from DNA methylation analysis. Researchers
+ have often excluded CpGs based on SNP annotation information. However, 
+because SNP annotation always depends on population origin, we found
  that this approach alone may exclude many well-distributed (unimodal)
  CpGs, while still failing to identify other multi-modal CpGs. We developed
  an empirical approach to identify CpGs that are not uni-modally distributed,
@@ -265,8 +266,8 @@ To illustrate the function, we have applied the approach in two different
 From the following summary table we can see this approach can correctly
  identifies all 65 known SNP probes as not unimodal in both datasets.
  More than 90\% of CpGs with an annotated SNP in probe region are uni-modal
- in both populations and could be kept in data analysis with exclusion of
- a few outliers. For CpGs with any SNP at CpG target site, more than 80\% 
+ in both populations.
+ For CpGs with any SNP at CpG target site, more than 80\% 
 are unimodal, and even 50\% of CpGs with an annotated common (minor 
 allele frequency > 0.05) SNP at target site have unimodal distributions. 
 
@@ -321,20 +322,15 @@ beta<-getBeta(mraw, "Illumina")
 nmode<-nmode.mc(beta, minN = 3, modedist=0.2, nCores = 6)
 #Frequency polygon plot to examining beta value distribution 
 multifreqpoly(beta)
+#background correction
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, nCores=6)
 #user specified CpG list to be excluded
 outCpG = names(nmode)[nmode>1]
 #exclude non-specific binding probes or probes affected by SNP et al.
 #outCpG = unique(c(outCpG,non-specific bind probes,snp probes,...))
 #filter out low quality samples and probes
-mraw<-QCfilter(mraw, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
-    ,bisulthre=5000,plot=TRUE, outid=NULL, outCpG=outCpG)
-cglist=rownames(mraw)
-idlist=colnames(mraw)
-exCpG=rownames(beta)[!(rownames(beta) %in% cglist)]
-
-#background correction
-mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, exCpG=exCpG, nCores=6)
-mdat=mdat[,colnames(mdat) %in% idlist]
+mraw<-QCfilter(mdat, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
+    ,plot=TRUE, outid=NULL, outCpG=outCpG)
 #between-array normalization
 mdat<-normalize.quantile.450k(mdat, method="quantile1")
 #probe type bias correction
