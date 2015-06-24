@@ -1,5 +1,5 @@
 Package: ENmix
-Version: 1.1.4
+Version: 1.1.5
 Date: 2015-04-30
 Title: Data preprocessing and quality control for Illumina HumanMethylation450 BeadChip
 Type: Package
@@ -18,7 +18,7 @@ Description: Illumina HumanMethylation450 BeadChip has a complex array design, a
     preprocessing methods, such as BMIQ probe design type bias correction and 
     ComBat batch effect correction. 
 Depends: minfi,parallel,doParallel,Biobase (>= 2.17.8),foreach
-Imports:MASS,preprocessCore,wateRmelon,sva,geneplotter
+Imports: MASS,preprocessCore,wateRmelon,sva,geneplotter,impute
 Suggests: minfiData (>= 0.4.1), RPMM, RUnit, BiocGenerics
 biocViews: DNAMethylation, Preprocessing, QualityControl, TwoChannel, Microarray,
       OneChannel, MethylationArray, BatchEffect, Normalization, DataImport

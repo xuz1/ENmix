@@ -4,10 +4,11 @@ importFrom(preprocessCore,normalize.quantiles)
 importFrom(wateRmelon,BMIQ)
 importFrom(sva,ComBat)
 importFrom(geneplotter, multidensity)
+importFrom(impute, impute.knn)
 
 export(preprocessENmix, bmiq.mc, ComBat.mc, 
 	nmode.mc,  normalize.quantile.450k,  plotCtrl,
-	QCfilter, QCinfo, pcrplot,multifreqpoly)
+	QCfilter, QCinfo, pcrplot, multifreqpoly, rm.outlier)
 
 
 
