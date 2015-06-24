@@ -16,4 +16,16 @@
   \itemize{
     \item Improve code in function preprocessENmix to use less memory.
 }}
+\section{Version 1.1.3}{
+  \itemize{
+    \item Function multifreqpoly was added
+}}
+\section{Version 1.1.4}{
+  \itemize{
+    \item Function rm.outlier was added
+}}
+\section{Version 1.1.5}{
+  \itemize{
+    \item rm.outlier was modified to have more functionality
+}}
 

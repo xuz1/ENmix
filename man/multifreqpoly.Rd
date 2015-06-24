@@ -15,7 +15,7 @@ multifreqpoly(mat, nbreaks=100, col=NULL, xlab="", ylab="Frequency", ...)
   \item{col}{Line plot color code, the length should be equal to the number of columns in mat}
   \item{xlab}{x-axis lable}
   \item{ylab}{y-axis lable}
-  \item{...}{Other options in R function plot()}
+  \item{...}{Graphical parameters to be passed to the method "plot"}
 }
 \value{
 Frequency polygon plot.

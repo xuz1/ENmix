@@ -10,7 +10,7 @@ bincount <- function(x,breaks)
     resu$counts[order(resu$id)]
 }
 
-multifreqpoly <- function(mat, nbreaks=100, col=NULL, xlab="", ylab="Frequency", ...)
+multifreqpoly <- function(mat, nbreaks=100, col=NULL, xlab="", ylab="Frequency",...)
 {
     if(!is.matrix(mat)) stop("Warning: input data is not a numeric matrix\n")
     if(is.null(col)) col="black"
@@ -22,6 +22,6 @@ multifreqpoly <- function(mat, nbreaks=100, col=NULL, xlab="", ylab="Frequency",
     mids <- 0.5 * (breaks[-1] + breaks[-length(breaks)])
     counts <- sapply(data.frame(mat),bincount,breaks=breaks)
     plot(range(mids),c(0,max(counts)),type="n",xlab=xlab,ylab=ylab,...)
-    for(i in 1:ncol(counts))(lines(mids,counts[,i],col=col[i],...))
+    for(i in 1:ncol(counts)){lines(mids,counts[,i],col=col[i],...)}
 }
 

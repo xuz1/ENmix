@@ -339,8 +339,11 @@ beta<-bmiq.mc(mdat, nCores=6)
 cov<-data.frame(group=pData(mdat)$Sample_Group,
     slide=factor(pData(mdat)$Slide))
 pcrplot(beta, cov, npc=6)
+#filter out low quality and outlier values, remove rows and columns
+#with too many missing value, and then do imputation
+beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
 #batch correction 
-batch<-factor(pData(mdat)$Slide)
+batch<-factor(pData(mdat)[colnames(beta),]$Slide)
 betaC<-ComBat.mc(beta, batch, nCores=6, mod=NULL)
 @
 
