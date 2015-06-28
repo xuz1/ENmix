@@ -1,6 +1,17 @@
-plotCtrl <- function(rgSet)
+plotCtrl <- function(rgSet,IDorder=NULL)
 {
     if(!is(rgSet, "RGChannelSet")){stop("object needs to be of class 'RGChannelSet'")}
+    if(!is.null(IDorder))
+    {
+        if(sum(!(IDorder %in% colnames(rgSet)))>0)
+        {
+           idmissing=IDorder[!(IDorder %in% colnames(rgSet))]
+           cat("The IDs were not found in the input data: ",idmissing,"\n")
+           stop("Wrong ids in IDorder, please check")
+        }else{
+            rgSet=rgSet[,IDorder]
+        }
+    }
     ctrls<-getProbeInfo(rgSet,type="Control")
     ctrls <- ctrls[ctrls$Address %in% featureNames(rgSet),]
     ctrl_r <- getRed(rgSet)[ctrls$Address,]

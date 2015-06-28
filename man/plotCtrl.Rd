@@ -7,10 +7,11 @@ Plot internal controls of 450K BeadChip.
 Intensity data are ploted for all internal control probe types on the Illumina Infinium HumanMethylation450 BeadChip. These figures can be used to check data quality and experimental procedures. 
 }
 \usage{
-plotCtrl(rgSet)
+plotCtrl(rgSet,IDorder=NULL)
 }
 \arguments{
   \item{rgSet}{An object of class \code{RGChannelSet}.}
+  \item{IDorder}{A list of sample ids in the order user specified. The list can be a subset of the samples in input dataset. If an id list is provided, all plots will be produced in the order of the list. The default is NULL.}
 }
 \value{
 A set of jpeg figures.
@@ -26,7 +27,9 @@ Zongli Xu
 \examples{
 if(FALSE){
 if (require(minfiData)) {
-plotCtrl(RGsetEx)
+pinfo=pData(RGsetEx)
+IDorder=rownames(pinfo)[order(pinfo$Slide,pinfo$Array)]
+plotCtrl(RGsetEx,IDorder)
 }}
 }
 
