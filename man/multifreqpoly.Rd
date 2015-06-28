@@ -7,7 +7,9 @@ Frequency polygon plot to display data distribution.
 Produce Frequency polygon plot for each column of a numeric data matrix.
 }
 \usage{
-multifreqpoly(mat, nbreaks=100, col=NULL, xlab="", ylab="Frequency", ...)
+multifreqpoly(mat, nbreaks=100, col=1:ncol(mat), xlab="", ylab="Frequency",
+      legend = list(x = "top", fill=col,
+      legend = if(is.null(colnames(mat))) paste(1:ncol(mat)) else colnames(mat)),...)
 }
 \arguments{
   \item{mat}{A numeric matrix}
@@ -15,7 +17,8 @@ multifreqpoly(mat, nbreaks=100, col=NULL, xlab="", ylab="Frequency", ...)
   \item{col}{Line plot color code, the length should be equal to the number of columns in mat}
   \item{xlab}{x-axis lable}
   \item{ylab}{y-axis lable}
-  \item{...}{Graphical parameters to be passed to the method "plot"}
+  \item{legend}{A list of arguments that get passed to the function "legend"}
+  \item{...}{Further arguments that get passed to the function "plot"}
 }
 \value{
 Frequency polygon plot.

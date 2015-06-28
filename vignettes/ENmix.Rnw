@@ -21,17 +21,18 @@ options(width=70)
 \title{The ENmix User's Guide\\
   Analyzing Illumina HumanMethylation450 BeadChip}
 \author{Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor}
-\date{Modified: May 14, 2015.  Compiled: \today}
+\date{Modified: June 26, 2015.  Compiled: \today}
 \begin{document}
 \maketitle
 \section{Introduction}
-The \Rpackage{ENmix} package provides tools for data preprocessing of the
- Illumina HumanMethylation450 array data to improve data quality, including
- functions for data quality control, background correction and inter-array
- normalization. In addition, the package also provides parallel computing
- wrappers for BMIQ probe design type bias correction and ComBat batch 
-effect correction.
- 
+The \Rpackage{ENmix} package provides tools to preprocess data from
+ Illumina HumanMethylation450 array. It includes functions to improve 
+data quality and to prepare clean dataset for EWAS and other DNA methylation
+analyses. The ENmix uses the same data structure as R package \Rpackage{minfi},
+ and is compatible with several R packages, such as \Rpackage{minfi} and 
+\Rpackage{waterMelon}, and provides complementary functions for data quality
+ control, background correction, inter-array normalization and variance exploretion.
+
 The Illumina Infinium HumanMethylation450 BeadChip has a complicated design.
  The array uses bisulfite converted DNA to estimate methylated (M) and 
 unmethylated (U) allele intensity at individual CpG site. Two different 
@@ -49,44 +50,28 @@ intensity.  The Infinium II assay is used for 72\% (350, 036) of the CpGs
 for methylated, or adenine (labeled with Cy5) for unmethylated alleles.
  The HumanMethylation450K Beadchip has 850 internal control probes to 
 monitor experimental procedures at different steps, including 613 negative
- control probes to measure background intensity and 16 probes to monitor 
-bisulfite conversion efficiency.
+ control probes to measure background intensity and 186 non-polymorphic
+ control probes that can be used to monitor color channel difference.
 
 \section{Citation}
-If you are using \Rpackage{ENmix} package, please cite the following
- publications:\\
-\begin{itemize}
-  \item The package: \\ 
+If you are using \Rpackage{ENmix} package, please cite this publication:\\
+
 Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor
-ENmix: a novel background correction method for Illumina 
+ENmix: a novel background correction method for Illumina
 HumanMethylation450 BeadChip, Under review.
-  \item Function \Rfunction{normalize.quantile.450k}:  \\
-Pidsley R, Y Wong CC, Volta M, Lunnon K, Mill J, Schalkwyk LC.
-A data-driven approach to preprocessing Illumina 450K methylation array data,
-BMC Genomics, 2013, 14:293
-  \item Function \Rfunction{bmiq.mc}:  \\
-Teschendorff AE, Marabita F, Lechner M, Bartlett T, Tegner J, Gomez-Cabrero 
-D, Beck S.A beta-mixture quantile normalization method for correcting probe 
-design bias in Illumina Infinium 450 k DNA methylation data,
-Bioinformatics, 2013, 29(2):189-96
-  \item Function \Rfunction{Combat.mc}:  \\
-Johnson WE, Li C, Rabinovic A.
-Adjusting batch effects in microarray expression data using empirical
- Bayes methods, Biostatistics, 2007,  8(1):118-27
-\end{itemize}
 
 Thanks for your help!
 
 
 \section{Setting up the data}
 The first step is to import array raw data files (*.idat) using functions
- provided in R package minfi to create an object of 
+ provided in R package \Rpackage{minfi} to create an object of 
 \Robject{RGChannelSetExtended}. 
 
 <<UnevaluatedCode, eval=FALSE>>=
 library(ENmix)
 require(minfi)
-#see minfi user guide for the format of sample_sheet.txt file
+#see minfi user's guide for the format of sample_sheet.txt file
 targets <- read.table("./sample_sheet.txt", header=T)
 rgSet <- read.450k.exp( targets = targets, extended = TRUE)
 # or read in all idat files under a directory
@@ -124,8 +109,8 @@ rgSet <- read.450k.exp(targets = sheet, extended = TRUE)
 
 \section{Quality Control}
 \subsubsection{Internal control probes}
-Illumina 450k chip incorporated 15 different types of internal controls
- (total of 848 probes). The function \Rfunction{plotCtrl} can plot 
+Illumina 450k chip incorporated 15 different types of internal control
+probes (total of 848 probes). The function \Rfunction{plotCtrl} can plot 
 intensity values for each type of the controls to evaluate data quality 
 or the performance of specific steps in the process flow. See Illumina
  Infinium HD Methylation Assay for detailed description on how to 
@@ -160,7 +145,55 @@ NEGATIVE & 613 \\
 plotCtrl(rgSet)
 @
 
-\subsubsection{Filtering out low quality samples and probes}
+These controls can also be plotted in user specified order to check 
+how experimental factors affect methylation measures, such as batch,
+ plate, array or array location.
+
+<<ctrlplot, eval=FALSE>>=
+pinfo=pData(rgSet)
+IDorder=rownames(pinfo)[order(pinfo$Slide,pinfo$Array)]
+plotCtrl(rgSet,IDorder)
+@
+
+\subsection{Data distribution}
+
+The distribution plot for methylation intensities or beta values is 
+very useful for data summary, visual inspection and identification of 
+outlier samples. Density plot was routinely generated to display data
+distribution in methylation studies. However density plot is difficult 
+to understand for many investigators. As noted in the man page of 
+\Rfunction{multidensity}, density plot may not able to display data 
+distribution accurately for some data because of the smooth function. 
+Furthermore, the function is computation intensive, and can take 
+several hours to produce density plot for large samples. 
+
+Frequency polygon plot is a better alternative for inspection of data
+distribution. It can accurately reflect data distribution and easy to 
+understand, just like histogram. It is much faster, and only take a few
+minutes to produce a distribution plot for >1000 samples. 
+
+<<ctrlplot, eval=FALSE>>=
+mraw <- preprocessRaw(rgSet)
+#total intensity plot is userful for data quality inspection
+multidensity(assayData(mraw)$Meth+assayData(mraw)$Unmeth)
+#the following code is to compare frequency polygon plot and density plot
+beta<-getBeta(mraw, "Illumina")
+anno=getAnnotation(rgSet)
+beta1=beta[anno$Type=="I",]
+beta2=beta[anno$Type=="II",]
+library(geneplotter)
+jpeg("dist.jpg",height=1200,width=800)
+par(mfrow=c(3,2))
+multidensity(beta,main="Multidensity")
+multifreqpoly(beta,main="Multifreqpoly")
+multidensity(beta1,main="Multidensity: Infinium I")
+multidensity(beta2,main="Multidensity: Infinium II")
+multifreqpoly(beta1,main="Multifreqpoly: Infinium I")
+multifreqpoly(beta2,main="Multifreqpoly: Infinium II")
+dev.off()
+@
+
+\subsection{Filtering out low quality samples and probes}
 Data quality measures, including detection P values, number of 
 bead for each methylation reads and average intensities for bisulfite
 conversion probes can be
@@ -168,13 +201,14 @@ conversion probes can be
  \Robject{RGChannelSetExtended}. The information can be used
  for identifying low quality data points. Samples or probes with large
  percentage of low quality data can be excluded using function 
-\Rfunction{QCfilter}. Appropriate thresholds (samplethre, CpGthre and 
-bisulthre) can be explored from figures and data outputted by function
-\Rfunction{QCinfo}. Users can also specify a list of samples or CpGs to
-be filtered out by using options outid and outCpG. Density plot of 
-total intensity (methylated intensity + unmethylated intensity) density
-plot of methylation beta values before and after filtering can be produced
-using option plot=TRUE.
+\Rfunction{QCfilter}. Figures and data outputted by function
+\Rfunction{QCinfo} can be used to select appropriate thresholds 
+(arguments samplethre, CpGthre and bisulthre). 
+Users can also specify a list of samples or CpGs to
+be filtered out by using options outid and outCpG. Frequency polygon plot for 
+total intensity (methylated intensity + unmethylated intensity) and 
+methylation beta values before and after filtering can be generated 
+using argument plot=TRUE.
 
 <<filter, eval=FALSE>>=
 qc<-QCinfo(rgSet)
@@ -183,13 +217,36 @@ mraw<-QCfilter(mraw, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
     ,bisulthre=5000,plot=TRUE, outid=NULL, outCpG=NULL)
 @
 
+\subsection{Filtering out outlier and low quality data values}
+Outlier and low quality data values can affect association analysis, 
+function \Rfunction{rm.outlier} can be used to replace these data points 
+with assign missing values. Outlier was defined as value smaller than
+ 3 times IQR from the lower quartile or larger than 3 times IQR from
+ the upper quartile. Some analysis method do not allow missing value, 
+argument impute=TRUE in the function can be specified to impute missing
+ data using k-nearest neighbors method.
+
+<<preprocessENmix, eval=FALSE>>=
+#filter out outliers
+b1=rm.outlier(beta)
+#filter out low quality and outlier values
+b2=rm.outlier(beta,qcscore=qcscore)
+#filter out low quality and outlier values, remove rows and columns with too many missing values
+b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE)
+#filter out low quality and outlier values, remove rows and columns with too many missing values, and then do imputation
+b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE,impute=TRUE)
+@
+
 \section{Background correction}
 Function \Rfunction{preprocessENmix} incorporated a model based background
  correction method ENmix, which models methylation signal intensities 
 with a flexible exponential-normal mixture distribution, together
  with a truncated normal distribution to model background noise. 
+User can also specify a list of poor performance CpGs to be excluded
+ before background correction using argument exCpG.
+ 
 <<preprocessENmix, eval=FALSE>>=
-mdat<-preprocessENmix(rgSet, bgParaEst="oob", nCores=6)
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, exCpG=NULL, nCores=6)
 mdat<-QCfilter(mdat, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
     ,bisulthre=5000,plot=TRUE, outid=NULL, outCpG=NULL)
 @
@@ -202,12 +259,26 @@ normalization on methylation intensity value
 mdat<-normalize.quantile.450k(mdat, method="quantile1")
 @
 
-\section{Probe type bias correction}
+\section{Parallele computing wrappers}
+DNA methylation array analysis is computation intensive. To take advandage 
+of the widely available multi-core computation resources, we provided a few 
+parallele computing wrappers to speed up the analysis. 
+
+\subsection{Probe type bias correction}
 Function \Rfunction{bmiq.mc} is a multi-core parallel computing wrapper
  for the \Rfunction{BMIQ} function in R package \Rpackage{watermelon}.
 
 <<bmiq.mc, eval=FALSE>>=
 beta<-bmiq.mc(mdat, nCores=6)
+@
+
+\subsection{Batch effect correction}
+Function \Rfunction{ComBat.mc} is a multi-core parallel computing wrapper
+ for the \Rfunction{ComBat} function in R package \Rpackage{sva}.
+
+<<combat.mc, eval=FALSE>>=
+batch<-factor(pData(mdat)$Slide)
+betaC<-ComBat.mc(beta, batch, nCores=6, mod=NULL)
 @
 
 \section{Principal component regression analysis plot}
@@ -220,15 +291,6 @@ value decomposition method in standardized (for each probe) beta value matrix.
 cov<-data.frame(group=pData(mdat)$Sample_Group,
     slide=factor(pData(mdat)$Slide))
 pcrplot(beta, cov, npc=6)
-@
-
-\section{Batch effect correction}
-Function \Rfunction{ComBat.mc} is a multi-core parallel computing wrapper
- for the \Rfunction{ComBat} function in R package \Rpackage{sva}.
-
-<<combat.mc, eval=FALSE>>=
-batch<-factor(pData(mdat)$Slide)
-betaC<-ComBat.mc(beta, batch, nCores=6, mod=NULL)
 @
 
 \section{Multimodal CpGs}
@@ -306,34 +368,31 @@ Working with IDAT files
 
 <<example, eval=FALSE>>=
 library(ENmix)
-#read in raw intensity data
+#read in data
 sheet <- read.450k.sheet(file.path(find.package("minfiData"),
     "extdata"), pattern = "csv$")
 rgSet <- read.450k.exp(targets = sheet, extended = TRUE)
-#Control plots
+#control plots
 plotCtrl(rgSet)
 #QC info
 qc<-QCinfo(rgSet)
-#Search for multimodal CpGs 
-#sample size in this example data is too small for this purpose!
-#should not use beta matrix after ComBat analysis for this purpose!
 mraw <- preprocessRaw(rgSet)
 beta<-getBeta(mraw, "Illumina")
+#distribution plot
+multidensity(beta,main="Methylation Beta value distribution")
+#Search for multimodal CpGs
+#sample size in this example data is too small for this purpose!
 nmode<-nmode.mc(beta, minN = 3, modedist=0.2, nCores = 6)
-#Frequency polygon plot to examining beta value distribution 
-multifreqpoly(beta)
-#background correction
+#background correction and dye bias correction
 mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, nCores=6)
+#exclude samples or CpGs with poor data quality
 #user specified CpG list to be excluded
 outCpG = names(nmode)[nmode>1]
-#exclude non-specific binding probes or probes affected by SNP et al.
-#outCpG = unique(c(outCpG,non-specific bind probes,snp probes,...))
-#filter out low quality samples and probes
 mdat<-QCfilter(mdat, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
     ,plot=TRUE, outid=NULL, outCpG=outCpG)
-#between-array normalization
+#inter-array normalization
 mdat<-normalize.quantile.450k(mdat, method="quantile1")
-#probe type bias correction
+#probe-type bias adjustment
 beta<-bmiq.mc(mdat, nCores=6)
 # Principal component regression analysis plot
 cov<-data.frame(group=pData(mdat)$Sample_Group,
@@ -342,7 +401,7 @@ pcrplot(beta, cov, npc=6)
 #filter out low quality and outlier values, remove rows and columns
 #with too many missing value, and then do imputation
 beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
-#batch correction 
+#batch correction
 batch<-factor(pData(mdat)[colnames(beta),]$Slide)
 betaC<-ComBat.mc(beta, batch, nCores=6, mod=NULL)
 @

@@ -7,13 +7,17 @@ Authors@R: c(person("Zongli","Xu",role=c("cre","aut"),email="xuz@niehs.nih.gov")
 	person("Liang","Niu",role=c("aut"),email="niulg@ucmail.uc.edu"),
 	person("Leping","Li",role=c("ctb"),email="li3@niehs.nih.gov"),
 	person("Jack","Taylor",role=c("ctb"),email="taylor@niehs.nih.gov"))
-Description: Illumina HumanMethylation450 BeadChip has a complex array design, and 
-    the measurement is subject to experimental variations. The ENmix R package 
-    provides tools for low level data preprocessing to improve data quality. It 
-    incorporates a model based background correction method ENmix, and provides
-    functions for inter-array quantile normalization, data quality checking,
-    exploration of multimodally distributed CpGs and source of data variation.
-    To support large scale data analysis, the package also provides 
+Description: Illumina HumanMethylation450 BeadChip has a complex array design, and
+    the measurement is subject to experimental variations. The ENmix
+    package provides tools to preprocess data from the array. It includes functions 
+    to improve data quality and to prepare clean dataset for EWAS and other DNA methylation
+    analyses. The ENmix uses the same data structure as R package minfi,
+    and is compatible with several R packages, such as minfi and waterMelon, 
+    and provides complementary functions for data quality control, background 
+    correction, inter-array normalization and data confounder exploretion.
+    Especially, the package incorporates a novel model based background correction
+    method ENmix, which was demonstrated to outperform other alternative background 
+    correction method. To support large scale data analysis, the package also provides 
     multi-processor parallel computing wrappers for some commonly used data 
     preprocessing methods, such as BMIQ probe design type bias correction and 
     ComBat batch effect correction. 
