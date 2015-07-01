@@ -28,4 +28,8 @@
   \itemize{
     \item rm.outlier was modified to have more functionality
 }}
+\section{Version 1.1.6}{
+  \itemize{
+    \item Improved code in function multifreqpoly.R and rm.outlier.R
+}}
 

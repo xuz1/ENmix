@@ -1,6 +1,6 @@
 Package: ENmix
-Version: 1.1.5
-Date: 2015-04-30
+Version: 1.1.6
+Date: 2015-07-01
 Title: Data preprocessing and quality control for Illumina HumanMethylation450 BeadChip
 Type: Package
 Authors@R: c(person("Zongli","Xu",role=c("cre","aut"),email="xuz@niehs.nih.gov"),
