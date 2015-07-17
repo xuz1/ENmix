@@ -2,6 +2,7 @@ nmode_est <-
 function(x,minN=3,modedist=0.2)
 {
     x <- x[!is.na(x)]
+    if(sum(!is.na(x))>3){
     minN <- max(minN,ceiling(length(x)*0.05))
     y<-density(x)
     sn <- 3;nn <- sn*2+1
@@ -9,12 +10,28 @@ function(x,minN=3,modedist=0.2)
     v <- matrix(NA,ncol=nn,nrow=n-nn+1)
     for(i in 1:nn){v[,i] <- y$y[i:(n-nn+i)]}
     ix <- sn+which(apply(v<v[,(sn+1)],1,sum)==(nn-1))
-    nmode <- min(5,length(ix))
-    xx <- sort(y$x[ix][order(y$y[ix],decreasing=TRUE)[1:nmode]])
-    if(nmode>=2){flag <- 1}else{flag <- 0}
+#number of samples under each peak must greater than minN
+    if(length(ix)>1){
+    valley <- array()
+    for(i in 1:(length(ix)-1))
+    {valley[i] <- y$x[ix[i]:ix[i+1]][which.min(y$y[ix[i]:ix[i+1]])]}
+    v1 <- c(min(x),valley,max(x)+0.1)
+    nn <- array();
+    for(i in 1:(length(v1)-1)){nn[i] <- length(x[x>=v1[i] & x<v1[i+1]])}
+    ix=ix[nn>=minN]
+    nmode <- max(1,length(ix))
+    }else{nmode=1}
+    }else{nmode=1}
+#nmode <- min(5,max(1,length(ix)))
+    if(nmode>=2){
+        flag <- 1;
+        xx <- sort(y$x[ix][order(y$y[ix],decreasing=TRUE)[1:nmode]])
+    }else{flag <- 0}
+#distance between peaks must greater than modedist
     while(flag)
     {
         pdist <- xx[2:length(xx)]-xx[1:(length(xx)-1)]
+
         valley <- array()
         pidx <- which(y$x %in% xx)
         for(i in 1:(length(pidx)-1))
