@@ -108,7 +108,7 @@ rgSet <- read.450k.exp(targets = sheet, extended = TRUE)
 @
 
 \section{Quality Control}
-\subsubsection{Internal control probes}
+\subsection{Internal control probes}
 Illumina 450k chip incorporated 15 different types of internal control
 probes (total of 848 probes). The function \Rfunction{plotCtrl} can plot 
 intensity values for each type of the controls to evaluate data quality 
@@ -176,7 +176,8 @@ minutes to produce a distribution plot for >1000 samples.
 mraw <- preprocessRaw(rgSet)
 #total intensity plot is userful for data quality inspection
 multidensity(assayData(mraw)$Meth+assayData(mraw)$Unmeth)
-#the following code is to compare frequency polygon plot and density plot
+#the following code is to compare frequency polygon plot and
+# density plot
 beta<-getBeta(mraw, "Illumina")
 anno=getAnnotation(rgSet)
 beta1=beta[anno$Type=="I",]
@@ -217,7 +218,7 @@ mraw<-QCfilter(mraw, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
     ,bisulthre=5000,plot=TRUE, outid=NULL, outCpG=NULL)
 @
 
-\subsection{Filtering out outlier and low quality data values}
+\subsection{Filtering out outliers and low quality data values}
 Outlier and low quality data values can affect association analysis, 
 function \Rfunction{rm.outlier} can be used to replace these data points 
 with assign missing values. Outlier was defined as value smaller than
@@ -231,9 +232,11 @@ argument impute=TRUE in the function can be specified to impute missing
 b1=rm.outlier(beta)
 #filter out low quality and outlier values
 b2=rm.outlier(beta,qcscore=qcscore)
-#filter out low quality and outlier values, remove rows and columns with too many missing values
+#filter out low quality and outlier values, remove rows and columns
+# with too many missing values
 b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE)
-#filter out low quality and outlier values, remove rows and columns with too many missing values, and then do imputation
+#filter out low quality and outlier values, remove rows and columns
+# with too many missing values, and then do imputation
 b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE,impute=TRUE)
 @
 
@@ -246,7 +249,8 @@ User can also specify a list of poor performance CpGs to be excluded
  before background correction using argument exCpG.
  
 <<preprocessENmix, eval=FALSE>>=
-mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, exCpG=NULL, nCores=6)
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, 
+exCpG=NULL, nCores=6)
 mdat<-QCfilter(mdat, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
     ,bisulthre=5000,plot=TRUE, outid=NULL, outCpG=NULL)
 @
@@ -284,7 +288,8 @@ betaC<-ComBat.mc(beta, batch, nCores=6, mod=NULL)
 \section{Principal component regression analysis plot}
 Principal component regression can be used to explore methylation data
  variance structure (or source of variance) and identifying possible
- confounding variables. Principal components are derived using singular 
+ confounding variables for association analysis.
+ Principal components are derived using singular 
 value decomposition method in standardized (for each probe) beta value matrix.
 
 <<pcrplot, eval=FALSE>>=
@@ -382,7 +387,8 @@ beta<-getBeta(mraw, "Illumina")
 multidensity(beta,main="Methylation Beta value distribution")
 #Search for multimodal CpGs
 #sample size in this example data is too small for this purpose!
-nmode<-nmode.mc(beta, minN = 3, modedist=0.2, nCores = 6)
+bb=beta; bb[qc$detP>0.05 | qc$nbead<3]=NA #exclude low quality data first
+nmode<-nmode.mc(bb, minN = 3, modedist=0.2, nCores = 6)
 #background correction and dye bias correction
 mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, nCores=6)
 #exclude samples or CpGs with poor data quality
