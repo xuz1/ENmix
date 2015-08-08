@@ -36,4 +36,8 @@
   \itemize{
     \item Improved code in function nmode.mc.R
 }}
+\section{Version 1.1.8}{
+  \itemize{
+    \item Revised user's guide
+}}
 

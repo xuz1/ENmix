@@ -4,7 +4,12 @@
 Principal component regression plot
 }
 \description{
-Principal component regression to explore methylation data variance structure and identifying possible confounding covariates. Principal components are derived using singular value decomposition method in beta value matrix. 
+First, principal component analysis will be performed in the standadized input data
+matrix (standadized for each row/CpG), and then the specified number of top
+principal components (that explain most data variation) will be used to perform
+linear regression with each specified variables. Regression P values will be
+plotted for exploration of methylation data variance structure or identification 
+of possible confounding variables for association analysis.
 }
 \usage{
 pcrplot(beta, cov,npc=50)
