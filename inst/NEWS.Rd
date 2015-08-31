@@ -40,4 +40,9 @@
   \itemize{
     \item Revised user's guide
 }}
+\section{Version 1.1.9}{
+  \itemize{
+    \item Citation information update
+}}
+
 

@@ -8,7 +8,7 @@ c(bibentry(bibtype = "Article",
            person("Jack,A.", "Taylor")
            ),
            year = 2015,
-           journal = "Under review",
+           journal = "Nucleic Acids Research",
 	   header = "ENmix R pacakge")
   )
 
