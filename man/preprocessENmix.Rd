@@ -23,7 +23,7 @@ By default, ENmix will use out-of-band Infinium I intensities ("oob") to estimat
 An object of class \code{MethylSet}
 }
 \references{
-Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor, ENmix: a novel background correction method for Illumina HumanMethylation450 BeadChip. In review.
+Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor, ENmix: a novel background correction method for Illumina HumanMethylation450 BeadChip. Nucleic Acids Research 2015.
 }
 \author{
 Zongli Xu and Liang Niu

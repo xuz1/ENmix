@@ -28,7 +28,7 @@ An numeric matrix of same dimention as the input matrix.
 }
 \references{
 Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor,
-\emph{ENmix: a novel background correction method for Illumina HumanMethylation450 BeadChip}. Under review.
+\emph{ENmix: a novel background correction method for Illumina HumanMethylation450 BeadChip}. Nucleic Acids Research 2015.
 }
 \author{
 Zongli Xu

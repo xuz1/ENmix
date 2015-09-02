@@ -17,7 +17,7 @@ QCfilter(mdat, qcinfo, detPthre = 0.05, nbthre = 3,
   \item{detPthre}{Detection P value threshold}
   \item{nbthre}{Number of bead threshold}
   \item{samplethre}{Threshold for filtering samples, the percentage of low quality methylation data points across probes for each sample}
-  \item{CpGthre}{Threshold for filtering probes, for percentage of low quality methylation data points across samples for each probe}
+  \item{CpGthre}{Threshold for filtering probes, percentage of low quality methylation data points across samples for each probe}
   \item{bisulthre}{Threshold of bisulfite intensity for identification of low quality samples. By default, Mean - 3 x SD of sample bisufite control intensities will be used as the threshold.}
   \item{plot}{Whether to plot total intensity and beta value distribution plot before and after QC.}
   \item{outid}{User specified sample list to be filtered out. Valid ids are selected from colnames(mdat).}
@@ -31,7 +31,7 @@ freqpolygon_total_intensity_afterQC.jpg, freqpolygon_total_beta_afterQC.jpg.
 }
 \references{
 Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor,
-\emph{ENmix: a novel background correction method for Illumina HumanMethylation450 BeadChip}. Under review.
+\emph{ENmix: a novel background correction method for Illumina HumanMethylation450 BeadChip}. Nucleic Acids Research 2015. 
 }
 \author{
 Zongli Xu
