@@ -15,13 +15,9 @@ multifreqpoly(beta,main="Methylation Beta value distribution")
 #sample size in this example data is too small for this purpose!
 bb=beta; bb[qc$detP>0.05 | qc$nbead<3]=NA #exclude low quality data first
 nmode<-nmode.mc(bb, minN = 3, modedist=0.2, nCores = 6)
-#background correction and dye bias correction
-mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, nCores=6)
-#exclude samples or CpGs with poor data quality
-#user can also specify an extra list of CpG to be excluded, for example
 outCpG = names(nmode)[nmode>1]
-mdat<-QCfilter(mdat, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
-    ,plot=TRUE, outid=NULL, outCpG=outCpG)
+#background correction and dye bias correction
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=qc, nCores=6)
 #inter-array normalization
 mdat<-normalize.quantile.450k(mdat, method="quantile1")
 #probe-type bias adjustment

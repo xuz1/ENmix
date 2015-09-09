@@ -145,11 +145,24 @@ estBG  <- function(meth_i)
 }
 
 ##background correction
-preprocessENmix  <- function(rgSet,bgParaEst="oob",dyeCorr=TRUE,exCpG=NULL,nCores=2)
+preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=NULL, exSample=NULL,
+                     exCpG=NULL, nCores=2)
 {
     if(is(rgSet, "RGChannelSet")){
+        if(!is.null(QCinfo)){exSample=unique(c(QCinfo$badsample, exSample))}
+        exSample=exSample[exSample %in% colnames(rgSet)]
+        if(length(exSample)>0){
+            rgSet=rgSet[,!(colnames(rgSet) %in% exSample)]
+            cat(length(exSample), " samples were excluded before ENmix correction\n")
+        }
         mdat <- preprocessRaw(rgSet)
     }else if(is(mdat, "MethylSet")){
+        if(!is.null(QCinfo)){exSample=unique(c(QCinfo$badsample, exSample))}
+        exSample=exSample[exSample %in% colnames(rgSet)]
+        if(length(exSample)>0){
+            rgSet=rgSet[,!(colnames(rgSet) %in% exSample)]
+            cat(length(exSample), " samples were excluded before ENmix correction\n")
+        }
         mdat=rgSet; bgParaEst="est"; dyeCorr=FALSE
         if(dyeCorr){cat("Warning: Input data need to be a RGChannelSet for dye bias correction\n");
                    cat("Warning: dyeCorr option was ignored\n")}
@@ -158,10 +171,15 @@ preprocessENmix  <- function(rgSet,bgParaEst="oob",dyeCorr=TRUE,exCpG=NULL,nCore
         nCores=detectCores(); 
         cat("Only ",detectCores(), " cores avialable, nCores was reset to ",detectCores(),"\n")
     }
-    cat("Analysis is running, please wait...!","\n")
-    mdat=mdat[!(rownames(mdat) %in% exCpG),]
-    probe_type <- getProbeType(mdat, withColor=TRUE)
+    if(!is.null(QCinfo)) {exCpG=unique(c(exCpG, QCinfo$badCpG))}
+    exCpG=exCpG[exCpG %in% rownames(mdat)]
+    if(length(exCpG)>0){
+        mdat=mdat[!(rownames(mdat) %in% exCpG),]
+        cat(length(exCpG), " CpGs were excluded before ENmix correction\n")
+    }
 
+    probe_type <- getProbeType(mdat, withColor=TRUE)
+    cat("Analysis is running, please wait...!\n")
 ##estimate background parameters
     if(bgParaEst == "neg" | bgParaEst == "subtract_neg")
     {

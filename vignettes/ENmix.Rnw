@@ -20,7 +20,7 @@ options(width=70)
 
 \title{The \Rpackage{ENmix} User's Guide}
 \author{Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor}
-\date{Modified: August 31, 2015.  Compiled: \today}
+\date{Modified: September 09, 2015.  Compiled: \today}
 \begin{document}
 \maketitle
 
@@ -289,28 +289,23 @@ multifreqpoly plots (panels on right)}
 \label{fig:dist}
 \end{figure}
 
-\subsection{Filtering out low quality samples and probes}
+\subsection{QC information, filtering of low quality samples and probes}
 Data quality measures, including detection P values, number of 
 beads for each methylation read and average intensities for bisulfite
 conversion probes can be
  extracted using the function \Rfunction{QCinfo} from an object of
- \Robject{RGChannelSetExtended}. The information can be used
- to identify low quality data points. Samples or probes with large
- percentage of low quality data can be excluded using function 
-\Rfunction{QCfilter}. Figures and data outputted by function
-\Rfunction{QCinfo} can be used to select appropriate thresholds 
-(arguments: \textit{samplethre, CpGthre and bisulthre}). 
-Users can also specify a list of samples or CpGs to
-be filtered out by using options \textit{outid} and \textit{outCpG}.
- Frequency polygon plot for total intensity (methylated intensity 
-+ unmethylated intensity) and methylation beta values before and 
-after filtering can be generated using argument \textit{plot=TRUE}.
+ \Robject{RGChannelSetExtended}. According default or user specified 
+quality score thresholds, the \Rfunction{QCinfo} can also identify and 
+export a list of low quality samples and CpG probes. Outlier samples in 
+total intensity or beta value distribution were often excluded before
+further analysis. Such samples were tricky to be identified, by default 
+the argument outlier=TRUE will trigger the function to identify these 
+outlier samples automatically. Quality score figures from
+\Rfunction{QCinfo} can be used to guide the selection of quality score 
+thresholds. 
 
 <<filter, eval=FALSE>>=
 qc<-QCinfo(rgSet)
-mraw <- preprocessRaw(rgSet)
-mraw<-QCfilter(mraw, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
-    ,bisulthre=5000,plot=TRUE, outid=NULL, outCpG=NULL)
 @
 
 \subsection{Filtering out outliers and low quality data values}
@@ -347,12 +342,16 @@ See the following paper for the detailed description of the method:
 
 Zongli Xu, et. al. ENmix: a novel background correction method for Illumina
 HumanMethylation450 BeadChip, Nucleic Acids Research, 2015
+
+If argument QCinfo is specified, the low quality samples and probes identified 
+by function \Rfunction{QCinfo} will be excluded before ENmix background correction.
+Using argument \textit{exSample} and \textit{exCpG}, User can also specify a list 
+of samples or probes to be excluded before background correction. 
  
 <<preprocessENmix, eval=FALSE>>=
-mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, 
+qc=QCinfo(rgSet)
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=qc, 
 exCpG=NULL, nCores=6)
-mdat<-QCfilter(mdat, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
-    ,bisulthre=5000,plot=TRUE, outid=NULL, outCpG=NULL)
 @
 
 \section{Inter-array normalization}
@@ -445,6 +444,27 @@ nmode<- nmode.mc(beta, minN = 3, modedist=0.2, nCores = 5)
 \section{Example Analysis}
 Working with IDAT raw methylation data files
 
+\subsection{Example 1 }
+<<example, eval=FALSE>>=
+library(ENmix)
+#read in data
+sheet <- read.450k.sheet(file.path(find.package("minfiData"),
+    "extdata"), pattern = "csv$")
+rgSet <- read.450k.exp(targets = sheet, extended = TRUE)
+#QC info
+qc<-QCinfo(rgSet)
+#background correction and dye bias correction
+#exclude bad samples and probes according to qc
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE,
+                      QCinfo=qc, nCores=6)
+#inter-array normalization
+mdat<-normalize.quantile.450k(mdat, method="quantile1")
+#probe-type bias adjustment
+beta<-bmiq.mc(mdat, nCores=6)
+@
+
+
+\subsection{Example 2: A more elaborated example}
 <<example, eval=FALSE>>=
 library(ENmix)
 #read in data
@@ -463,13 +483,14 @@ multifreqpoly(beta,main="Methylation Beta value distribution")
 #sample size in this example data is too small for this purpose!
 bb=beta; bb[qc$detP>0.05 | qc$nbead<3]=NA #exclude low quality data first
 nmode<-nmode.mc(bb, minN = 3, modedist=0.2, nCores = 6)
-#background correction and dye bias correction
-mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, nCores=6)
-#exclude samples or CpGs with poor data quality
-#user can also specify an extra list of CpG to be excluded, for example
 outCpG = names(nmode)[nmode>1]
-mdat<-QCfilter(mdat, qcinfo=qc, samplethre = 0.01, CpGthre = 0.05
-    ,plot=TRUE, outid=NULL, outCpG=outCpG)
+#background correction and dye bias correction
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, 
+                      QCinfo=qc, exCpG=outCpG, nCores=6)
+#user also can exclude bad samples and CpGs later by running:
+#mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE,nCores=6)
+#mdat <- mdat[,!(colnames(mdat) %in% qc$badsample)]
+#mdat <- mdat[!(rownames(mdat) %in% qc$badCpG),]
 #inter-array normalization
 mdat<-normalize.quantile.450k(mdat, method="quantile1")
 #probe-type bias adjustment
