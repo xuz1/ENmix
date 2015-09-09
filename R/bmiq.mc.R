@@ -3,7 +3,8 @@ bmiq.mc <-function(mdat,nCores=1,...)
     if(!is(mdat, "MethylSet")){stop("object needs to be of class 'MethylSet'")}
     if(nCores>detectCores()){
         nCores <- detectCores();
-        cat("Only ",detectCores()," Cores avialable, nCores was reset to ",detectCores(),"\n")
+        cat("Only ",nCores," cores are avialable in your computer,", 
+           "argument nCores was reset to nCores=",nCores,"\n")
     }
     cat("Analysis is running, please wait...!","\n")
 

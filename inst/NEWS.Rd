@@ -44,5 +44,11 @@
   \itemize{
     \item Citation information update
 }}
+\section{Version 1.2.0}{
+  \itemize{
+    \item Removed function QCfilter 
+    \item Heavily modified function QCinfo
+    \item Add an argument exSample to preprocessENmix
+}}
 
 
