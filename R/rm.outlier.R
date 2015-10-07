@@ -34,8 +34,8 @@ rm.outlier <-function(mat,byrow=TRUE,qcscore=NULL,detPthre=0.05,nbthre=3,
             cthre=max(cthre,min(3,nrow(tmat))/nrow(tmat))
             mat=tmat[,cpercna<cthre]
             ncout=sum(cpercna>=cthre)
-            print(paste(nrout," rows with percentage of missing data greater than ",rthre," were excluded",sep=""))
-            print(paste(ncout," columns with percentage of missing data greater than ",cthre," were excluded",sep=""))
+            cat(nrout," rows with percentage of missing data greater than ",rthre," were excluded\n")
+            cat(ncout," columns with percentage of missing data greater than ",cthre," were excluded\n")
         }else{
             thre=min(2*rthre,0.3)
             rpercna=apply(is.na(mat),1,sum)/ncol(mat)
@@ -48,8 +48,8 @@ rm.outlier <-function(mat,byrow=TRUE,qcscore=NULL,detPthre=0.05,nbthre=3,
             rthre=max(rthre,min(3,ncol(tmat))/ncol(tmat))
             mat=tmat[rpercna<rthre,]
             nrout=sum(rpercna>=rthre)
-            print(paste(nrout," rows with percentage of missing data greater than ",rthre," were excluded",sep=""))
-            print(paste(ncout," columns with percentage of missing data greater than ",cthre," were excluded",sep=""))
+            cat(nrout," rows with percentage of missing data greater than ",rthre," were excluded\n")
+            cat(ncout," columns with percentage of missing data greater than ",cthre," were excluded\n")
         }
     }
 
