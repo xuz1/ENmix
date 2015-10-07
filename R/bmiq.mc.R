@@ -6,10 +6,11 @@ bmiq.mc <-function(mdat,nCores=1,...)
         cat("Only ",nCores," cores are avialable in your computer,", 
            "argument nCores was reset to nCores=",nCores,"\n")
     }
-    cat("Analysis is running, please wait...!","\n")
 
     anno <- getAnnotation(mdat)
+    cat("Analysis is running, please wait...!","\n")
     beta.b <- getBeta(mdat, "Illumina")
+    rm(mdat)
     beta.b[beta.b <= 0] <- 1e-06
     design.v <- as.vector(anno$Type);
     design.v[design.v == "I"]=1
