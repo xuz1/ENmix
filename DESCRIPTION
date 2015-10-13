@@ -1,5 +1,5 @@
 Package: ENmix
-Version: 1.4.0
+Version: 1.5.0
 Date: 2015-09-09
 Title: Data preprocessing and quality control for Illumina HumanMethylation450 BeadChip
 Type: Package
