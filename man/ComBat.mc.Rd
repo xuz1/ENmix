@@ -16,7 +16,8 @@ ComBat.mc(dat,batch,nCores = 1,...)
   \item{...}{See \code{ComBat} in \code{sva} package for extra options}
 }
 \value{
-A data matrix with the same dimension as input data, adjusted for batch effects.
+A data matrix with the same dimension as input data, adjusted for batch effects. 
+Warning: Values for multimodal distributed CpGs could be over-adjusted. 
 }
 \references{
 Johnson, WE, Rabinovic, A, and Li, C (2007). 

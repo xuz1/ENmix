@@ -327,7 +327,7 @@ b2=rm.outlier(beta,qcscore=qcscore)
 b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE)
 #filter out low quality and outlier values, remove rows and columns
 # with too many missing values, and then do imputation
-b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE,impute=TRUE)
+b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE,impute=TRUE,nCores=5)
 @
 
 \section{Background correction}

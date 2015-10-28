@@ -87,7 +87,7 @@ firstpeak <- function(x,y,sn,dat)
 }
 
 
-enmix_adj <- function(i,meth_i=NULL,bg_i=NULL,bgParaEst)
+enmix_adj <- function(meth_i=NULL,bg_i=NULL,bgParaEst)
 {
     if(sum(is.na(meth_i))>0)
     {stop("ENmix background correction does not allow missing value")}
@@ -117,13 +117,13 @@ if(bgParaEst == "est" | bgParaEst == "neg" | bgParaEst == "oob")
 enmix <- function(meth,bg,bgParaEst,nCores)
 {
     colnm <- colnames(meth)
-    c1 <- makeCluster(nCores)
-    registerDoParallel(c1)
-    meth <- foreach(i=1:ncol(meth),.combine=cbind,.export=c("EM_estimate","new_cm","enmix_adj")) %dopar% {
-    i=i;enmix_adj(i,meth[,i],bg[i,],bgParaEst)}
-    stopCluster(c1)
-    colnames(meth)=colnm
-    meth
+    meth.o <- foreach(i=1:ncol(meth),.combine=cbind,.export=c("EM_estimate","new_cm","enmix_adj")) %dopar% {
+                      i=i;enmix_adj(meth[,i],bg[i,],bgParaEst)}
+    if(is.matrix(meth.o)){if(sum(is.na(meth.o))>0){stop("Computation ran out of memory, try to set 
+        nCores with a smaller value")}}else{
+         stop("Computation ran out of memory, try to set nCores with a smaller value")}
+    colnames(meth.o)=colnm
+    gc(); meth.o
 }
 
 huber_mus <- function(x){ests <- huber(x);c(mu=ests$mu,s=ests$s)}
@@ -177,7 +177,7 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=NULL, 
         mdat=mdat[!(rownames(mdat) %in% exCpG),]
         cat(length(exCpG), " CpGs were excluded before ENmix correction\n")
     }
-
+    rm(QCinfo)
     probe_type <- getProbeType(mdat, withColor=TRUE)
     cat("Analysis is running, please wait...!\n")
 ##estimate background parameters
@@ -261,15 +261,8 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=NULL, 
 	bgRII=bgRI;bgRII$mu=bgRII$mu*A1;bgRII$sigma=bgRII$sigma*A2
         rm(list=c("m_I_red","m_I_grn","mII"))
     }
-
-    methData <- getMeth(mdat)
-    unmethData <- getUnmeth(mdat)
-    methData[probe_type == "IGrn",] <- enmix(methData[probe_type == "IGrn",], bgGI, bgParaEst, nCores)
-    unmethData[probe_type == "IGrn",] <- enmix(unmethData[probe_type == "IGrn",], bgGI, bgParaEst, nCores)
-    methData[probe_type == "II",] <- enmix(methData[probe_type == "II",], bgGII, bgParaEst, nCores)
-    methData[probe_type == "IRed",] <- enmix(methData[probe_type == "IRed",], bgRI, bgParaEst, nCores)
-    unmethData[probe_type == "IRed",] <- enmix(unmethData[probe_type == "IRed",], bgRI, bgParaEst, nCores)
-    unmethData[probe_type == "II",] <- enmix(unmethData[probe_type == "II",], bgRII, bgParaEst, nCores)
+    c1 <- makeCluster(nCores)
+    registerDoParallel(c1)
 
     if (dyeCorr){
       ctrls <- getProbeInfo(rgSet, type="Control")
@@ -289,17 +282,45 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=NULL, 
       ref <- mean(c(Red.avg,Green.avg))
       Grn.factor <- ref/Green.avg
       Red.factor <- ref/Red.avg
+      }
+    rm(rgSet)
+
+    methData <- getMeth(mdat)
+    N=ceiling(ncol(methData)/(nCores*10))
+    parts=rep(1:N,each = ceiling(ncol(methData)/N))[1:ncol(methData)]
+    for(i in 1:N){
+        id=which(parts==i)
+        methD=methData[,id]
+        methD[probe_type == "IGrn",] <- enmix(methD[probe_type == "IGrn",], bgGI[id,], bgParaEst, nCores)
+        methD[probe_type == "IRed",] <- enmix(methD[probe_type == "IRed",], bgRI[id,], bgParaEst, nCores)
+        methD[probe_type == "II",] <- enmix(methD[probe_type == "II",], bgGII[id,], bgParaEst, nCores)
+        methData[,id]=methD;
+    }
+    if (dyeCorr){
       methData[probe_type == "IGrn",] <- sweep(methData[probe_type == "IGrn",], 2, FUN="*", Grn.factor)
-      unmethData[probe_type == "IGrn",] <- sweep(unmethData[probe_type == "IGrn",], 2, FUN="*", Grn.factor)
       methData[probe_type == "II",] <- sweep(methData[probe_type == "II",], 2, FUN="*", Grn.factor)
       methData[probe_type == "IRed",] <- sweep(methData[probe_type == "IRed",], 2, FUN="*", Red.factor)
+    }
+    assayDataElement(mdat, "Meth") <- methData
+    rm(methData)
+
+    unmethData <- getUnmeth(mdat)
+    for(i in 1:N){
+        id=which(parts==i)
+        unmethD=unmethData[,id]
+        unmethD[probe_type == "IGrn",] <- enmix(unmethD[probe_type == "IGrn",], bgGI[id,], bgParaEst, nCores)
+        unmethD[probe_type == "IRed",] <- enmix(unmethD[probe_type == "IRed",], bgRI[id,], bgParaEst, nCores)
+        unmethD[probe_type == "II",] <- enmix(unmethD[probe_type == "II",], bgRII[id,], bgParaEst, nCores)
+        unmethData[,id]=unmethD;
+    }
+    if (dyeCorr){
+      unmethData[probe_type == "IGrn",] <- sweep(unmethData[probe_type == "IGrn",], 2, FUN="*", Grn.factor)
       unmethData[probe_type == "IRed",] <- sweep(unmethData[probe_type == "IRed",], 2, FUN="*", Red.factor)
       unmethData[probe_type == "II",] <- sweep(unmethData[probe_type == "II",], 2, FUN="*", Red.factor)
     }
-    
-    assayDataElement(mdat, "Meth") <- methData
     assayDataElement(mdat, "Unmeth") <- unmethData
-
+    rm(unmethData)
+    stopCluster(c1)
     mdat@preprocessMethod <- c(rg.norm=sprintf("Background correction method: ENmix %s",bgParaEst),
         ENmix=as.character(packageVersion("ENmix")),
         manifest=as.character(packageVersion("IlluminaHumanMethylation450kmanifest")))

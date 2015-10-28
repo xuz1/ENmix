@@ -1,5 +1,5 @@
 rm.outlier <-function(mat,byrow=TRUE,qcscore=NULL,detPthre=0.05,nbthre=3,
-     rmcr=FALSE,rthre=0.05,cthre=0.05,impute=FALSE,imputebyrow=TRUE,...)
+     rmcr=FALSE,rthre=0.05,cthre=0.05,impute=FALSE,imputebyrow=TRUE,nCores=1,...)
 {
     if(!(is.numeric(mat) & is.matrix(mat))){stop("Input data must be a numeric matrix")}
 
@@ -57,15 +57,22 @@ rm.outlier <-function(mat,byrow=TRUE,qcscore=NULL,detPthre=0.05,nbthre=3,
     if(impute)
     {
         if(imputebyrow){mat=t(mat)}
-        impu_resu<-impute.knn(as.matrix(mat),k = 10, rowmax = 0.5, colmax = 0.8, maxp = 1500, rng.seed=362436069)
-        rowname=dimnames(mat)[[1]]
-        colname=dimnames(mat)[[2]]
-        mat=impu_resu$data
-        dimnames(mat)[[1]]=rowname
-        dimnames(mat)[[2]]=colname
+        nparts=min(5,nCores, floor(ncol(mat)/500))
+        nCores=min(nCores,nparts)
+        parts <- rep(1:nparts,ceiling(ncol(mat)/nparts))[1:ncol(mat)]
+        c1 <- makeCluster(nCores)
+        registerDoParallel(c1)
+        rname=dimnames(mat)[[1]]
+        cname=dimnames(mat)[[2]]
+        mat.o<-foreach (s = 1:nCores,.combine=cbind,.export=c("impute.knn"))  %dopar%{
+              s=s; mat1=as.matrix(mat[,which(parts==s)])
+              resu=impute.knn(mat1,...); resu$data}
+        stopCluster(c1)
+        mat=mat.o;rm(mat.o)
+        mat=mat[rname,]
+        mat=mat[,cname]
         if(imputebyrow){mat=t(mat)}
     }
-    return(mat)
+    mat
 }
-
 
