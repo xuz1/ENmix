@@ -1,7 +1,8 @@
 Package: ENmix
-Version: 1.2.1
-Date: 2015-10-12
-Title: Data preprocessing and quality control for Illumina HumanMethylation450 BeadChip
+Version: 1.6.0
+Date: 2015-10-22
+Title: Data preprocessing and quality control for Illumina 
+       HumanMethylation450 BeadChip
 Type: Package
 Authors@R: c(person("Zongli","Xu",role=c("cre","aut"),email="xuz@niehs.nih.gov"),
 	person("Liang","Niu",role=c("aut"),email="niulg@ucmail.uc.edu"),
@@ -34,5 +35,9 @@ Depends: minfi,parallel,doParallel,Biobase (>= 2.17.8),foreach
 Imports: MASS,preprocessCore,wateRmelon,sva,geneplotter,impute
 Suggests: minfiData (>= 0.4.1), RPMM, RUnit, BiocGenerics
 biocViews: DNAMethylation, Preprocessing, QualityControl, TwoChannel, Microarray,
-      OneChannel, MethylationArray, BatchEffect, Normalization, DataImport
+      OneChannel, MethylationArray, BatchEffect, Normalization, DataImport,
+      Regression, PrincipalComponent
 License: Artistic-2.0
+NeedsCompilation: no
+Maintainer: Zongli Xu <xuz@niehs.nih.gov>
+

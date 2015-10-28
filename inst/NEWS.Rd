@@ -50,9 +50,10 @@
     \item Heavily modified function QCinfo
     \item Add an argument exSample to preprocessENmix
 }}
-\section{Version 1.2.1}{
+\section{Version 1.6.0}{
   \itemize{
     \item Improved code for parallel computing
+    \item Added a function freqpoly
 }}
 
 

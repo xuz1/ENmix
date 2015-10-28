@@ -8,8 +8,5 @@ importFrom(impute, impute.knn)
 
 export(preprocessENmix, bmiq.mc, ComBat.mc, 
 	nmode.mc,  normalize.quantile.450k,  plotCtrl,
-	QCinfo, pcrplot, multifreqpoly, rm.outlier)
-
-
-
+	QCinfo, pcrplot, freqpoly, multifreqpoly, rm.outlier)
 

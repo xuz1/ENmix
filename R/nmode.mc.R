@@ -64,11 +64,31 @@ nmode.mc <-function(x,minN=3,modedist=0.2,nCores=1)
     cat("Analysis is running, please wait...!","\n")
 
     CpG <- rownames(x)
-    c1 <- makeCluster(nCores)
-    registerDoParallel(c1)
-    nmode <- foreach(i = 1:nrow(x),.combine=c,.export=c("nmode_est")) %dopar% 
-    {i=i;nmode_est(x[i,], minN,modedist)}
-    stopCluster(c1)
+    if(!(.Platform$OS.type == "unix")){
+        c1 <- makeCluster(nCores)
+        registerDoParallel(c1)
+    }
+
+    nmode=NULL
+    N=ceiling(nrow(x)/(nCores*1200))
+    parts=rep(1:N,each = ceiling(nrow(x)/N))[1:nrow(x)]
+    for(i in 1:N){
+        id=which(parts==i)
+        x.1=x[id,]
+
+    if(.Platform$OS.type == "unix"){
+        nmode_est1 <-function(id,beta,minN,modedist)
+        {nmode_est(beta[id,],minN=minN,modedist=modedist)}
+        nmode.1=mclapply(1:nrow(x.1),nmode_est1,beta=x.1,minN=minN,modedist=modedist,mc.cores=nCores)
+        nmode.1=unlist(nmode.1)
+    }else{
+
+        nmode.1 <- foreach(i = 1:nrow(x.1),.combine=c,.export=c("nmode_est")) %dopar% {
+                 i=i; nmode_est(x.1[i,], minN=minN,modedist=modedist)}
+    }
+        nmode=c(nmode,nmode.1)
+    }
+    if(!(.Platform$OS.type == "unix")){stopCluster(c1)}
     names(nmode) <- CpG
     nmode
 }
