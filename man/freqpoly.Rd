@@ -7,7 +7,8 @@ Frequency polygon plot
 Similar to histogram, frequency polygon plot can be used to display data distribution.
 }
 \usage{
-freqpoly(mat, nbreaks=15, col="black", xlab="", ylab="Frequency", type="l",append=FALSE,...)
+freqpoly(mat, nbreaks=15, col="black", xlab="", ylab="Frequency", 
+         type="l",append=FALSE,...)
 }
 \arguments{
   \item{mat}{A numeric vector}

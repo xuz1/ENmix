@@ -8,7 +8,7 @@ Extract informations for data quanlity controls: detection P values and number o
 }
 \usage{
 QCinfo(rgSet, detPthre=0.05, nbthre=3, samplethre=0.01, CpGthre=0.05,
-          bisulthre=NULL, outlier=TRUE, distplot=TRUE)
+       bisulthre=NULL, outlier=TRUE, distplot=TRUE)
 }
 \arguments{
   \item{rgSet}{An object of class \code{RGChannelSetExtended}.}
