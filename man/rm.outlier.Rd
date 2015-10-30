@@ -8,7 +8,8 @@ Setting outliers as missing value. Outlier was defined as value smaller than 3 t
 }
 \usage{
 rm.outlier(mat,byrow=TRUE,qcscore=NULL,detPthre=0.05,nbthre=3,
-     rmcr=FALSE,rthre=0.05,cthre=0.05,impute=FALSE,imputebyrow=TRUE,nCores=1,...)
+           rmcr=FALSE,rthre=0.05,cthre=0.05,impute=FALSE,
+           imputebyrow=TRUE,nCores=1,...)
 }
 \arguments{
   \item{mat}{An numeric matirx}
