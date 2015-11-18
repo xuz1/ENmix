@@ -55,5 +55,8 @@
     \item Improved code for parallel computing
     \item Added a function freqpoly
 }}
-
+\section{Version 1.7.3}{
+  \itemize{
+    \item Bugfix in function rm.outlier
+}}
 
