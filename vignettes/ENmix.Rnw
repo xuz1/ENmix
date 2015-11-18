@@ -20,7 +20,7 @@ options(width=70)
 
 \title{The \Rpackage{ENmix} User's Guide}
 \author{Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor}
-\date{Modified: September 09, 2015.  Compiled: \today}
+\date{Modified: November 10, 2015.  Compiled: \today}
 \begin{document}
 \maketitle
 
@@ -327,7 +327,7 @@ b2=rm.outlier(beta,qcscore=qcscore)
 b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE)
 #filter out low quality and outlier values, remove rows and columns
 # with too many missing values, and then do imputation
-b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE,impute=TRUE,nCores=5)
+b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE,impute=TRUE)
 @
 
 \section{Background correction}

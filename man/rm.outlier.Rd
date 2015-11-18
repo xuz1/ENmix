@@ -9,7 +9,7 @@ Setting outliers as missing value. Outlier was defined as value smaller than 3 t
 \usage{
 rm.outlier(mat,byrow=TRUE,qcscore=NULL,detPthre=0.05,nbthre=3,
            rmcr=FALSE,rthre=0.05,cthre=0.05,impute=FALSE,
-           imputebyrow=TRUE,nCores=1,...)
+           imputebyrow=TRUE,...)
 }
 \arguments{
   \item{mat}{An numeric matirx}
@@ -22,7 +22,6 @@ rm.outlier(mat,byrow=TRUE,qcscore=NULL,detPthre=0.05,nbthre=3,
   \item{cthre}{Minimum of percentage of missing values for a column to be excluded}
   \item{impute}{Whether to impute missing values. If TRUE, k-nearest neighbors methods will used for imputation. FALSE is in default. Warning: imputed values for multimodal distributed CpGs may not be correct.}
   \item{imputebyrow}{TRUE: impute missing values using similar values in row, or FALSE: in column}
-  \item{nCores}{Number of computer cores to be used for imputation}
   \item{...}{Arguments to be passed to the function impute.knn in R package "impute"}
 }
 \value{
@@ -51,6 +50,6 @@ b2=rm.outlier(beta,qcscore=qcscore)
 #filter out low quality and outlier values, remove rows and columns with too many missing values
 b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE)
 #filter out low quality and outlier values, remove rows and columns with too many missing values, and then do imputation
-b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE,impute=TRUE,nCores=5)
+b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE,impute=TRUE)
 }}
 }
