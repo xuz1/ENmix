@@ -33,9 +33,9 @@ bmiq.mc <-function(mdat,nCores=1,...)
         beta.b[,id]=beta.b1
     }
     stopCluster(c1)
-    if(is.matrix(beta.b)){if(sum(is.na(beta.b))>0){stop("Computation ran out of memory, try to set
-        nCores with a smaller value")}}else{
-         stop("Computation ran out of memory, try to set nCores with a smaller value")}
+    if(is.matrix(beta.b)){if(sum(is.na(beta.b))>0){stop("BMIQ estimates encountered error, try
+        to run it again")}}else{
+         stop("BMIQ estimates encountered error, try to run it again")}
     colnames(beta.b) <- coln
     beta.b
 }

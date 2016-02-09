@@ -7,7 +7,7 @@ QC information.
 Extract informations for data quanlity controls: detection P values and number of beads for each call of methylation beta value.
 }
 \usage{
-QCinfo(rgSet, detPthre=0.05, nbthre=3, samplethre=0.01, CpGthre=0.05,
+QCinfo(rgSet, detPthre=0.000001, nbthre=3, samplethre=0.05, CpGthre=0.05,
        bisulthre=NULL, outlier=TRUE, distplot=TRUE)
 }
 \arguments{

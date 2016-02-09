@@ -59,4 +59,8 @@
   \itemize{
     \item Bugfix in function rm.outlier
 }}
+\section{Version 1.7.5}{
+  \itemize{
+    \item added function rcp for probe type bias correction
+}}
 
