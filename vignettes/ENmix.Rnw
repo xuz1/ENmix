@@ -20,7 +20,7 @@ options(width=70)
 
 \title{The \Rpackage{ENmix} User's Guide}
 \author{Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor}
-\date{Modified: November 10, 2015.  Compiled: \today}
+\date{Modified: February 9, 2016.  Compiled: \today}
 \begin{document}
 \maketitle
 
@@ -368,8 +368,22 @@ of the widely available multi-core computation resources, we provided a few
 parallel computing wrappers to speed up the analysis. 
 
 \subsection{Probe type bias correction}
-Function \Rfunction{bmiq.mc} is a multi-core parallel computing wrapper
- for the \Rfunction{BMIQ} function in R package \Rpackage{wateRmelon}.
+Majority of probes on Illumina 450K and EPIC BeadChips are type II probes. Although 
+type II probes facilitate increased array genome coverage, they were shown to have 
+decreased dynamic range and reproducibility compared to type I probes. Taking advantage 
+of the high spatial correlation of DNA methylation levels along the human genome, The RCP 
+(Regression on Correlated Probes) method utilizes nearby (<25 bp) type I and II probe 
+pairs to derive the quantitative relationship between probe types and then recalibrates
+ type II probe measurements using type I probes as referents. 
+
+<<rcp, eval=FALSE>>=
+beta<-rcp(mdat)
+@
+
+The \Rfunction{BMIQ} function in R package \Rpackage{wateRmelon} can also be used to 
+reduce probe type bias. However the funtion is computation intensive and can take very 
+long time for large dataset. Therefore we here provided a multi-core parallel computing 
+wrapper in the function \Rfunction{bmiq.mc} to speed up the process.
 
 <<bmiq.mc, eval=FALSE>>=
 beta<-bmiq.mc(mdat, nCores=6)
@@ -460,7 +474,7 @@ mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE,
 #inter-array normalization
 mdat<-normalize.quantile.450k(mdat, method="quantile1")
 #probe-type bias adjustment
-beta<-bmiq.mc(mdat, nCores=6)
+beta<-rcp(mdat)
 @
 
 
@@ -494,7 +508,7 @@ mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE,
 #inter-array normalization
 mdat<-normalize.quantile.450k(mdat, method="quantile1")
 #probe-type bias adjustment
-beta<-bmiq.mc(mdat, nCores=6)
+beta<-rcp(mdat, nCores=6)
 # Principal component regression analysis plot
 cov<-data.frame(group=pData(mdat)$Sample_Group,
     slide=factor(pData(mdat)$Slide))

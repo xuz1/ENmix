@@ -21,7 +21,7 @@ mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=qc, nCores=6)
 #inter-array normalization
 mdat<-normalize.quantile.450k(mdat, method="quantile1")
 #probe-type bias adjustment
-beta<-bmiq.mc(mdat, nCores=6)
+beta<-rcp(mdat)
 # Principal component regression analysis plot
 cov<-data.frame(group=pData(mdat)$Sample_Group,
     slide=factor(pData(mdat)$Slide))

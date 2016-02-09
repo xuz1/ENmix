@@ -7,7 +7,7 @@ Filtering out outlier and/or low quality values
 Setting outliers as missing value. Outlier was defined as value smaller than 3 times IQR from the lower quartile or larger than 3 times IQR from the upper quartile. If data quality information were provided, low quality data points will be set to missing first before looking for outliers. If specified, imputation will be performed using k-nearest neighbors method to impute all missing values. 
 }
 \usage{
-rm.outlier(mat,byrow=TRUE,qcscore=NULL,detPthre=0.05,nbthre=3,
+rm.outlier(mat,byrow=TRUE,qcscore=NULL,detPthre=0.000001,nbthre=3,
            rmcr=FALSE,rthre=0.05,cthre=0.05,impute=FALSE,
            imputebyrow=TRUE,...)
 }
@@ -15,7 +15,7 @@ rm.outlier(mat,byrow=TRUE,qcscore=NULL,detPthre=0.05,nbthre=3,
   \item{mat}{An numeric matirx}
   \item{byrow}{TRUE: Looking for outliers row by row, or FALSE: column by column.}
   \item{qcscore}{If the data quality infomation (the output from function QCinfo) were provied, low quality data points as defined by detection p value threshold (detPthre) or number of bead threshold (nbthre) will be set to missing.} 
-  \item{detPthre}{Detection P value threshold to define low qualitye data points, detPthre=0.05 in default.}
+  \item{detPthre}{Detection P value threshold to define low qualitye data points, detPthre=0.000001 in default.}
   \item{nbthre}{Number of beads threshold define low qualitye data points, nbthre=3 in default.}
   \item{rmcr}{TRUE: excluded rows and columns with too many missing values as defined by rthre and cthre. FALSE is in default}
   \item{rthre}{Minimum of percentage of missing values for a row to be excluded}

@@ -1,4 +1,4 @@
-QCinfo <- function(rgSet,detPthre=0.05,nbthre=3,samplethre=0.01,CpGthre=0.05,
+QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05,
           bisulthre=NULL,outlier=TRUE,distplot=TRUE)
 {
     ##number of bead

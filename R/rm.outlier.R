@@ -1,4 +1,4 @@
-rm.outlier <-function(mat,byrow=TRUE,qcscore=NULL,detPthre=0.05,nbthre=3,
+rm.outlier <-function(mat,byrow=TRUE,qcscore=NULL,detPthre=0.000001,nbthre=3,
      rmcr=FALSE,rthre=0.05,cthre=0.05,impute=FALSE,imputebyrow=TRUE,...)
 {
     if(!(is.numeric(mat) & is.matrix(mat))){stop("Input data must be a numeric matrix")}
