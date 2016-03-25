@@ -1,14 +1,14 @@
 Package: ENmix
-Version: 1.7.5
+Version: 1.7.7
 Date: 2016-02-09
 Title: Data preprocessing and quality control for Illumina 
-       HumanMethylation450 BeadChip
+       HumanMethylation450 and MethylationEPIC BeadChip
 Type: Package
 Authors@R: c(person("Zongli","Xu",role=c("cre","aut"),email="xuz@niehs.nih.gov"),
 	person("Liang","Niu",role=c("aut"),email="niulg@ucmail.uc.edu"),
 	person("Leping","Li",role=c("ctb"),email="li3@niehs.nih.gov"),
 	person("Jack","Taylor",role=c("ctb"),email="taylor@niehs.nih.gov"))
-Description: Illumina HumanMethylation450 BeadChip array measurements have 
+Description: Illumina Methylation BeadChip array measurements have 
     intrinsic levels of background noise that degrade methylation measurement.
     The ENmix package provides an efficient data pre-processing tool designed 
     to reduce background noise and improve signal for DNA methylation estimation.

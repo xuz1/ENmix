@@ -1,13 +1,13 @@
-\name{normalize.quantile.450k}
-\alias{normalize.quantile.450k}
+\name{norm.quantile}
+\alias{norm.quantile}
 \title{
 Quantile normalization.
 }
 \description{
-Quantile normalization of methylation intensity data across samples for Illumina Infinium HumanMethylation 450 BeadChip.
+Quantile normalization of methylation intensity data across samples for Illumina Infinium HumanMethylation 450 and MethylationEPIC BeadChip.
 }
 \usage{
-normalize.quantile.450k(mdat, method = "quantile1")
+norm.quantile(mdat, method = "quantile1")
 }
 \arguments{
   \item{mdat}{An object of class \code{MethylSet}.}
@@ -31,7 +31,7 @@ Zongli Xu
 if(FALSE){
 if (require(minfiData)) {
 mdat=preprocessENmix(RGsetEx,bgParaEst="oob",nCores=6)
-mdatq1=normalize.quantile.450k(mdat,method="quantile1")
+mdatq1=norm.quantile(mdat,method="quantile1")
 }}
 }
 

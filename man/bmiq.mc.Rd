@@ -31,7 +31,7 @@ See \code{BMIQ} in R package \code{watermelon} for model details
 if(FALSE){
 if (require(minfiData)) {
 mdat=preprocessENmix(RGsetEx,bgParaEst="oob",nCores=6)
-mdatq1=normalize.quantile.450k(mdat,method="quantile1")
+mdatq1=norm.quantile(mdat,method="quantile1")
 beta=bmiq.mc(mdatq1,nCores=10)
 }}
 }

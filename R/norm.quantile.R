@@ -11,7 +11,7 @@ normalize.q <- function(x)
 }
 
 
-normalize.quantile.450k <- function(mdat,method="quantile1")
+norm.quantile <- function(mdat,method="quantile1")
 {
     if(!is(mdat, "MethylSet")){stop("object needs to be of class 'MethylSet'")}
     cat("Analysis is running, please wait...!","\n")
@@ -68,6 +68,6 @@ normalize.quantile.450k <- function(mdat,method="quantile1")
         assayDataElement(mdat, "Meth")<-methData
         assayDataElement(mdat, "Unmeth")<-unmethData
     }
-    mdat@preprocessMethod <- c(mu.norm="normalize.quantile", preprocessMethod(mdat))
+    mdat@preprocessMethod <- c(mu.norm="norm.quantile", preprocessMethod(mdat))
     mdat
 }

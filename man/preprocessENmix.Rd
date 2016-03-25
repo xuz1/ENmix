@@ -1,20 +1,22 @@
 \name{preprocessENmix}
 \alias{preprocessENmix}
 \title{
-The ENmix background correction for HumanMethylation450k BeadChip
+The ENmix background correction for HumanMethylation 450 and MethylationEPIC  BeadChip
 }
 \description{
-ENmix models methylation signal intensities with a flexible exponential-normal mixture distribution, and models background noise with a truncated normal distribution. ENmix will split 450k BeadChip intensity data into 6 parts and separately model methylated and unmethylated intensities, 2 different color channels and 2 different probe designs.
+ENmix models methylation signal intensities with a flexible exponential-normal mixture distribution, and models background noise with a truncated normal distribution. ENmix will split BeadChip intensity data into 6 parts and separately model methylated and unmethylated intensities, 2 different color channels and 2 different probe designs.
 }
 \usage{
-preprocessENmix(rgSet, bgParaEst = "oob", dyeCorr=TRUE, QCinfo=NULL, 
-                exSample=NULL, exCpG=NULL, nCores = 2)
+preprocessENmix(rgSet, bgParaEst = "oob", dyeCorr=TRUE, QCinfo=NULL, exQCsample=TRUE,
+                    exQCcpg=TRUE, exSample=NULL, exCpG=NULL, nCores = 2)
 }
 \arguments{
   \item{rgSet}{An object of class \code{RGChannelSetExtended}, \code{RGChannelSet} or \code{MethylSet}.}
   \item{bgParaEst}{Optional method to estimate background normal distribution parameters. This must be one of the strings: "oob","est", or "neg".}
   \item{dyeCorr}{Dye bias correction: "TRUE" or "FALSE"}
-  \item{QCinfo}{If QCinfo object from function QCinfo() was provided, low quality samples and CpGs will be excluded before background correction.}
+  \item{QCinfo}{If QCinfo object from function QCinfo() is provided, low quality samples (if exQCsample=TRUE) and CpGs (if exQCcpg=TRUE) will be excluded before background correction.}
+  \item{exQCsample}{If TRUE, low quality samples listed in QCinfo will be excluded.}
+  \item{exQCcpg}{If TRUE, low quality CpGs listed in QCinfo will be excluded.}
   \item{exSample}{User specified sample list to be excluded before background correction}
   \item{exCpG}{User specified probe list to be excluded before background correction}
   \item{nCores}{Number of cores will be used for computation}

@@ -26,7 +26,7 @@ options(width=70)
 
 \section{Introduction}
 
-Illumina HumanMethylation450 BeadChip array measurements have
+Illumina HumanMethylation450 and MethylationEPIC BeadChip array measurements have
 intrinsic levels of background noise that degrade methylation measurement.
 The \Rpackage{ENmix} package provides an efficient data pre-processing tool designed
 to reduce background noise and improve signal for DNA methylation estimation.
@@ -302,10 +302,15 @@ further analysis. Such samples were tricky to be identified, by default
 the argument outlier=TRUE will trigger the function to identify these 
 outlier samples automatically. Quality score figures from
 \Rfunction{QCinfo} can be used to guide the selection of quality score 
-thresholds. 
+thresholds. Low quality samples and probes can be filtered out using 
+\Rfunction{QCfilter} or \Rfunction{preprocessENmix}.
 
 <<filter, eval=FALSE>>=
 qc<-QCinfo(rgSet)
+#exclude before backgroud correction
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=qc, nCores=6)
+#Or exclude after background correction
+mdat <- QCfilter(mdat,qcinfo=qc,outlier=TRUE)
 @
 
 \subsection{Filtering out outliers and low quality data values}
@@ -465,12 +470,14 @@ library(ENmix)
 sheet <- read.450k.sheet(file.path(find.package("minfiData"),
     "extdata"), pattern = "csv$")
 rgSet <- read.450k.exp(targets = sheet, extended = TRUE)
+#for EPIC array use read.metharray.sheet and read.metharray.exp instead
 #QC info
 qc<-QCinfo(rgSet)
 #background correction and dye bias correction
-#exclude bad samples and probes according to qc
-mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE,
-                      QCinfo=qc, nCores=6)
+#if provide qc info, the low quality samples and probes will be excluded before background correction
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=qc, nCores=6)
+#low quality samples and probes can also be excluded after background correction using QCfilter.
+#mdat <- QCfilter(mdat,qcinfo=qc,outlier=TRUE)
 #inter-array normalization
 mdat<-normalize.quantile.450k(mdat, method="quantile1")
 #probe-type bias adjustment
@@ -499,27 +506,20 @@ bb=beta; bb[qc$detP>0.05 | qc$nbead<3]=NA #exclude low quality data first
 nmode<-nmode.mc(bb, minN = 3, modedist=0.2, nCores = 6)
 outCpG = names(nmode)[nmode>1]
 #background correction and dye bias correction
-mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, 
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE,
                       QCinfo=qc, exCpG=outCpG, nCores=6)
-#user also can exclude bad samples and CpGs later by running:
-#mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE,nCores=6)
-#mdat <- mdat[,!(colnames(mdat) %in% qc$badsample)]
-#mdat <- mdat[!(rownames(mdat) %in% qc$badCpG),]
 #inter-array normalization
 mdat<-normalize.quantile.450k(mdat, method="quantile1")
 #probe-type bias adjustment
-beta<-rcp(mdat, nCores=6)
+beta<-rcp(mdat)
 # Principal component regression analysis plot
 cov<-data.frame(group=pData(mdat)$Sample_Group,
     slide=factor(pData(mdat)$Slide))
 pcrplot(beta, cov, npc=6)
-#filter out low quality and outlier values, remove rows and columns
-#with too many missing value, and then do imputation
+#filter out low quality and outlier data points for each probe;
+#rows and columns with too many missing value can be removed if specify;
+#Do imputation to fill missing data if specify.
 beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
-#batch correction 
-#using M values instead of beta values maybe better at this step
-batch<-factor(pData(mdat)[colnames(beta),]$Slide)
-betaC<-ComBat.mc(beta, batch, nCores=6, mod=NULL)
 @
 
 \section{SessionInfo}
@@ -531,6 +531,9 @@ toLatex(sessionInfo())
 Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor, ENmix: a novel background
  correction method for Illumina HumanMethylation450 BeadChip, Nucleic Acids 
 Research, 2015 
+
+Liang Niu, Zongli Xu and Jack A. Taylor, RCP: a novel probe design bias 
+correction method for Illumina Methylation BeadChip, in review
 
 Illumina Inc., Infinium HD Assay Methylation Protocol Guide,  Illumina, Inc.
  San Diego, CA. 
