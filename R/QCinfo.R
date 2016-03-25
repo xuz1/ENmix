@@ -112,10 +112,12 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
     cat(sum(flag)," samples are outliers in beta value distribution","\n")
     flag=flag | flag1
     badsample=c(badsample,colnames(beta)[flag])
+    outlier_sample=colnames(beta)[flag]
     cat(sum(flag)," outlier samples were added into badsample list\n")
     if(ncol(qcmat)<15){
-        cat("WARNING: Sample size is too small, outlier samples may not be correctly identified!\n")
-        cat("RECOMMAND: set outlier=FALSE\n")}
+        cat("WARNING: Sample size may be too small to correctly identify outlier samples!\n")
+        cat("RECOMMAND: set outlier=FALSE or double check total intensity and beta value 
+             distribution plots to confirm\n")}
     }
 
     if(distplot)
@@ -128,12 +130,12 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
              height=500,quality = 100)
         color=rep("black",ncol(beta))
         color[colnames(beta) %in% badsample]="red"
-        multifreqpoly(beta,cex.lab=1.4,cex.axis=1.5, col=color, legend="", 
+        multifreqpoly(beta,cex.lab=1.4,cex.axis=1.5, col=color, legend="",
                 cex.main=1.5,main="Beta value distribution",
                 xlab="Methylation beta value")
         dev.off()
         cat("Done\n")
-        
+
         beta=beta[!(rownames(beta) %in% badCpG),]
         beta=beta[,!(colnames(beta) %in% badsample)]
         cat("Ploting freqpolygon_beta_afterQC.jpg ...")
@@ -145,7 +147,11 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
         dev.off()
         cat("Done\n")
     }
-    list(detP=detP,nbead=nbead,bisul=bisul,badsample=badsample,badCpG=badCpG)
+
+    if(outlier)
+    {list(detP=detP,nbead=nbead,bisul=bisul,badsample=badsample,badCpG=badCpG,
+          outlier_sample=outlier_sample)
+    }else{list(detP=detP,nbead=nbead,bisul=bisul,badsample=badsample,badCpG=badCpG)}
 }
 
 

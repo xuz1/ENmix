@@ -145,8 +145,8 @@ estBG  <- function(meth_i)
 }
 
 ##background correction
-preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=NULL, exSample=NULL,
-                     exCpG=NULL, nCores=2)
+preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=NULL, exQCsample=TRUE, 
+                    exQCcpg=TRUE, exSample=NULL, exCpG=NULL, nCores=2)
 {
     if(is(rgSet, "RGChannelSet")){
         if(!is.null(QCinfo)){exSample=unique(c(QCinfo$badsample, exSample))}
@@ -157,7 +157,7 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=NULL, 
         }
         mdat <- preprocessRaw(rgSet)
     }else if(is(mdat, "MethylSet")){
-        if(!is.null(QCinfo)){exSample=unique(c(QCinfo$badsample, exSample))}
+        if(!is.null(QCinfo) & exQCsample){exSample=unique(c(QCinfo$badsample, exSample))}
         exSample=exSample[exSample %in% colnames(rgSet)]
         if(length(exSample)>0){
             rgSet=rgSet[,!(colnames(rgSet) %in% exSample)]
@@ -171,7 +171,7 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=NULL, 
         nCores=detectCores(); 
         cat("Only ",detectCores(), " cores avialable, nCores was reset to ",detectCores(),"\n")
     }
-    if(!is.null(QCinfo)) {exCpG=unique(c(exCpG, QCinfo$badCpG))}
+    if(!is.null(QCinfo) & exQCcpg) {exCpG=unique(c(exCpG, QCinfo$badCpG))}
     exCpG=exCpG[exCpG %in% rownames(mdat)]
     if(length(exCpG)>0){
         mdat=mdat[!(rownames(mdat) %in% exCpG),]
@@ -321,9 +321,7 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=NULL, 
     assayDataElement(mdat, "Unmeth") <- unmethData
     rm(unmethData)
     stopCluster(c1)
-    mdat@preprocessMethod <- c(rg.norm=sprintf("Background correction method: ENmix %s",bgParaEst),
-        ENmix=as.character(packageVersion("ENmix")),
-        manifest=as.character(packageVersion("IlluminaHumanMethylation450kmanifest")))
+    mdat@preprocessMethod <- c(mu.norm = sprintf("ENmix, dyeCorr=%s", dyeCorr))
     mdat
 }
 

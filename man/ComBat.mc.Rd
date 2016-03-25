@@ -34,7 +34,7 @@ See \code{ComBat} in \code{sva} package for details.
 if(FALSE){
 if (require(minfiData)) {
 mdat=preprocessENmix(RGsetEx,bgParaEst="oob",nCores=6)
-mdat=normalize.quantile.450k(mdat,method="quantile1")
+mdat=norm.quantile(mdat,method="quantile1")
 beta=bmiq.mc(mdat,nCores=10)
 batch=factor(pData(mdat)$Slide)
 betaC=ComBat.mc(beta,batch,nCores=6,mod=NULL)

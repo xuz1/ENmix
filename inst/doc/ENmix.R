@@ -17,7 +17,8 @@ bb=beta; bb[qc$detP>0.05 | qc$nbead<3]=NA #exclude low quality data first
 nmode<-nmode.mc(bb, minN = 3, modedist=0.2, nCores = 6)
 outCpG = names(nmode)[nmode>1]
 #background correction and dye bias correction
-mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=qc, nCores=6)
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE,
+                      QCinfo=qc, exCpG=outCpG, nCores=6)
 #inter-array normalization
 mdat<-normalize.quantile.450k(mdat, method="quantile1")
 #probe-type bias adjustment
@@ -26,12 +27,10 @@ beta<-rcp(mdat)
 cov<-data.frame(group=pData(mdat)$Sample_Group,
     slide=factor(pData(mdat)$Slide))
 pcrplot(beta, cov, npc=6)
-#filter out low quality and outlier values, remove rows and columns
-#with too many missing value, and then do imputation
+#filter out low quality and outlier data points for each probe;
+#rows and columns with too many missing value can be removed if specify;
+#Do imputation to fill missing data if specify.
 beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
-#batch correction
-#using M values instead of beta values maybe better at this step
-batch<-factor(pData(mdat)[colnames(beta),]$Slide)
-betaC<-ComBat.mc(beta, batch, nCores=6, mod=NULL)
 
-                                                                                             
+
+

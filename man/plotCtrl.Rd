@@ -1,10 +1,10 @@
 \name{plotCtrl}
 \alias{plotCtrl}
 \title{
-Plot internal controls of 450K BeadChip.
+Plot internal controls of 450K  or MethylationEPIC BeadChip.
 }
 \description{
-Intensity data are ploted for all internal control probe types on the Illumina Infinium HumanMethylation450 BeadChip. These figures can be used to check data quality and experimental procedures. 
+Intensity data are ploted for all internal control probe types on the Illumina Infinium HumanMethylation450 or MethylationEPIC BeadChip. These figures can be used to check data quality and experimental procedures. 
 }
 \usage{
 plotCtrl(rgSet,IDorder=NULL)
