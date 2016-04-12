@@ -9,7 +9,7 @@ The function can also identify low quality samples and probes, as well as outlie
 }
 \usage{
 QCinfo(rgSet, detPthre=0.000001, nbthre=3, samplethre=0.05, CpGthre=0.05,
-       bisulthre=NULL, outlier=TRUE,distplot=TRUE)
+       bisulthre=NULL, outlier=TRUE, distplot=TRUE)
 }
 \arguments{
   \item{rgSet}{An object of class \code{RGChannelSetExtended}.}
