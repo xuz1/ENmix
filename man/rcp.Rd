@@ -26,7 +26,7 @@ A beta value matrix
 }
 \references{
 Liang Niu, Zongli Xu and Jack A. Taylor
-\emph{RCP: a novel probe design bias correction method for Illumina Methylation BeadChip, in review}
+\emph{RCP: a novel probe design bias correction method for Illumina Methylation BeadChip, Bioinformatics 2016}
 }
 \author{
 Liang Niu, Zongli Xu

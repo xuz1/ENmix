@@ -20,7 +20,7 @@ options(width=70)
 
 \title{The \Rpackage{ENmix} User's Guide}
 \author{Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor}
-\date{Modified: March 29, 2016.  Compiled: \today}
+\date{Modified: April 28, 2016.  Compiled: \today}
 \begin{document}
 \maketitle
 
@@ -533,7 +533,7 @@ Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor, ENmix: a novel background
 Research, 2015 
 
 Liang Niu, Zongli Xu and Jack A. Taylor, RCP: a novel probe design bias 
-correction method for Illumina Methylation BeadChip, in review
+correction method for Illumina Methylation BeadChip, Bioinformatics 2016 
 
 Illumina Inc., Infinium HD Assay Methylation Protocol Guide,  Illumina, Inc.
  San Diego, CA. 
