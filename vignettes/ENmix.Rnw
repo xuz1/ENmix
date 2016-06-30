@@ -20,7 +20,7 @@ options(width=70)
 
 \title{The \Rpackage{ENmix} User's Guide}
 \author{Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor}
-\date{Modified: April 28, 2016.  Compiled: \today}
+\date{Modified: June 30, 2016.  Compiled: \today}
 \begin{document}
 \maketitle
 
@@ -264,9 +264,11 @@ par(mfrow=c(3,2))
 multidensity(beta,main="Multidensity")
 multifreqpoly(beta,main="Multifreqpoly",xlab="Beta value")
 multidensity(beta1,main="Multidensity: Infinium I")
-multifreqpoly(beta1,main="Multifreqpoly: Infinium I",xlab="Beta value")
+multifreqpoly(beta1,main="Multifreqpoly: Infinium I",
+xlab="Beta value")
 multidensity(beta2,main="Multidensity: Infinium II")
-multifreqpoly(beta2,main="Multifreqpoly: Infinium II",xlab="Beta value")
+multifreqpoly(beta2,main="Multifreqpoly: Infinium II",
+xlab="Beta value")
 dev.off()
 @
 
@@ -308,7 +310,8 @@ thresholds. Low quality samples and probes can be filtered out using
 <<filter, eval=FALSE>>=
 qc<-QCinfo(rgSet)
 #exclude before backgroud correction
-mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=qc, nCores=6)
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, 
+QCinfo=qc, nCores=6)
 #Or exclude after background correction
 mdat <- QCfilter(mdat,qcinfo=qc,outlier=TRUE)
 @
@@ -355,8 +358,8 @@ of samples or probes to be excluded before background correction.
  
 <<preprocessENmix, eval=FALSE>>=
 qc=QCinfo(rgSet)
-mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=qc, 
-exCpG=NULL, nCores=6)
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, 
+QCinfo=qc, exCpG=NULL, nCores=6)
 @
 
 \section{Inter-array normalization}
@@ -467,16 +470,18 @@ Working with IDAT raw methylation data files
 <<example, eval=FALSE>>=
 library(ENmix)
 #read in data
-sheet <- read.450k.sheet(file.path(find.package("minfiData"),
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
     "extdata"), pattern = "csv$")
-rgSet <- read.450k.exp(targets = sheet, extended = TRUE)
-#for EPIC array use read.metharray.sheet and read.metharray.exp instead
+rgSet <- read.metharray.exp(targets = sheet, extended = TRUE)
 #QC info
 qc<-QCinfo(rgSet)
 #background correction and dye bias correction
-#if provide qc info, the low quality samples and probes will be excluded before background correction
-mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=qc, nCores=6)
-#low quality samples and probes can also be excluded after background correction using QCfilter.
+#if provide qc info, the low quality samples and probes 
+#will be excluded before background correction
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, 
+QCinfo=qc, nCores=6)
+#low quality samples and probes can also be excluded after 
+#background correction using QCfilter.
 #mdat <- QCfilter(mdat,qcinfo=qc,outlier=TRUE)
 #inter-array normalization
 mdat<-normalize.quantile.450k(mdat, method="quantile1")
@@ -489,9 +494,9 @@ beta<-rcp(mdat)
 <<example, eval=FALSE>>=
 library(ENmix)
 #read in data
-sheet <- read.450k.sheet(file.path(find.package("minfiData"),
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
     "extdata"), pattern = "csv$")
-rgSet <- read.450k.exp(targets = sheet, extended = TRUE)
+rgSet <- read.metharray.exp(targets = sheet, extended = TRUE)
 #control plots
 plotCtrl(rgSet)
 #QC info
@@ -502,7 +507,8 @@ beta<-getBeta(mraw, "Illumina")
 multifreqpoly(beta,main="Methylation Beta value distribution")
 #Search for multimodal CpGs
 #sample size in this example data is too small for this purpose!
-bb=beta; bb[qc$detP>0.05 | qc$nbead<3]=NA #exclude low quality data first
+#exclude low quality data first
+bb=beta; bb[qc$detP>0.05 | qc$nbead<3]=NA 
 nmode<-nmode.mc(bb, minN = 3, modedist=0.2, nCores = 6)
 outCpG = names(nmode)[nmode>1]
 #background correction and dye bias correction
@@ -517,8 +523,8 @@ cov<-data.frame(group=pData(mdat)$Sample_Group,
     slide=factor(pData(mdat)$Slide))
 pcrplot(beta, cov, npc=6)
 #filter out low quality and outlier data points for each probe;
-#rows and columns with too many missing value can be removed if specify;
-#Do imputation to fill missing data if specify.
+#rows and columns with too many missing value can be removed 
+#if specify; Do imputation to fill missing data if specify.
 beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
 @
 
@@ -534,6 +540,11 @@ Research, 2015
 
 Liang Niu, Zongli Xu and Jack A. Taylor, RCP: a novel probe design bias 
 correction method for Illumina Methylation BeadChip, Bioinformatics 2016 
+
+Zongli Xu, Jack A. Taylor, Yuet-Kin Leung, Shuk-Mei Ho and Liang Niu,
+oxBS-MLE: An efficient method to estimate 5-methylcytosine and 
+5-hydroxymethylcytosine in paired bisulfite and oxidative bisulfite 
+treated DNA, under review.
 
 Illumina Inc., Infinium HD Assay Methylation Protocol Guide,  Illumina, Inc.
  San Diego, CA. 
