@@ -7,8 +7,36 @@ c(bibentry(bibtype = "Article",
            person("Leping", "Li"),
            person("Jack,A.", "Taylor")
            ),
-           year = 2015,
+           year = 2016,
            journal = "Nucleic Acids Research",
-	   header = "ENmix R pacakge")
+           pubmed = "26384415",
+	   header = "ENmix R pacakge"),
+
+  bibentry(bibtype = "Article",
+           key = "RCP",
+           author = c(
+           person("Zongli", "Xu"),
+           person("Liang", "Niu"),
+           person("Jack,A.", "Taylor")
+                ),
+           title = "RCP: a novel probe design bias correction method for Illumina Methylation BeadChip",
+           journal = "Bioinformatics",
+           year = "2016",
+           pubmed = "27153672",
+           header = "RCP probe type bias correction"),
+
+  bibentry(bibtype = "Article",
+           key = "oxBS-MLE",
+           author = c(
+           person("Zongli", "Xu"),
+           person("Jack,A.", "Taylor"),
+           person("Yuet-Kin", "Leung"),
+           person("Shuk-Mei", "Ho"),
+           person("Liang", "Niu")
+                ),
+           title = "oxBS-MLE: An efficient method to estimate 5-methylcytosine and 5-hydroxymethylcytosine in paired bisulfite and oxidative bisulfite treated DNA",
+           journal = "Bioinformatics",
+           year = "2016",
+           header = "oxBS-MLE to estimate 5-hydroxymethylcytosine")
   )
 
