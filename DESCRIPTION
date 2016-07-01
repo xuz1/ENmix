@@ -35,7 +35,7 @@ Description: Illumina Methylation BeadChip array measurements have
     component regression analysis plots. Together these provide a set of
     flexible and transparent tools for preprocessing of EWAS data in a
     computationally-efficient and user-friendly package.
-Depends: minfi,parallel,doParallel,Biobase (>= 2.17.8),foreach
+Depends:  minfi,parallel,doParallel,Biobase (>= 2.17.8),foreach
 Imports: MASS,preprocessCore,wateRmelon,sva,geneplotter,impute
 Suggests: minfiData (>= 0.4.1), RPMM, RUnit, BiocGenerics
 biocViews: DNAMethylation, Preprocessing, QualityControl, TwoChannel, Microarray,
