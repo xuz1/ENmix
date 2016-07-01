@@ -1,7 +1,7 @@
 \name{oxBS.MLE}
 \alias{oxBS.MLE}
 \title{
-oxBS-MLE
+oxBS-MLE.
 }
 \description{
 Find the Maximum Likelihood Estimate (MLE) of 5-methylcytosine (5mC) and 5-hydroxymethylcytosine (5hmC)
@@ -24,11 +24,12 @@ A list with two elements:
 \code{5hmC}: a matrix for estimated 5hmC levels.
 }
 \details{
-For all the arguments (\code{beta.BS}, \code{beta.oxBS}, \code{N.BS} and \code{N.oxBS}), the rows are corresponding to CpG loci and the columns are corresponding to samples.
-The order of rows/columns in all four matrices should be consistent.
-The function outputs the MLE of 5mC and 5hmC levels at each CpG locus in each sample based on a binomial model.
+For all the inputs (\code{beta.BS}, \code{beta.oxBS}, \code{N.BS} and \code{N.oxBS}), the rows should be corresponding to CpG loci and the columns should be corresponding to samples.
+The order of rows/columns in all four matrices should be consistent (otherwise \code{oxBS.MLE}  will stop with error messages).
+Using a binomial model at each CpG locus in each sample, \code{oxBS.MLE} outputs a list with two matrices: a matrix of MLEs of 5mC levels and a matrix of MLEs of 5hmC levels.
+The rows and columns of both matrices are consistent with the rows and columns of the input matrices.
 For any CpG locus in any sample, if any of the four corresponding values (\code{beta.BS}, \code{beta.oxBS}, \code{N.BS} and \code{N.oxBS}) is \code{NA},
-or \code{N.BS} is zero, or \code{N.oxBS} is zero, the output of both 5mC and 5hmC levels will be \code{NA}.
+or \code{N.BS} is zero, or \code{N.oxBS} is zero, the MLE of both 5mC and 5hmC levels will be set as \code{NA}.
 }
 \references{
 Zongli Xu, Jack A. Taylor, Yuet-Kin Leung, Shuk-Mei Ho and Liang Niu,
