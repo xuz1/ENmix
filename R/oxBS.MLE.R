@@ -11,9 +11,9 @@ oxBS.MLE<-function(beta.BS,beta.oxBS,N.BS,N.oxBS){
     }
     else {
         # filter the measurements to do estimation
-            index<-!(is.na(beta.BS) | is.na(beta.oxBS) | is.na(N.BS) | is.na(N.oxBS) 
+            index<-!(is.na(beta.BS) | is.na(beta.oxBS) | is.na(N.BS) | is.na(N.oxBS)
                | N.BS==0 | N.oxBS==0)
-            weight.BS<-N.BS[index]/(N.BS[index]+N.oxBS[index]) 
+            weight.BS<-N.BS[index]/(N.BS[index]+N.oxBS[index])
             weight.oxBS<-(1-weight.BS);
 
         # oxBS-MLE
