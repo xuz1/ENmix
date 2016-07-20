@@ -20,7 +20,7 @@ options(width=70)
 
 \title{The \Rpackage{ENmix} User's Guide}
 \author{Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor}
-\date{Modified: June 30, 2016.  Compiled: \today}
+\date{Modified: July 15, 2016.  Compiled: \today}
 \begin{document}
 \maketitle
 
@@ -545,6 +545,10 @@ Zongli Xu, Jack A. Taylor, Yuet-Kin Leung, Shuk-Mei Ho and Liang Niu,
 oxBS-MLE: An efficient method to estimate 5-methylcytosine and 
 5-hydroxymethylcytosine in paired bisulfite and oxidative bisulfite 
 treated DNA, under review.
+
+Zongli Xu, Sabine A. S. Langie, Patrick De Boever, Jack A. Taylor1 and 
+Liang Niu, RELIC: a novel dye-bias correction method for Illumina 
+Methylation BeadChip, in review 2016
 
 Illumina Inc., Infinium HD Assay Methylation Protocol Guide,  Illumina, Inc.
  San Diego, CA. 
