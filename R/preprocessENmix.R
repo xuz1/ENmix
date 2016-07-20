@@ -106,7 +106,7 @@ if(bgParaEst == "est" | bgParaEst == "neg" | bgParaEst == "oob")
     p2 <- 1-p1
     meth_adj <- new_cm(lambda,mu2,sigma2,p1,p2,mu,sigma,meth_i)
     meth_adj[meth_adj <= 0]=0.01 #restrict to positive values, only a few
-}else if (bgParaEst == "subtract_neg" | bgParaEst == "subtract_estBG"  | bgParaEst == "subtract_q5neg" 
+}else if (bgParaEst == "subtract_neg" | bgParaEst == "subtract_estBG"  | bgParaEst == "subtract_q5neg"
      | bgParaEst == "subtract_oob"){
     meth_adj=meth_i-mu
     meth_adj[meth_adj <= 0]=0.01 #restrict to positive values
@@ -119,7 +119,7 @@ enmix <- function(meth,bg,bgParaEst,nCores)
     colnm <- colnames(meth)
     meth.o <- foreach(i=1:ncol(meth),.combine=cbind,.export=c("EM_estimate","new_cm","enmix_adj")) %dopar% {
                       i=i;enmix_adj(meth[,i],bg[i,],bgParaEst)}
-    if(is.matrix(meth.o)){if(sum(is.na(meth.o))>0){stop("Computation ran out of memory, try to set 
+    if(is.matrix(meth.o)){if(sum(is.na(meth.o))>0){stop("Computation ran out of memory, try to set
         nCores with a smaller value")}}else{
          stop("Computation ran out of memory, try to set nCores with a smaller value")}
     colnames(meth.o)=colnm
@@ -133,7 +133,7 @@ estBG  <- function(meth_i)
 {
     meth_i[meth_i<=0]=1e-06
     temp <- density(meth_i)
-    temp <- density(meth_i[meth_i<temp$x[which.max(temp$y)]])  
+    temp <- density(meth_i[meth_i<temp$x[which.max(temp$y)]])
     flag <- temp$x>=min(meth_i) & temp$x<=max(meth_i)
     temp$x <- temp$x[flag];temp$y=temp$y[flag]
     mu <- temp$x[which.max(temp$y)]
@@ -145,7 +145,7 @@ estBG  <- function(meth_i)
 }
 
 ##background correction
-preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC", QCinfo=NULL, exQCsample=TRUE, 
+preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC", QCinfo=NULL, exQCsample=TRUE,
                     exQCcpg=TRUE, exSample=NULL, exCpG=NULL, nCores=2)
 {
     if(is(rgSet, "RGChannelSet")){
@@ -188,7 +188,7 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC", QCinfo=NUL
         ctrl_address <- as.vector(ctrls$Address[ctrls$Type %in% "NEGATIVE"])
         ctrl_r <- getRed(rgSet)[ctrl_address,]
         ctrl_g <- getGreen(rgSet)[ctrl_address,]
-        ctrl_r[ctrl_r<=0]=1e-06;ctrl_g[ctrl_g<=0]=1e-06  
+        ctrl_r[ctrl_r<=0]=1e-06;ctrl_g[ctrl_g<=0]=1e-06
         temp <- apply(ctrl_r,2,huber_mus)
         mu <- temp["mu",];sigma <- temp["s",]
         bgRI <- as.data.frame(cbind(mu,sigma))
@@ -285,9 +285,9 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC", QCinfo=NUL
       }else if(dyeCorr =="RELIC"){
     ctrls<-getProbeInfo(rgSet,type="Control")
     ctrls<-ctrls[ctrls$Address %in% featureNames(rgSet),]
-    ctrl_r<-getRed(rgSet)[ctrls$Address,] 
+    ctrl_r<-getRed(rgSet)[ctrls$Address,]
     ctrl_g<-getGreen(rgSet)[ctrls$Address,]
-    CG.controls<-ctrls$Type %in% c("NORM_C","NORM_G") 
+    CG.controls<-ctrls$Type %in% c("NORM_C","NORM_G")
     AT.controls<-ctrls$Type %in% c("NORM_A","NORM_T")
     cg_grn<-ctrl_g[CG.controls,];rownames(cg_grn)=ctrls$ExtendedType[CG.controls]
     at_red<-ctrl_r[AT.controls,];rownames(at_red)=ctrls$ExtendedType[AT.controls]
