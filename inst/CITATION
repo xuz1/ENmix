@@ -35,8 +35,22 @@ c(bibentry(bibtype = "Article",
            person("Liang", "Niu")
                 ),
            title = "oxBS-MLE: An efficient method to estimate 5-methylcytosine and 5-hydroxymethylcytosine in paired bisulfite and oxidative bisulfite treated DNA",
-           journal = "Bioinformatics",
+           journal = "In review",
            year = "2016",
-           header = "oxBS-MLE to estimate 5-hydroxymethylcytosine")
-  )
+           header = "oxBS-MLE to estimate 5-hydroxymethylcytosine"),
+
+  bibentry(bibtype = "Article",
+           key = "RELIC",
+           author = c(
+           person("Zongli", "Xu"),
+           person("Jack,A.", "Taylor"),
+           person("Sabine,A.S.", "Langie"),
+           person("Patrick,De", "Boever"),
+           person("Liang", "Niu")
+                ),
+           title = "RELIC: a novel dye-bias correction method for Illumina Methylation BeadChip",
+           journal = "In review",
+           year = "2016",
+           header = "RELIC dye-bias correction")
+)
 

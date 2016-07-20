@@ -145,7 +145,7 @@ estBG  <- function(meth_i)
 }
 
 ##background correction
-preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=NULL, exQCsample=TRUE, 
+preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC", QCinfo=NULL, exQCsample=TRUE, 
                     exQCcpg=TRUE, exSample=NULL, exCpG=NULL, nCores=2)
 {
     if(is(rgSet, "RGChannelSet")){
@@ -264,7 +264,7 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=NULL, 
     c1 <- makeCluster(nCores)
     registerDoParallel(c1)
 
-    if (dyeCorr){
+    if (dyeCorr == "mean"){
       ctrls <- getProbeInfo(rgSet, type="Control")
       ctrls <- ctrls[ctrls$Address %in% featureNames(rgSet),]
       ctrl_r <- getRed(rgSet)[ctrls$Address,]
@@ -282,6 +282,17 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=NULL, 
       ref <- mean(c(Red.avg,Green.avg))
       Grn.factor <- ref/Green.avg
       Red.factor <- ref/Red.avg
+      }else if(dyeCorr =="RELIC"){
+    ctrls<-getProbeInfo(rgSet,type="Control")
+    ctrls<-ctrls[ctrls$Address %in% featureNames(rgSet),]
+    ctrl_r<-getRed(rgSet)[ctrls$Address,] 
+    ctrl_g<-getGreen(rgSet)[ctrls$Address,]
+    CG.controls<-ctrls$Type %in% c("NORM_C","NORM_G") 
+    AT.controls<-ctrls$Type %in% c("NORM_A","NORM_T")
+    cg_grn<-ctrl_g[CG.controls,];rownames(cg_grn)=ctrls$ExtendedType[CG.controls]
+    at_red<-ctrl_r[AT.controls,];rownames(at_red)=ctrls$ExtendedType[AT.controls]
+      cg_grn <- enmix(cg_grn,bgGI,bgParaEst,nCores)
+      at_red <- enmix(at_red,bgRI,bgParaEst,nCores)
       }
     rm(rgSet)
 
@@ -296,7 +307,7 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=NULL, 
         methD[probe_type == "II",] <- enmix(methD[probe_type == "II",], bgGII[id,], bgParaEst, nCores)
         methData[,id]=methD;
     }
-    if (dyeCorr){
+    if (dyeCorr == "mean"){
       methData[probe_type == "IGrn",] <- sweep(methData[probe_type == "IGrn",], 2, FUN="*", Grn.factor)
       methData[probe_type == "II",] <- sweep(methData[probe_type == "II",], 2, FUN="*", Grn.factor)
       methData[probe_type == "IRed",] <- sweep(methData[probe_type == "IRed",], 2, FUN="*", Red.factor)
@@ -313,7 +324,7 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=NULL, 
         unmethD[probe_type == "II",] <- enmix(unmethD[probe_type == "II",], bgRII[id,], bgParaEst, nCores)
         unmethData[,id]=unmethD;
     }
-    if (dyeCorr){
+    if (dyeCorr == "mean"){
       unmethData[probe_type == "IGrn",] <- sweep(unmethData[probe_type == "IGrn",], 2, FUN="*", Grn.factor)
       unmethData[probe_type == "IRed",] <- sweep(unmethData[probe_type == "IRed",], 2, FUN="*", Red.factor)
       unmethData[probe_type == "II",] <- sweep(unmethData[probe_type == "II",], 2, FUN="*", Red.factor)
@@ -321,6 +332,7 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr=TRUE, QCinfo=NULL, 
     assayDataElement(mdat, "Unmeth") <- unmethData
     rm(unmethData)
     stopCluster(c1)
+    if(dyeCorr =="RELIC"){mdat=relic(mdat,at_red,cg_grn)}
     mdat@preprocessMethod <- c(mu.norm = sprintf("ENmix, dyeCorr=%s", dyeCorr))
     mdat
 }
