@@ -63,15 +63,15 @@
   \itemize{
     \item added function rcp for probe type bias correction
 }}
-\section{Version 1.8.3}{
+\section{Version 1.9.1}{
   \itemize{
     \item added function oxBS.MLE
 }}
-\section{Version 1.8.5}{
+\section{Version 1.9.2}{
   \itemize{
     \item added function ctrlsva
 }}
-\section{Version 1.8.7}{
+\section{Version 1.9.3}{
   \itemize{
     \item added function relic
 }}
