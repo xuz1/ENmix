@@ -29,8 +29,8 @@ Zongli Xu
 \examples{
 if(FALSE){
 if (require(minfiData)) {
-sheet <- read.450k.sheet(file.path(find.package("minfiData"),"extdata"), pattern = "csv$")
-rgSet <- read.450k.exp(targets = sheet,extended = TRUE)
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),"extdata"), pattern = "csv$")
+rgSet <- read.metharray.exp(targets = sheet,extended = TRUE)
 sva<-ctrl(rgSet)
 }}
 }

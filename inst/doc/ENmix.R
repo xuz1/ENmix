@@ -1,8 +1,8 @@
 library(ENmix)
 #read in data
-sheet <- read.450k.sheet(file.path(find.package("minfiData"),
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
     "extdata"), pattern = "csv$")
-rgSet <- read.450k.exp(targets = sheet, extended = TRUE)
+rgSet <- read.metharray.exp(targets = sheet, extended = TRUE)
 #control plots
 plotCtrl(rgSet)
 #QC info

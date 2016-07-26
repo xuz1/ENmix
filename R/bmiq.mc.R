@@ -2,9 +2,9 @@ bmiq.mc <-function(mdat,nCores=1,...)
 {
     if(!is(mdat, "MethylSet")){stop("object needs to be of class 'MethylSet'")}
     if(nCores>detectCores()){
-        nCores <- detectCores();
-        cat("Only ",nCores," cores are avialable in your computer,", 
-           "argument nCores was reset to nCores=",nCores,"\n")
+    nCores <- detectCores();
+    cat("Only ",nCores," cores are avialable in your computer,", 
+       "argument nCores was reset to nCores=",nCores,"\n")
     }
 
     anno <- getAnnotation(mdat)
@@ -23,19 +23,19 @@ bmiq.mc <-function(mdat,nCores=1,...)
     c1 <- makeCluster(nCores)
     registerDoParallel(c1)
     for(i in 1:N){
-        id=which(parts==i)
-        beta.b1=beta.b[,id]
+    id=which(parts==i)
+    beta.b1=beta.b[,id]
 
-        beta.b1 <- foreach (s = 1:ncol(beta.b1),.combine=cbind,.export=c("BMIQ"))  %dopar%{
-            s=s;out <- BMIQ(beta.b1[, s], design.v=design.v, plots = FALSE,...)
-            out$nbeta
-        }
-        beta.b[,id]=beta.b1
+    beta.b1 <- foreach (s = 1:ncol(beta.b1),.combine=cbind,.export=c("BMIQ"))%dopar%{
+    s=s;out <- BMIQ(beta.b1[, s], design.v=design.v, plots = FALSE,...)
+    out$nbeta
+    }
+    beta.b[,id]=beta.b1
     }
     stopCluster(c1)
-    if(is.matrix(beta.b)){if(sum(is.na(beta.b))>0){stop("BMIQ estimates encountered error, try
-        to run it again")}}else{
-         stop("BMIQ estimates encountered error, try to run it again")}
+    if(is.matrix(beta.b)){if(sum(is.na(beta.b))>0){stop("BMIQ estimates 
+    encountered error, try to run it again")}}else{
+     stop("BMIQ estimates encountered error, try to run it again")}
     colnames(beta.b) <- coln
     beta.b
 }
