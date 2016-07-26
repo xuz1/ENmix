@@ -1,8 +1,9 @@
 import(Biobase,minfi,parallel,doParallel,foreach)
-importFrom(MASS, huber)
+importFrom(MASS,huber)
 importFrom(preprocessCore,normalize.quantiles)
 importFrom(wateRmelon,BMIQ)
 importFrom(sva,ComBat)
+<<<<<<< HEAD
 importFrom(geneplotter, multidensity)
 importFrom(impute, impute.knn)
 importFrom("grDevices", "dev.off", "jpeg")
@@ -10,9 +11,18 @@ importFrom("graphics", "abline", "axis", "boxplot", "hist", "legend",
            "lines", "par", "plot", "polygon", "text")
 importFrom("stats", "density", "dexp", "dnorm", "lm", "na.omit", "pf",
            "pnorm", "prcomp", "quantile", "screeplot", "sd")
+=======
+importFrom(geneplotter,multidensity)
+importFrom(impute,impute.knn)
+importFrom("grDevices","dev.off","jpeg")
+importFrom("graphics","abline","axis","boxplot","hist","legend",
+    "lines","par","plot","polygon","text")
+    importFrom("stats","density","dexp","dnorm","lm","na.omit","pf",
+    "pnorm","prcomp","quantile","screeplot","sd")
+>>>>>>> master
 
-export(preprocessENmix, bmiq.mc, ComBat.mc, 
-    nmode.mc,  normalize.quantile.450k, norm.quantile, plotCtrl,
-    QCinfo, QCfilter, pcrplot, freqpoly, multifreqpoly, 
-    rm.outlier, rcp, oxBS.MLE, ctrlsva, relic)
+export(preprocessENmix,bmiq.mc,ComBat.mc,
+    nmode.mc,normalize.quantile.450k,norm.quantile,plotCtrl,
+    QCinfo,QCfilter,pcrplot,freqpoly,multifreqpoly,
+    rm.outlier,rcp,oxBS.MLE,ctrlsva,relic)
 
