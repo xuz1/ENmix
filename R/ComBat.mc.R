@@ -20,7 +20,7 @@ function(dat,batch,nCores=1,...)
     parts <- rep(1:nCores,ceiling(nrow(dat1)/nCores))[1:nrow(dat1)]
     parts=sample(parts)
     dat.o1 <- foreach (s = 1:nCores,.combine=rbind,.export=c("ComBat"))%dopar%{
-    s=s;idx=which(parts==s) 
+    s=s;idx=which(parts==s)
     ComBat(dat=dat1[idx,], batch=batch,...)
     }
     dat.o=rbind(dat.o,dat.o1)

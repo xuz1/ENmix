@@ -5,18 +5,18 @@ QCfilter <-function(mdat,qcinfo=NULL,detPthre=0.000001,nbthre=3,
     if(!(is(mdat, "MethylSet") | is(mdat,"matrix"))){
      stop("input needs to be MethylSet or a beta value matrix\n")}
 
-    if(is.null(qcinfo)){stop("ERROR: Please provide QC information 
+    if(is.null(qcinfo)){stop("ERROR: Please provide QC information
      from function QCinfo'")}
     if(outlier & is.null(qcinfo$outlier_sample)){
-       stop("ERROR: No outlier sample information, please set 
+       stop("ERROR: No outlier sample information, please set
        outlier=FALSE\n")}
     detP=qcinfo$detP
     nbead=qcinfo$nbead
     bisul=qcinfo$bisul
     outlier_sample=qcinfo$outlier_sample
-    if(sum(!(colnames(mdat) %in% colnames(detP)))>0){stop("ERROR: 
+    if(sum(!(colnames(mdat) %in% colnames(detP)))>0){stop("ERROR:
       some samples do not have QC information")}
-    if(sum(!(rownames(mdat) %in% rownames(detP)))>0){stop("ERROR: 
+    if(sum(!(rownames(mdat) %in% rownames(detP)))>0){stop("ERROR:
       some CpGs do not have QC information")}
 
     if(!identical(colnames(mdat),colnames(detP))){
@@ -85,7 +85,7 @@ QCfilter <-function(mdat,qcinfo=NULL,detPthre=0.000001,nbthre=3,
     color[flag]="red"
     plot(badValuePerSample,bisul,xlab="Percent of low quality data per sample",
        ylab="Average bisulfite conversion intensity",cex=1.5,col=color,
-       main=paste(length(badsample)," samples were classified as low quality 
+       main=paste(length(badsample)," samples were classified as low quality
        samples"))
     abline(h=bisulthre,lty=2,col="red")
     abline(v=samplethre,lty=2,col="red")
