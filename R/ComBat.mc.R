@@ -2,8 +2,9 @@ ComBat.mc <-
 function(dat,batch,nCores=1,...)
 {
     if(nCores>detectCores()){
-        nCores <- detectCores();
-        cat("Only ",detectCores()," Cores avialable, nCores was reset to ",detectCores(),"\n")
+    nCores <- detectCores();
+    cat("Only ",detectCores()," Cores avialable, nCores was reset to ",
+    detectCores(),"\n")
     }
     cat("Analysis is running, please wait...!","\n")
 
@@ -15,14 +16,14 @@ function(dat,batch,nCores=1,...)
     c1 <- makeCluster(nCores)
     registerDoParallel(c1)
     for(i in 1:nparts1){
-        dat1=dat[which(parts1==i),]
-        parts <- rep(1:nCores,ceiling(nrow(dat1)/nCores))[1:nrow(dat1)]
-        parts=sample(parts)
-        dat.o1 <- foreach (s = 1:nCores,.combine=rbind,.export=c("ComBat"))  %dopar%{
-            s=s;idx=which(parts==s) 
-            ComBat(dat=dat1[idx,], batch=batch,...)
-        }
-        dat.o=rbind(dat.o,dat.o1)
+    dat1=dat[which(parts1==i),]
+    parts <- rep(1:nCores,ceiling(nrow(dat1)/nCores))[1:nrow(dat1)]
+    parts=sample(parts)
+    dat.o1 <- foreach (s = 1:nCores,.combine=rbind,.export=c("ComBat"))%dopar%{
+    s=s;idx=which(parts==s) 
+    ComBat(dat=dat1[idx,], batch=batch,...)
+    }
+    dat.o=rbind(dat.o,dat.o1)
     }
     stopCluster(c1)
     dat.o[rname,]

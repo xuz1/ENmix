@@ -72,9 +72,9 @@ Example 1: mixed use of minfi and ENmix functions
 <<ENmixAndminfi, eval=FALSE>>=
 library(ENmix)
 #minfi functions to read in data
-sheet <- read.450k.sheet(file.path(find.package("minfiData"),
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
  "extdata"), pattern = "csv$")
-rgSet <- read.450k.exp(targets = sheet, extended = TRUE)
+rgSet <- read.metharray.exp(targets = sheet, extended = TRUE)
 #ENmix function for control plot
 plotCtrl(rgSet)
 #minfi functions to extract methylation and annotation data
@@ -122,9 +122,9 @@ library(ENmix)
 require(minfi)
 #see minfi user's guide for the format of sample_sheet.txt file
 targets <- read.table("./sample_sheet.txt", header=T)
-rgSet <- read.450k.exp( targets = targets, extended = TRUE)
+rgSet <- read.metharray.exp( targets = targets, extended = TRUE)
 # or read in all idat files under a directory
-rgSet <- read.450k.exp(base = "path_to_directory_idat_files", 
+rgSet <- read.metharray.exp(base = "path_to_directory_idat_files", 
 targets = NULL, extended = TRUE, recursive=TRUE)
 @
 When methylation IDAT raw data files are not available, such as in many
@@ -151,9 +151,9 @@ As an example for testing, users can use IDAT files provided in R data
 library(ENmix)
 require(minfi)
 require(minfiData)
-sheet <- read.450k.sheet(file.path(find.package("minfiData"),
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
 "extdata"), pattern = "csv$")
-rgSet <- read.450k.exp(targets = sheet, extended = TRUE)
+rgSet <- read.metharray.exp(targets = sheet, extended = TRUE)
 @
 
 \section{Quality Control}

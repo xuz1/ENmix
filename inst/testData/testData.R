@@ -9,13 +9,13 @@ digestMatrix <- function(mat) {
 }
 
 #read in raw intensity data
-sheet <- read.450k.sheet(file.path(find.package("minfiData"),
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
         "extdata"), pattern = "csv$")
-rgSet <- read.450k.exp(targets = sheet,extended = TRUE)
+rgSet <- read.metharray.exp(targets = sheet,extended = TRUE)
 qc<-QCinfo(rgSet)
 mdat <- preprocessRaw(rgSet)
 mdat.bg=preprocessENmix(rgSet,bgParaEst="oob",nCores=6)
-mdat.filter=QCfilter(mdat,qcinfo=qc, samplethre = 0.01, CpGthre = 0.05)
+mdat.filter=QCfilter(mdat,qcinfo=qc, samplethre = 0.05, CpGthre = 0.05)
 mdat.quantile=normalize.quantile.450k(mdat,method="quantile1")
 
 testDigests <- list(

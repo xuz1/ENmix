@@ -1,5 +1,5 @@
 QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05,
-          bisulthre=NULL,outlier=TRUE,distplot=TRUE)
+      bisulthre=NULL,outlier=TRUE,distplot=TRUE)
 {
     ##number of bead
     if(!is(rgSet, "RGChannelSetExtended"))
@@ -15,7 +15,7 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
     typeII <- getProbeInfo(rgSet, type = "II")
     locusNames <- getManifestInfo(rgSet, "locusNames")
     nbead <- matrix(NA_real_, ncol = ncol(rgSet), nrow = length(locusNames),
-        dimnames = list(locusNames, sampleNames(rgSet)))
+    dimnames = list(locusNames, sampleNames(rgSet)))
     nbead[typeI$Name,]<-bc_I
     nbead[typeII$Name,]<-nb[typeII$AddressA,]
 
@@ -45,7 +45,7 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
     badValuePerSample <- apply(qcmat,2,sum)/nrow(qcmat)
     flag <- badValuePerSample > samplethre | bisul < bisulthre
     cat(sum(flag)," samples with percentage of low quanlity CpG value greater
-         than ",samplethre, " or bisulfite intensity less than ", bisulthre, "\n")
+     than ",samplethre, " or bisulfite intensity less than ", bisulthre, "\n")
     badsample=colnames(qcmat)[flag]
 
     ##low quanlity CpGs
@@ -54,7 +54,7 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
     badValuePerCpG <- NbadValuePerCpG/ncol(qcmat)
     flag2 <- badValuePerCpG>CpGthre & NbadValuePerCpG>1
     cat(sum(flag2)," CpGs with percentage of low quanlity value greater than ",
-          CpGthre,"\n")
+      CpGthre,"\n")
     badCpG <- rownames(qcmat)[flag2]
     qcmat=qcmat[!flag2,]
 
@@ -75,7 +75,7 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
     jpeg(filename="qc_CpG.jpg",width=1000,height=1000,quality = 100)
     par(mfrow=c(2,1))
     hist(badValuePerCpG,breaks=1000,xlab="Percent of low quality data per CpG",
-         main=paste(length(badCpG)," CpGs were classified as low quality CpGs"))
+     main=paste(length(badCpG)," CpGs were classified as low quality CpGs"))
     abline(v=CpGthre,lty=2,col="red")
     hist(badValuePerCpG,breaks=1000,xlim=c(0,0.1),
        xlab="Percent of low quality data per CpG",main="Zoom in view")
@@ -115,42 +115,42 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
     outlier_sample=colnames(beta)[flag]
     cat(sum(flag)," outlier samples were added into badsample list\n")
     if(ncol(qcmat)<15){
-        cat("WARNING: Sample size may be too small to correctly identify outlier samples!\n")
-        cat("RECOMMAND: set outlier=FALSE or double check total intensity and beta value 
-             distribution plots to confirm\n")}
+    cat("WARNING: Sample size may be too small to correctly identify outlier samples!\n")
+    cat("RECOMMAND: set outlier=FALSE or double check total intensity and beta value 
+     distribution plots to confirm\n")}
     }
 
     if(distplot)
     {
-        mdat=preprocessRaw(rgSet)
-        beta=getBeta(mdat, "Illumina")
+    mdat=preprocessRaw(rgSet)
+    beta=getBeta(mdat, "Illumina")
 
-        cat("Ploting freqpolygon_beta_beforeQC.jpg ...")
-        jpeg(filename="freqpolygon_beta_beforeQC.jpg",width=1000,
-             height=500,quality = 100)
-        color=rep("black",ncol(beta))
-        color[colnames(beta) %in% badsample]="red"
-        multifreqpoly(beta,cex.lab=1.4,cex.axis=1.5, col=color, legend="",
-                cex.main=1.5,main="Beta value distribution",
-                xlab="Methylation beta value")
-        dev.off()
-        cat("Done\n")
+    cat("Ploting freqpolygon_beta_beforeQC.jpg ...")
+    jpeg(filename="freqpolygon_beta_beforeQC.jpg",width=1000,
+     height=500,quality = 100)
+    color=rep("black",ncol(beta))
+    color[colnames(beta) %in% badsample]="red"
+    multifreqpoly(beta,cex.lab=1.4,cex.axis=1.5, col=color, legend="",
+    cex.main=1.5,main="Beta value distribution",
+    xlab="Methylation beta value")
+    dev.off()
+    cat("Done\n")
 
-        beta=beta[!(rownames(beta) %in% badCpG),]
-        beta=beta[,!(colnames(beta) %in% badsample)]
-        cat("Ploting freqpolygon_beta_afterQC.jpg ...")
-        jpeg(filename="freqpolygon_beta_afterQC.jpg",width=1000,
-             height=500,quality = 100)
-        multifreqpoly(beta,cex.lab=1.4,cex.axis=1.5, col="black",legend="",
-                cex.main=1.5,main="Beta value distribution",
-                xlab="Methylation beta value")
-        dev.off()
-        cat("Done\n")
+    beta=beta[!(rownames(beta) %in% badCpG),]
+    beta=beta[,!(colnames(beta) %in% badsample)]
+    cat("Ploting freqpolygon_beta_afterQC.jpg ...")
+    jpeg(filename="freqpolygon_beta_afterQC.jpg",width=1000,
+     height=500,quality = 100)
+    multifreqpoly(beta,cex.lab=1.4,cex.axis=1.5, col="black",legend="",
+    cex.main=1.5,main="Beta value distribution",
+    xlab="Methylation beta value")
+    dev.off()
+    cat("Done\n")
     }
 
     if(outlier)
     {list(detP=detP,nbead=nbead,bisul=bisul,badsample=badsample,badCpG=badCpG,
-          outlier_sample=outlier_sample)
+      outlier_sample=outlier_sample)
     }else{list(detP=detP,nbead=nbead,bisul=bisul,badsample=badsample,badCpG=badCpG)}
 }
 

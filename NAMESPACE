@@ -5,6 +5,11 @@ importFrom(wateRmelon,BMIQ)
 importFrom(sva,ComBat)
 importFrom(geneplotter, multidensity)
 importFrom(impute, impute.knn)
+importFrom("grDevices", "dev.off", "jpeg")
+importFrom("graphics", "abline", "axis", "boxplot", "hist", "legend",
+           "lines", "par", "plot", "polygon", "text")
+importFrom("stats", "density", "dexp", "dnorm", "lm", "na.omit", "pf",
+           "pnorm", "prcomp", "quantile", "screeplot", "sd")
 
 export(preprocessENmix, bmiq.mc, ComBat.mc, 
     nmode.mc,  normalize.quantile.450k, norm.quantile, plotCtrl,

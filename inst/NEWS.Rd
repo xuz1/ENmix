@@ -75,5 +75,9 @@
   \itemize{
     \item added function relic
 }}
+\section{Version 1.9.4}{
+  \itemize{
+    \item bug fix
+}}
 
 
