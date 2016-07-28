@@ -20,7 +20,7 @@ options(width=70)
 
 \title{The \Rpackage{ENmix} User's Guide}
 \author{Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor}
-\date{Modified: July 15, 2016.  Compiled: \today}
+\date{Modified: July 26, 2016.  Compiled: \today}
 \begin{document}
 \maketitle
 
