@@ -1,0 +1,47 @@
+Package: ENmix
+Version: 1.12.0
+Date: 2016-07-28
+Title: Data preprocessing and quality control for Illumina
+   HumanMethylation450 and MethylationEPIC BeadChip
+Type: Package
+Authors@R: c(person("Zongli","Xu",role=c("cre","aut"),email="xuz@niehs.nih.gov"),
+    person("Liang","Niu",role=c("aut"),email="niulg@ucmail.uc.edu"),
+    person("Leping","Li",role=c("ctb"),email="li3@niehs.nih.gov"),
+    person("Jack","Taylor",role=c("ctb"),email="taylor@niehs.nih.gov"))
+Description: Illumina Methylation BeadChip array measurements have
+    intrinsic levels of background noise that degrade methylation measurement.
+    The ENmix package provides an efficient data pre-processing tool designed
+    to reduce background noise and improve signal for DNA methylation estimation.
+    Several efficient novel methods were incorporated in the package: ENmix is a
+    model based background correction method that can significantly improve
+    accuracy and reproducibility of methylation  measures; RCP taking
+    advantage of the high spatial correlation of DNA methylation levels between
+    nearby type I and II probe pairs to reduce probe type bias and improve
+    data quality on type II probe measures.The data structure used by the
+    ENmix package is compatible with
+    several other related R packages, such as minfi, wateRmelon and ChAMP,
+    providing straightforward integration of ENmix-corrected datasets for
+    subsequent data analysis. The software is designed to support large
+    scale data analysis, and provides multi-processor parallel computing
+    wrappers for some commonly used but computation intensive data
+    preprocessing methods.
+    In addition ENmix package has selectable complementary functions for
+    efficient data visualization (such as data distribution plotting),
+    quality control (identification and filtering of low quality data points,
+    samples, probes, and outliers, along with imputation of missing values),
+    inter-array normalization (3 different quantile normalizations),
+    identification of probes with multimodal distributions due to SNPs and
+    other factors, and exploration of data variance structure using principal
+    component regression analysis plots. Together these provide a set of
+    flexible and transparent tools for preprocessing of EWAS data in a
+    computationally-efficient and user-friendly package.
+Depends:  minfi,parallel,doParallel,Biobase (>= 2.17.8),foreach
+Imports: MASS,preprocessCore,wateRmelon,sva,geneplotter,impute,grDevices,graphics,stats
+Suggests: minfiData (>= 0.4.1), RPMM, RUnit, BiocGenerics
+biocViews: DNAMethylation, Preprocessing, QualityControl, TwoChannel, Microarray,
+    OneChannel, MethylationArray, BatchEffect, Normalization, DataImport,
+    Regression, PrincipalComponent
+License: Artistic-2.0
+NeedsCompilation: no
+Maintainer: Zongli Xu <xuz@niehs.nih.gov>
+
