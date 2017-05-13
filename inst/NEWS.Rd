@@ -82,6 +82,7 @@
 \section{Version 1.13.1}{
   \itemize{
     \item add pipeline function mpreprocess
+    \item bug fix
 }}
 
 
