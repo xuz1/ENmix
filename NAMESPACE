@@ -14,5 +14,5 @@ importFrom("graphics","abline","axis","boxplot","hist","legend",
 export(preprocessENmix,bmiq.mc,ComBat.mc,
     nmode.mc,normalize.quantile.450k,norm.quantile,plotCtrl,
     QCinfo,QCfilter,pcrplot,freqpoly,multifreqpoly,
-    rm.outlier,rcp,oxBS.MLE,ctrlsva,relic)
+    rm.outlier,rcp,oxBS.MLE,ctrlsva,relic,mpreprocess)
 

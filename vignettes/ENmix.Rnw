@@ -20,7 +20,7 @@ options(width=70)
 
 \title{The \Rpackage{ENmix} User's Guide}
 \author{Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor}
-\date{Modified: July 26, 2016.  Compiled: \today}
+\date{Modified: May 5, 2017.  Compiled: \today}
 \begin{document}
 \maketitle
 
@@ -58,59 +58,87 @@ Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor
 ENmix: a novel background correction method for Illumina
 HumanMethylation450 BeadChip, Nucleic Acids Research, 2015
 
+\section{Example Analysis}
 
-\section{Compatibility with other related R packages}
-
-The \Rpackage{ENmix} uses the data structure provided by R \Rpackage{minfi}
- packages as input and output, and thus is fully compatible with the minfi package. 
-The same data structures were also used by several other R packages, such as
- \Rpackage{ChAMP} and \Rpackage{wateRmelon}, so the output from ENmix
- functions can be easily utilized in 
-these packages for further analysis. Here are some examples:
-
-Example 1: mixed use of minfi and ENmix functions
-<<ENmixAndminfi, eval=FALSE>>=
+\subsection{Example 1: using pipeline }
+<<example, eval=FALSE>>=
 library(ENmix)
-#minfi functions to read in data
+#read in data
+require(minfiData)
+#data pre-processing
+beta=mpreprocess(RGsetEx,nCores=6)
+#or
+#read in IDAT files
 sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
- "extdata"), pattern = "csv$")
+         "extdata"), pattern = "csv$")
+rgSet <- read.metharray.exp(targets = sheet,extended = TRUE)
+#quality control and data pre-processing
+beta=mpreprocess(rgSet,nCores=6,qc=TRUE,foutlier=TRUE,
+     rmcr=TRUE,impute=TRUE)
+@
+
+\subsection{Example 2: using individual function}
+<<example, eval=FALSE>>=
+library(ENmix)
+#read in data
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
+    "extdata"), pattern = "csv$")
 rgSet <- read.metharray.exp(targets = sheet, extended = TRUE)
-#ENmix function for control plot
+#QC info
+qc<-QCinfo(rgSet)
+#background correction and dye bias correction
+#if provide qc info, the low quality samples and probes 
+#will be excluded before background correction
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr="RELIC", 
+QCinfo=qc, nCores=6)
+#low quality samples and probes can also be excluded after 
+#background correction using QCfilter.
+#mdat <- QCfilter(mdat,qcinfo=qc,outlier=TRUE)
+#inter-array normalization
+mdat<-norm.quantile(mdat, method="quantile1")
+#probe-type bias adjustment
+beta<-rcp(mdat,qcscore=qc)
+beta <- rm.outlier(beta,qcscore=qc,impute=TRUE,rmcr=TRUE)
+@
+
+
+\subsection{Example 3: A more elaborated example}
+<<example, eval=FALSE>>=
+library(ENmix)
+#read in data
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
+    "extdata"), pattern = "csv$")
+rgSet <- read.metharray.exp(targets = sheet, extended = TRUE)
+#control plots
 plotCtrl(rgSet)
-#minfi functions to extract methylation and annotation data
+#QC info
+qc<-QCinfo(rgSet)
 mraw <- preprocessRaw(rgSet)
 beta<-getBeta(mraw, "Illumina")
-anno=getAnnotation(rgSet)
-#ENmix function for fast and accurate distribution plot
-multifreqpoly(beta,main="Data distribution")
-multifreqpoly(beta[anno$Type=="I",],main="Data distribution, type I")
-multifreqpoly(beta[anno$Type=="II",],main="Data distribution, type II")
-#ENmix background correction
-mset<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, nCores=6)
-#minfi functions for further preprocessing and analysis
-gmSet <- preprocessQuantile(mset)
-bumps <- bumphunter(gmSet, design = model.matrix(~ gmSet$status), B = 0,
-type = "Beta", cutoff = 0.25)
+#distribution plot
+multifreqpoly(beta,main="Methylation Beta value distribution")
+#Search for multimodal CpGs
+#sample size in this example data is too small for this purpose!
+#exclude low quality data first
+bb=beta; bb[qc$detP>0.05 | qc$nbead<3]=NA 
+nmode<-nmode.mc(bb, minN = 3, modedist=0.2, nCores = 6)
+outCpG = names(nmode)[nmode>1]
+#background correction and dye bias correction
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr="RELIC",
+                      QCinfo=qc, exCpG=outCpG, nCores=6)
+#inter-array normalization
+mdat<-norm.quantile(mdat, method="quantile1")
+#probe-type bias adjustment
+beta<-rcp(mdat,qcscore=qc)
+# Principal component regression analysis plot
+cov<-data.frame(group=pData(mdat)$Sample_Group,
+    slide=factor(pData(mdat)$Slide))
+pcrplot(beta, cov, npc=6)
+#filter out low quality and outlier data points for each probe;
+#rows and columns with too many missing value can be removed 
+#if specify; Do imputation to fill missing data if specify.
+beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
 @
-
-Example 2: add ENmix background correction step into ChAMP pipeline
-<<ENmixAndChAMP, eval=FALSE>>=
-library(ENmix)
-library(ChAMP)
-testDir=system.file("extdata",package="ChAMPdata")
-myLoad=champ.load(directory=testDir)
-#ENmix background correction
-mset<-preprocessENmix(myLoad$rgSet,bgParaEst="oob", nCores=6)
-#remove probes filtered by champ.load() 
-mset=mset[rownames(myLoad$beta),]
-#update myLoad object with background corrected intensity data
-myLoad$mset=mset
-myLoad$beta=getBeta(mset)
-myLoad$intensity=getMeth(mset)+getUnmeth(mset)
-#continue ChAMP pipeline
-myNorm=champ.norm()
-@
-
 
 \section{Setting up the data}
 The first step is to import array raw data files (*.idat) using functions
@@ -310,7 +338,7 @@ thresholds. Low quality samples and probes can be filtered out using
 <<filter, eval=FALSE>>=
 qc<-QCinfo(rgSet)
 #exclude before backgroud correction
-mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, 
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr="RELIC", 
 QCinfo=qc, nCores=6)
 #Or exclude after background correction
 mdat <- QCfilter(mdat,qcinfo=qc,outlier=TRUE)
@@ -338,13 +366,14 @@ b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE)
 b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE,impute=TRUE)
 @
 
-\section{Background correction}
+\section{Background correction and dye-bias adjustment}
 Function \Rfunction{preprocessENmix} incorporats a model based background
  correction method \textit{ENmix}, which models methylation signal intensities 
 with a flexible exponential-normal mixture distribution, together
  with a truncated normal distribution to model background noise. 
 Users can also specify a list of poor performance CpGs to be excluded
- before background correction using argument \textit{exCpG}.
+ before background correction using argument \textit{exCpG}. Argument dyeCorr 
+can be used to specify a method for dye-bias correction. 
 
 See the following paper for the detailed description of the method:
 
@@ -358,24 +387,19 @@ of samples or probes to be excluded before background correction.
  
 <<preprocessENmix, eval=FALSE>>=
 qc=QCinfo(rgSet)
-mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, 
+mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr="RELIC", 
 QCinfo=qc, exCpG=NULL, nCores=6)
 @
 
 \section{Inter-array normalization}
-Function \Rfunction{normalize.quantile.450k} can be used to perform quantile 
+Function \Rfunction{norm.quantile} can be used to perform quantile 
 normalization on methylation intensity values.
 
 <<normalize.quantile.450k, eval=FALSE>>=
-mdat<-normalize.quantile.450k(mdat, method="quantile1")
+mdat<-norm.quantile(mdat, method="quantile1")
 @
 
-\section{Parallel computing wrappers}
-DNA methylation analysis is computationally intensive. To take advantage 
-of the widely available multi-core computation resources, we provided a few 
-parallel computing wrappers to speed up the analysis. 
-
-\subsection{Probe type bias correction}
+\section{Probe type bias adjustment}
 Majority of probes on Illumina 450K and EPIC BeadChips are type II probes. Although 
 type II probes facilitate increased array genome coverage, they were shown to have 
 decreased dynamic range and reproducibility compared to type I probes. Taking advantage 
@@ -397,8 +421,23 @@ wrapper in the function \Rfunction{bmiq.mc} to speed up the process.
 beta<-bmiq.mc(mdat, nCores=6)
 @
 
-\subsection{Batch effect correction}
-Function \Rfunction{ComBat.mc} is a multi-core parallel computing wrapper
+\section{Batch effect correction}
+
+Function \Rfunction{ctrlsva} can be used to estimate surrogate variables for batch 
+effect and unknown experimental confounders from intensity data for non-negative 
+internal control probes. These variables can then be adjusted as covariables in 
+downstream association analysis to remove unwanted data variation.  
+
+<<ctrlsva, eval=FALSE>>=
+require(minfiData) 
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
+                             "extdata"), pattern = "csv$")
+rgSet <- read.metharray.exp(targets = sheet,extended = TRUE)
+sva<-ctrlsva(rgSet)
+@
+
+Alternatively, a batch variable can be estimated using function ComBat. Function 
+\Rfunction{ComBat.mc} is a multi-core parallel computing wrapper
  for the \Rfunction{ComBat} function in R package \Rpackage{sva}.
 
 <<combat.mc, eval=FALSE>>=
@@ -463,70 +502,58 @@ HumanMethylation450 BeadChip, Nucleic Acids Research, 2015
 nmode<- nmode.mc(beta, minN = 3, modedist=0.2, nCores = 5)
 @
 
-\section{Example Analysis}
-Working with IDAT raw methylation data files
+\section{Compatibility with other related R packages}
 
-\subsection{Example 1 }
-<<example, eval=FALSE>>=
+The \Rpackage{ENmix} uses the data structure provided by R \Rpackage{minfi}
+ packages as input and output, and thus is fully compatible with the minfi package. 
+The same data structures were also used by several other R packages, such as
+ \Rpackage{ChAMP} and \Rpackage{wateRmelon}, so the output from ENmix
+ functions can be easily utilized in 
+these packages for further analysis. Here are some examples:
+
+Example 1: mixed use of minfi and ENmix functions
+<<ENmixAndminfi, eval=FALSE>>=
 library(ENmix)
-#read in data
+#minfi functions to read in data
 sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
-    "extdata"), pattern = "csv$")
+ "extdata"), pattern = "csv$")
 rgSet <- read.metharray.exp(targets = sheet, extended = TRUE)
-#QC info
-qc<-QCinfo(rgSet)
-#background correction and dye bias correction
-#if provide qc info, the low quality samples and probes 
-#will be excluded before background correction
-mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE, 
-QCinfo=qc, nCores=6)
-#low quality samples and probes can also be excluded after 
-#background correction using QCfilter.
-#mdat <- QCfilter(mdat,qcinfo=qc,outlier=TRUE)
-#inter-array normalization
-mdat<-normalize.quantile.450k(mdat, method="quantile1")
-#probe-type bias adjustment
-beta<-rcp(mdat)
-@
-
-
-\subsection{Example 2: A more elaborated example}
-<<example, eval=FALSE>>=
-library(ENmix)
-#read in data
-sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
-    "extdata"), pattern = "csv$")
-rgSet <- read.metharray.exp(targets = sheet, extended = TRUE)
-#control plots
+#ENmix function for control plot
 plotCtrl(rgSet)
-#QC info
-qc<-QCinfo(rgSet)
+#minfi functions to extract methylation and annotation data
 mraw <- preprocessRaw(rgSet)
 beta<-getBeta(mraw, "Illumina")
-#distribution plot
-multifreqpoly(beta,main="Methylation Beta value distribution")
-#Search for multimodal CpGs
-#sample size in this example data is too small for this purpose!
-#exclude low quality data first
-bb=beta; bb[qc$detP>0.05 | qc$nbead<3]=NA 
-nmode<-nmode.mc(bb, minN = 3, modedist=0.2, nCores = 6)
-outCpG = names(nmode)[nmode>1]
-#background correction and dye bias correction
-mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr=TRUE,
-                      QCinfo=qc, exCpG=outCpG, nCores=6)
-#inter-array normalization
-mdat<-normalize.quantile.450k(mdat, method="quantile1")
-#probe-type bias adjustment
-beta<-rcp(mdat)
-# Principal component regression analysis plot
-cov<-data.frame(group=pData(mdat)$Sample_Group,
-    slide=factor(pData(mdat)$Slide))
-pcrplot(beta, cov, npc=6)
-#filter out low quality and outlier data points for each probe;
-#rows and columns with too many missing value can be removed 
-#if specify; Do imputation to fill missing data if specify.
-beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
+anno=getAnnotation(rgSet)
+#ENmix function for fast and accurate distribution plot
+multifreqpoly(beta,main="Data distribution")
+multifreqpoly(beta[anno$Type=="I",],main="Data distribution, type I")
+multifreqpoly(beta[anno$Type=="II",],main="Data distribution, type II")
+#ENmix background correction
+mset<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr="RELIC", nCores=6)
+#minfi functions for further preprocessing and analysis
+gmSet <- preprocessQuantile(mset)
+bumps <- bumphunter(gmSet, design = model.matrix(~ gmSet$status), B = 0,
+type = "Beta", cutoff = 0.25)
 @
+
+Example 2: add ENmix background correction step into ChAMP pipeline
+<<ENmixAndChAMP, eval=FALSE>>=
+library(ENmix)
+library(ChAMP)
+testDir=system.file("extdata",package="ChAMPdata")
+myLoad=champ.load(directory=testDir)
+#ENmix background correction
+mset<-preprocessENmix(myLoad$rgSet,bgParaEst="oob", nCores=6)
+#remove probes filtered by champ.load() 
+mset=mset[rownames(myLoad$beta),]
+#update myLoad object with background corrected intensity data
+myLoad$mset=mset
+myLoad$beta=getBeta(mset)
+myLoad$intensity=getMeth(mset)+getUnmeth(mset)
+#continue ChAMP pipeline
+myNorm=champ.norm()
+@
+
 
 \section{SessionInfo}
 <<sessionInfo, results=tex, echo=FALSE>>=
