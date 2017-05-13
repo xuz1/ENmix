@@ -1,6 +1,11 @@
 Package: ENmix
+<<<<<<< HEAD
 Version: 1.13.1
 Date: 2017-05-05
+=======
+Version: 1.13.3
+Date: 2017-05-13
+>>>>>>> master
 Title: Data preprocessing and quality control for Illumina
    HumanMethylation450 and MethylationEPIC BeadChip
 Type: Package
