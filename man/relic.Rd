@@ -1,7 +1,7 @@
 \name{relic}
 \alias{relic}
 \title{
-RELIC dye bias correction methodfor Illumina HumanMethylation450 and MethylationEPIC  BeadChip
+RELIC dye bias correction method for Illumina HumanMethylation450 and MethylationEPIC  BeadChip
 }
 \description{REgression on Logarithm of Internal Control probes (RELIC) correct for dye bias on whole array by utilizing the intensity values of paired internal control probes that monitor the two color channels. 
 }

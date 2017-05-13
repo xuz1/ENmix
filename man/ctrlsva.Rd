@@ -31,7 +31,7 @@ if(FALSE){
 if (require(minfiData)) {
 sheet <- read.metharray.sheet(file.path(find.package("minfiData"),"extdata"), pattern = "csv$")
 rgSet <- read.metharray.exp(targets = sheet,extended = TRUE)
-sva<-ctrl(rgSet)
+sva<-ctrlsva(rgSet)
 }}
 }
 
