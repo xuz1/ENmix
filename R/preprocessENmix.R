@@ -170,10 +170,11 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
     rgSet=rgSet[,!(colnames(rgSet) %in% exSample)]
     cat(length(exSample), " samples were excluded before ENmix correction\n")
     }
-    mdat=rgSet; bgParaEst="est"; dyeCorr=FALSE
-    if(dyeCorr){cat("Warning: Input data need to be a RGChannelSet for dye bias
+    mdat=rgSet; bgParaEst="est"; 
+    if(!(dyeCorr=="none")){cat("Warning: Input data need to be a RGChannelSet for dye bias
      correction\n");
-       cat("Warning: dyeCorr option was ignored\n")}
+       cat("Warning: dye-bias correction will not be performed\n")}
+    dyeCorr="none"
     }else{stop("Error: object needs to be of class 'RGChannelSet' or 
       'MethylSet'")}
     if(nCores>detectCores()){
@@ -244,11 +245,11 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
     }else if(bgParaEst == "est" | bgParaEst == "subtract_estBG"){
     
     mdat_subset <- mdat[probe_type == "IRed",]
-    m_I_red <- rbind(assayData(mdat_subset)$Meth,assayData(mdat_subset)$Unmeth)
+    m_I_red <- rbind(assays(mdat_subset)$Meth,assays(mdat_subset)$Unmeth)
     mdat_subset <- mdat[probe_type == "IGrn",]
-    m_I_grn <- rbind(assayData(mdat_subset)$Meth,assayData(mdat_subset)$Unmeth)
+    m_I_grn <- rbind(assays(mdat_subset)$Meth,assays(mdat_subset)$Unmeth)
     mdat_subset <- mdat[probe_type == "II",]
-    mII <- rbind(assayData(mdat_subset)$Meth,assayData(mdat_subset)$Unmeth)
+    mII <- rbind(assays(mdat_subset)$Meth,assays(mdat_subset)$Unmeth)
     rm(mdat_subset)
     bgRI <- as.data.frame(t(apply(m_I_red,2,estBG)));names(bgRI) <- c("mu",
      "sigma","perc")
@@ -334,7 +335,7 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
       methData[probe_type == "IRed",] <- sweep(methData[probe_type == "IRed",],
        2, FUN="*", Red.factor)
     }
-    assayDataElement(mdat, "Meth") <- methData
+    assays(mdat)$Meth <- methData
     rm(methData)
 
     unmethData <- getUnmeth(mdat)
@@ -357,7 +358,7 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
       unmethData[probe_type == "II",] <- sweep(unmethData[probe_type ==
        "II",], 2, FUN="*", Red.factor)
     }
-    assayDataElement(mdat, "Unmeth") <- unmethData
+    assays(mdat)$Unmeth <- unmethData
     rm(unmethData)
     stopCluster(c1)
     if(dyeCorr =="RELIC"){mdat=relic(mdat,at_red,cg_grn)}

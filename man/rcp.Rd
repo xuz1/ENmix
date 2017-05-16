@@ -35,7 +35,7 @@ Liang Niu, Zongli Xu
 if(FALSE){
 if (require(minfiData)) {
 mdat=preprocessENmix(RGsetEx,bgParaEst="oob",nCores=6)
-mdatq1=normalize.quantile(mdat,method="quantile1")
+mdatq1=norm.quantile(mdat,method="quantile1")
 beta=rcp(mdatq1)
 }}
 }
