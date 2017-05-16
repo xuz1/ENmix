@@ -16,8 +16,8 @@ relic <- function(mdat,at_red=NULL,cg_grn=NULL)
     at_red=at_red[common,];cg_grn=cg_grn[match(common,name_grn),]
 
     probe_type <- getProbeType(mdat, withColor=TRUE)
-    m_grn=assayData(mdat)$Meth[probe_type %in% c("IGrn","II"),]
-    um_grn=assayData(mdat)$Unmeth[probe_type %in% c("IGrn"),]
+    m_grn=assays(mdat)$Meth[probe_type %in% c("IGrn","II"),]
+    um_grn=assays(mdat)$Unmeth[probe_type %in% c("IGrn"),]
     for(i in 1:ncol(cg_grn))
     {
     index<-(at_red[,i]>10 & cg_grn[,i]>10)
@@ -26,8 +26,8 @@ relic <- function(mdat,at_red=NULL,cg_grn=NULL)
     m_grn[,i]<-exp(log(m_grn[,i])*temp[2]+temp[1]);
     um_grn[,i]<-exp(log(um_grn[,i])*temp[2]+temp[1]);
     }
-    assayDataElement(mdat, "Meth")[probe_type %in% c("IGrn","II"),] <- m_grn
-    assayDataElement(mdat, "Unmeth")[probe_type %in% c("IGrn"),] <- um_grn
+    assays(mdat)$Meth[probe_type %in% c("IGrn","II"),] <- m_grn
+    assays(mdat)$Unmeth[probe_type %in% c("IGrn"),] <- um_grn
     mdat
 }
 

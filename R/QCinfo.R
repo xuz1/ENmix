@@ -5,7 +5,7 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
     if(!is(rgSet, "RGChannelSetExtended"))
       stop("ERROR: rgSet is not an object of class 'RGChannelSetExtended'")
 
-    nb <- assayDataElement(rgSet, "NBeads")
+    nb <- assays(rgSet)$NBeads
     typeI <- getProbeInfo(rgSet, type = "I")
     bcA <- nb[typeI$AddressA, ]
     bcB <- nb[typeI$AddressB, ]
@@ -91,7 +91,7 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
     mdat=mdat[rownames(qcmat),]
     mdat=mdat[,colnames(qcmat)]
     #outliers based on total intensity values
-    mu <- assayData(mdat)$Meth+assayData(mdat)$Unmeth
+    mu <- assays(mdat)$Meth+assays(mdat)$Unmeth
     mumean=apply(mu,2,mean,na.rm=TRUE)
     q2575 <- quantile(mumean, probs=c(0.25,0.75), na.rm=TRUE)
     qr <- q2575["75%"]-q2575["25%"]
