@@ -19,48 +19,73 @@ options(width=70)
 \newcommand{\Robject}[1]{{\texttt{#1}}}
 
 \title{The \Rpackage{ENmix} User's Guide}
-\author{Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor}
-\date{Modified: May 5, 2017.  Compiled: \today}
+
+\date{Modified: May 16, 2017.  Compiled: \today}
 \begin{document}
 \maketitle
 
 \section{Introduction}
 
-Illumina HumanMethylation450 and MethylationEPIC BeadChip array measurements have
-intrinsic levels of background noise that degrade methylation measurement.
-The \Rpackage{ENmix} package provides an efficient data pre-processing tool designed
-to reduce background noise and improve signal for DNA methylation estimation.
-The package utilizes a novel model-based background correction method, \textit{ENmix},
-that significantly improve accuracy and reproducibility of methylation
-measures. The data structure used by the \Rpackage{ENmix} package is compatible with
-several other related R packages, such as \Rpackage{minfi}, 
+The \Rpackage{ENmix} package provides a set of quality control and data 
+pre-processing tools for Illumina Methylaiton 
+HumanMethylation450 and MethylationEPIC Beadchips. 
+These functions can be used to remove unwanted experimental noise and thus to
+improve accuracy and reproducibility of methylation measures. 
+\Rpackage{ENmix} functions 
+are flexible and transparent. Users has option to use a single pipeline 
+command to finish all data pre-processing steps (including background correction, 
+dye-bias adjustment, inter-array normalization and probe-type bias correction) or 
+to use individual functions sequentially to perform data pre-processing in more 
+customized manner. In addition the \Rpackage{ENmix} package has selectable 
+complementary functions for efficient data visualization (such as data 
+distribution plotting); quality control (identification and filtering of 
+low quality data points, samples, probes, and outliers, along with 
+imputation of missing values); identification of probes with multimodal 
+distributions due to SNPs and other factors; exploration of data variance
+ structure using principal component regression analysis plots and preparation
+of experimental factors related control variables to be adjusted in downstream 
+statistical analysis. 
+
+The data structure used by the \Rpackage{ENmix} package is compatible with
+several other related R packages, such as \Rpackage{minfi},
 \Rpackage{wateRmelon} and \Rpackage{ChAMP},
-providing straightforward integration of ENmix-corrected datasets for
-subsequent data analysis. The software is designed to support large
-scale data analysis, and provides multi-processor parallel computing
-wrappers for commonly used data preprocessing methods, including BMIQ
-probe design type bias correction and ComBat batch effect correction.
-In addition the \Rpackage{ENmix} package has selectable complementary functions for
-efficient data visualization (such as data distribution plotting),
-quality control (identification and filtering of low quality data points,
-samples, probes, and outliers, along with imputation of missing values),
-inter-array normalization (3 different quantile normalizations),
-identification of probes with multimodal distributions due to SNPs and
-other factors, and exploration of data variance structure using principal
-component regression analysis plots. Together these provide a set of
-flexible and transparent tools for preprocessing of EWAS data in a
-computationally-efficient and user-friendly package.
+providing straightforward integration of 
+ENmix-corrected datasets for subsequent data analysis. 
+
+The software is designed to support large scale data analysis, and provides
+ multi-processor parallel computing options for most functions. 
 
 \section{Citation}
-If you are using \Rpackage{ENmix} package, please cite this publication:\\
 
-Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor
+The following publications can be refered to learn more about the methods 
+implemented in this package. 
+
+Xu Z, Niu L, Li L, Taylor JA.
 ENmix: a novel background correction method for Illumina
 HumanMethylation450 BeadChip, Nucleic Acids Research, 2015
+
+Niu L, Xu Z, Taylor JA.
+RCP: a novel probe design bias correction method for Illumina Methylation 
+BeadChip. Bioinformatics, 2016
+
+Xu Z, Langie SA, De Boever P, Taylor JA, Niu L.
+RELIC: a novel dye-bias correction method for Illumina Methylation BeadChip.
+BMC Genomics. 2017
+
+Xu Z, Taylor JA, Leung YK, Ho SM, Niu L.
+oxBS-MLE: an efficient method to estimate 5-methylcytosine and 
+5-hydroxymethylcytosine in paired bisulfite and oxidative 
+bisulfite treated DNA.
+Bioinformatics. 2016 
 
 \section{Example Analysis}
 
 \subsection{Example 1: using pipeline }
+
+Pipeline function \Rfunction{mpreprocess} can be used to perform background 
+correction, dye-bias adjustment, inter-array normalization, probe-type bias 
+correction, as well as outlier removal and imputation. 
+
 <<example, eval=FALSE>>=
 library(ENmix)
 #read in data
@@ -78,6 +103,10 @@ beta=mpreprocess(rgSet,nCores=6,qc=TRUE,foutlier=TRUE,
 @
 
 \subsection{Example 2: using individual function}
+
+This example code is basically doing the same thing as in example 1, but 
+more transparent, and have more customized options. 
+
 <<example, eval=FALSE>>=
 library(ENmix)
 #read in data
@@ -103,6 +132,12 @@ beta <- rm.outlier(beta,qcscore=qc,impute=TRUE,rmcr=TRUE)
 
 
 \subsection{Example 3: A more elaborated example}
+
+This example is to demonstrate the flexibility of the package functions. 
+Getting detailed information about data quality, SNP-like probes, excluding 
+user specified probes and/or samples, principal component regression analysis,
+outlier removal and control surrogate variables. 
+
 <<example, eval=FALSE>>=
 library(ENmix)
 #read in data
@@ -138,6 +173,8 @@ pcrplot(beta, cov, npc=6)
 #rows and columns with too many missing value can be removed 
 #if specify; Do imputation to fill missing data if specify.
 beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
+#Non-negative control surrogate variables
+sva<-ctrlsva(rgSet)
 @
 
 \section{Setting up the data}
@@ -375,10 +412,14 @@ Users can also specify a list of poor performance CpGs to be excluded
  before background correction using argument \textit{exCpG}. Argument dyeCorr 
 can be used to specify a method for dye-bias correction. 
 
-See the following paper for the detailed description of the method:
+See the following papers for the detailed description of the methods:
 
 Zongli Xu, et. al. ENmix: a novel background correction method for Illumina
 HumanMethylation450 BeadChip, Nucleic Acids Research, 2015
+
+Xu Z, Langie SA, De Boever P, Taylor JA, Niu L.
+RELIC: a novel dye-bias correction method for Illumina Methylation BeadChip.
+BMC Genomics. 2017
 
 If argument QCinfo is specified, the low quality samples and probes identified 
 by function \Rfunction{QCinfo} will be excluded before ENmix background correction.
@@ -412,7 +453,7 @@ pairs to derive the quantitative relationship between probe types and then recal
 beta<-rcp(mdat)
 @
 
-The \Rfunction{BMIQ} function in R package \Rpackage{wateRmelon} can also be used to 
+Alternatively, the \Rfunction{BMIQ} function in R package \Rpackage{wateRmelon} can also be used to 
 reduce probe type bias. However the funtion is computation intensive and can take very 
 long time for large dataset. Therefore we here provided a multi-core parallel computing 
 wrapper in the function \Rfunction{bmiq.mc} to speed up the process.

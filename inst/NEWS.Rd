@@ -96,5 +96,8 @@
   \itemize{
     \item bug fix
 }}
-
+\section{Version 1.13.6}{
+  \itemize{
+    \item corrected User's guide  
+}}
 
