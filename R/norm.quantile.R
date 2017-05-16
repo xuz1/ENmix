@@ -21,52 +21,52 @@ norm.quantile <- function(mdat,method="quantile1")
     anno <- getAnnotation(mdat)
     mdat_I <- mdat[anno$Type == "I",]
     mdat_II <- mdat[anno$Type == "II",]
-    assayDataElement(mdat_I, "Meth")<-normalize.q(assayData(mdat_I)$Meth)
-    assayDataElement(mdat_I, "Unmeth")<-normalize.q(assayData(mdat_I)$Unmeth)
-    assayDataElement(mdat_II, "Meth")<-normalize.q(assayData(mdat_II)$Meth)
-    assayDataElement(mdat_II, "Unmeth")<-normalize.q(assayData(mdat_II)$Unmeth)
-    methData <- rbind(assayData(mdat_I)$Meth,assayData(mdat_II)$Meth)
-    unmethData <- rbind(assayData(mdat_I)$Unmeth,assayData(mdat_II)$Unmeth)
+    assays(mdat_I)$Meth<-normalize.q(assays(mdat_I)$Meth)
+    assays(mdat_I)$Unmeth<-normalize.q(assays(mdat_I)$Unmeth)
+    assays(mdat_II)$Meth<-normalize.q(assays(mdat_II)$Meth)
+    assays(mdat_II)$Unmeth<-normalize.q(assays(mdat_II)$Unmeth)
+    methData <- rbind(assays(mdat_I)$Meth,assays(mdat_II)$Meth)
+    unmethData <- rbind(assays(mdat_I)$Unmeth,assays(mdat_II)$Unmeth)
     CpGID <- rownames(mdat)
     SampleID <- colnames(mdat)
     methData <- methData[CpGID,]
     unmethData <- unmethData[CpGID,]
-    assayDataElement(mdat, "Meth")<-methData
-    assayDataElement(mdat, "Unmeth")<-unmethData
+    assays(mdat)$Meth<-methData
+    assays(mdat)$Unmeth<-unmethData
     }
     else if(method == "quantile2")
     {
     anno <- getAnnotation(mdat)
     mdat_I <- mdat[anno$Type == "I",]
     mdat_II <- mdat[anno$Type == "II",]
-    mat <- rbind(assayData(mdat_I)$Meth,assayData(mdat_I)$Unmeth)
+    mat <- rbind(assays(mdat_I)$Meth,assays(mdat_I)$Unmeth)
     mat  <-  normalize.q(mat)
-    assayDataElement(mdat_I, "Meth") <- mat[1:(nrow(mat)/2),]
-    assayDataElement(mdat_I, "Unmeth") <- mat[((nrow(mat)/2)+1):nrow(mat),]
-    mat <- rbind(assayData(mdat_II)$Meth,assayData(mdat_II)$Unmeth)
+    assays(mdat_I)$Meth <- mat[1:(nrow(mat)/2),]
+    assays(mdat_I)$Unmeth <- mat[((nrow(mat)/2)+1):nrow(mat),]
+    mat <- rbind(assays(mdat_II)$Meth,assays(mdat_II)$Unmeth)
     mat  <-  normalize.q(mat)
-    assayDataElement(mdat_II, "Meth") <- mat[1:(nrow(mat)/2),]
-    assayDataElement(mdat_II, "Unmeth") <- mat[((nrow(mat)/2)+1):nrow(mat),]
-    methData <- rbind(assayData(mdat_I)$Meth,assayData(mdat_II)$Meth)
-    unmethData <- rbind(assayData(mdat_I)$Unmeth,assayData(mdat_II)$Unmeth)
+    assays(mdat_II)$Meth <- mat[1:(nrow(mat)/2),]
+    assays(mdat_II)$Unmeth <- mat[((nrow(mat)/2)+1):nrow(mat),]
+    methData <- rbind(assays(mdat_I)$Meth,assays(mdat_II)$Meth)
+    unmethData <- rbind(assays(mdat_I)$Unmeth,assays(mdat_II)$Unmeth)
     CpGID <- rownames(mdat)
     SampleID <- colnames(mdat)
     methData <- methData[CpGID,]
     unmethData <- unmethData[CpGID,]
-    assayDataElement(mdat, "Meth")<-methData
-    assayDataElement(mdat, "Unmeth")<-unmethData
+    assays(mdat)$Meth<-methData
+    assays(mdat)$Unmeth<-unmethData
 
     }
     else if(method == "quantile3")
     {
     ##quantile normalization of combined intensity values
     ##similar with lumi lumimethyN
-    mat <- rbind(assayData(mdat)$Meth,assayData(mdat)$Unmeth)
+    mat <- rbind(assays(mdat)$Meth,assays(mdat)$Unmeth)
     mat  <-  normalize.q(mat)
     methData <- mat[1:(nrow(mat)/2),]
     unmethData <- mat[((nrow(mat)/2)+1):nrow(mat),]
-    assayDataElement(mdat, "Meth")<-methData
-    assayDataElement(mdat, "Unmeth")<-unmethData
+    assays(mdat)$Meth<-methData
+    assays(mdat)$Unmeth<-unmethData
     }
     mdat@preprocessMethod <- c(mu.norm="norm.quantile", preprocessMethod(mdat))
     mdat
