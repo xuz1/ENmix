@@ -1,4 +1,4 @@
-import(Biobase,minfi,parallel,doParallel,foreach)
+import(parallel,doParallel,foreach,SummarizedExperiment,minfi)
 importFrom(MASS,huber)
 importFrom(preprocessCore,normalize.quantiles)
 importFrom(wateRmelon,BMIQ)
