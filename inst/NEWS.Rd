@@ -83,6 +83,8 @@
   \itemize{
     \item bug fix
 }}
-
-
+\section{Version 1.12.2}{
+  \itemize{
+    \item bug fix
+}}
 
