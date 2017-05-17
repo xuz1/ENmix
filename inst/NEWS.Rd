@@ -100,4 +100,8 @@
   \itemize{
     \item corrected User's guide  
 }}
+\section{Version 1.13.7}{
+  \itemize{
+    \item updated User's guide
+}}
 

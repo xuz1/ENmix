@@ -20,31 +20,35 @@ options(width=70)
 
 \title{The \Rpackage{ENmix} User's Guide}
 
-\date{Modified: May 16, 2017.  Compiled: \today}
+\date{Modified: May 17, 2017.  Compiled: \today}
 \begin{document}
 \maketitle
 
 \section{Introduction}
 
 The \Rpackage{ENmix} package provides a set of quality control and data 
-pre-processing tools for Illumina Methylaiton 
-HumanMethylation450 and MethylationEPIC Beadchips. 
+pre-processing tools for Illumina  
+HumanMethylation450 and MethylationEPIC Beadchips. It includes ENmix background 
+ correction, RELIC dye bias correction, RCP probe-type bias adjustment, 
+ along with a number of additional tools.
 These functions can be used to remove unwanted experimental noise and thus to
 improve accuracy and reproducibility of methylation measures. 
 \Rpackage{ENmix} functions 
-are flexible and transparent. Users has option to use a single pipeline 
+are flexible and transparent. Users have option to choose a single pipeline 
 command to finish all data pre-processing steps (including background correction, 
 dye-bias adjustment, inter-array normalization and probe-type bias correction) or 
-to use individual functions sequentially to perform data pre-processing in more 
+to use individual functions sequentially to perform data pre-processing in a more 
 customized manner. In addition the \Rpackage{ENmix} package has selectable 
 complementary functions for efficient data visualization (such as data 
-distribution plotting); quality control (identification and filtering of 
+distribution plots); quality control (identifing and filtering 
 low quality data points, samples, probes, and outliers, along with 
 imputation of missing values); identification of probes with multimodal 
-distributions due to SNPs and other factors; exploration of data variance
- structure using principal component regression analysis plots and preparation
-of experimental factors related control variables to be adjusted in downstream 
-statistical analysis. 
+distributions due to SNPs or other factors; exploration of data variance
+ structure using principal component regression analysis plot; preparation
+of experimental factors related surrogate control variables 
+to be adjusted in downstream 
+statistical analysis; and an efficient algorithm oxBS-MLE to estimate 
+5-methylcytosine and 5-hydroxymethylcytosine level.
 
 The data structure used by the \Rpackage{ENmix} package is compatible with
 several other related R packages, such as \Rpackage{minfi},
@@ -84,7 +88,7 @@ Bioinformatics. 2016
 
 Pipeline function \Rfunction{mpreprocess} can be used to perform background 
 correction, dye-bias adjustment, inter-array normalization, probe-type bias 
-correction, as well as outlier removal and imputation. 
+correction, as well as outlier removal and imputation in a single step. 
 
 <<example, eval=FALSE>>=
 library(ENmix)
@@ -105,7 +109,7 @@ beta=mpreprocess(rgSet,nCores=6,qc=TRUE,foutlier=TRUE,
 \subsection{Example 2: using individual function}
 
 This example code is basically doing the same thing as in example 1, but 
-more transparent, and have more customized options. 
+more transparent, and has more customized options. 
 
 <<example, eval=FALSE>>=
 library(ENmix)
@@ -361,13 +365,13 @@ Data quality measures, including detection P values, number of
 beads for each methylation read and average intensities for bisulfite
 conversion probes can be
  extracted using the function \Rfunction{QCinfo} from an object of
- \Robject{RGChannelSetExtended}. According default or user specified 
+ \Robject{RGChannelSetExtended}. Based on default or user specified 
 quality score thresholds, the \Rfunction{QCinfo} can also identify and 
-export a list of low quality samples and CpG probes. Outlier samples in 
-total intensity or beta value distribution were often excluded before
-further analysis. Such samples were tricky to be identified, by default 
-the argument outlier=TRUE will trigger the function to identify these 
-outlier samples automatically. Quality score figures from
+export a list of low quality samples and CpG probes. Outlier samples based on 
+total intensity or beta value distribution should be excluded before
+further analysis. Such samples have been difficult to identify, but by using 
+the argument outlier=TRUE, these outlier samples will be identified 
+ automatically. Data quality score figures from
 \Rfunction{QCinfo} can be used to guide the selection of quality score 
 thresholds. Low quality samples and probes can be filtered out using 
 \Rfunction{QCfilter} or \Rfunction{preprocessENmix}.
@@ -382,7 +386,7 @@ mdat <- QCfilter(mdat,qcinfo=qc,outlier=TRUE)
 @
 
 \subsection{Filtering out outliers and low quality data values}
-Outlier and low quality data values can have large impact on association
+Outlier and low quality data values can have a large impact on association
 statistical tests. Function \Rfunction{rm.outlier} can filter out these
 data points and replace them as missing values. Outliers are defined as 
 values smaller than 3 times IQR from the lower quartile or larger than 
@@ -404,15 +408,15 @@ b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE,impute=TRUE)
 @
 
 \section{Background correction and dye-bias adjustment}
-Function \Rfunction{preprocessENmix} incorporats a model based background
+Function \Rfunction{preprocessENmix} incorporates a model based background
  correction method \textit{ENmix}, which models methylation signal intensities 
 with a flexible exponential-normal mixture distribution, together
  with a truncated normal distribution to model background noise. 
 Users can also specify a list of poor performance CpGs to be excluded
  before background correction using argument \textit{exCpG}. Argument dyeCorr 
-can be used to specify a method for dye-bias correction. 
+can be used to specify a method for dye-bias correction, the default is RELIC. 
 
-See the following papers for the detailed description of the methods:
+See the following papers for the detailed description of related methods:
 
 Zongli Xu, et. al. ENmix: a novel background correction method for Illumina
 HumanMethylation450 BeadChip, Nucleic Acids Research, 2015
@@ -441,7 +445,7 @@ mdat<-norm.quantile(mdat, method="quantile1")
 @
 
 \section{Probe type bias adjustment}
-Majority of probes on Illumina 450K and EPIC BeadChips are type II probes. Although 
+The majority of probes on Illumina 450K and EPIC BeadChips are type II probes. Although 
 type II probes facilitate increased array genome coverage, they were shown to have 
 decreased dynamic range and reproducibility compared to type I probes. Taking advantage 
 of the high spatial correlation of DNA methylation levels along the human genome, The RCP 
@@ -452,6 +456,13 @@ pairs to derive the quantitative relationship between probe types and then recal
 <<rcp, eval=FALSE>>=
 beta<-rcp(mdat)
 @
+
+See the following publication for the detailed description of the method:
+
+Niu L, Xu Z, Taylor JA.
+RCP: a novel probe design bias correction method for Illumina Methylation
+BeadChip. Bioinformatics, 2016
+
 
 Alternatively, the \Rfunction{BMIQ} function in R package \Rpackage{wateRmelon} can also be used to 
 reduce probe type bias. However the funtion is computation intensive and can take very 
