@@ -104,4 +104,8 @@
   \itemize{
     \item updated User's guide
 }}
+\section{Version 1.13.9}{
+  \itemize{
+    \item getBeta: bug fix for handling large dataset
+}}
 

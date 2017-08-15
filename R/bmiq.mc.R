@@ -9,7 +9,7 @@ bmiq.mc <-function(mdat,nCores=1,...)
 
     anno <- getAnnotation(mdat)
     cat("Analysis is running, please wait...!","\n")
-    beta.b <- getBeta(mdat, "Illumina")
+    beta.b <- getB(mdat,type="Illumina")
     rm(mdat)
     beta.b[beta.b <= 0] <- 1e-06
     design.v <- as.vector(anno$Type);

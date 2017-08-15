@@ -34,20 +34,20 @@ QCfilter <-function(mdat,qcinfo=NULL,detPthre=0.000001,nbthre=3,
     if(is.null(bisulthre)){bisulthre=mean(bisul,na.rm=TRUE)-3*sd(bisul,
     na.rm=TRUE)}
 
-    ##low quanlity samples
+    ##low quality samples
     qcmat <- nbead<nbthre | detP>detPthre
     badValuePerSample <- apply(qcmat,2,sum)/nrow(qcmat)
     flag <- badValuePerSample > samplethre | bisul < bisulthre
-    cat(sum(flag)," samples with percentage of low quanlity CpG value greater
+    cat(sum(flag)," samples with percentage of low quality CpG value greater
      than ",samplethre, " or bisulfite intensity less than ", bisulthre, "\n")
     badsample=colnames(qcmat)[flag]
 
-    ##low quanlity CpGs
+    ##low quality CpGs
     qcmat <- qcmat[,!flag]
     NbadValuePerCpG <- apply(qcmat,1,sum)
     badValuePerCpG <- NbadValuePerCpG/ncol(qcmat)
     flag2 <- badValuePerCpG>CpGthre & NbadValuePerCpG>1
-    cat(sum(flag2)," CpGs with percentage of low quanlity value greater than ",
+    cat(sum(flag2)," CpGs with percentage of low quality value greater than ",
       CpGthre,"\n")
     badCpG <- rownames(qcmat)[flag2]
     qcmat=qcmat[!flag2,]
@@ -106,10 +106,10 @@ QCfilter <-function(mdat,qcinfo=NULL,detPthre=0.000001,nbthre=3,
 
     ##distribution plot before and after filtering
     mdat=preprocessRaw(mdat)
-    beta=getBeta(mdat, "Illumina")
+    beta=getB(mdat, type="Illumina")
 
     if(is(mdat, "MethylSet")){
-       beta=getBeta(mdat, "Illumina")
+       beta=getB(mdat, type="Illumina")
     }else{beta=mdat} 
 
     cat("Ploting freqpolygon_beta_beforeQC.jpg ...")

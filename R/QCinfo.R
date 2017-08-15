@@ -40,20 +40,20 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
     #threshold of bisulfite conversion control intensity
     if(is.null(bisulthre)){bisulthre=mean(bisul,na.rm=TRUE)-3*sd(bisul,na.rm=TRUE)}
 
-    ##low quanlity samples
+    ##low quality samples
     qcmat <- nbead<nbthre | detP>detPthre
     badValuePerSample <- apply(qcmat,2,sum)/nrow(qcmat)
     flag <- badValuePerSample > samplethre | bisul < bisulthre
-    cat(sum(flag)," samples with percentage of low quanlity CpG value greater
+    cat(sum(flag)," samples with percentage of low quality CpG value greater
      than ",samplethre, " or bisulfite intensity less than ", bisulthre, "\n")
     badsample=colnames(qcmat)[flag]
 
-    ##low quanlity CpGs
+    ##low quality CpGs
     qcmat <- qcmat[,!flag]
     NbadValuePerCpG <- apply(qcmat,1,sum)
     badValuePerCpG <- NbadValuePerCpG/ncol(qcmat)
     flag2 <- badValuePerCpG>CpGthre & NbadValuePerCpG>1
-    cat(sum(flag2)," CpGs with percentage of low quanlity value greater than ",
+    cat(sum(flag2)," CpGs with percentage of low quality value greater than ",
       CpGthre,"\n")
     badCpG <- rownames(qcmat)[flag2]
     qcmat=qcmat[!flag2,]
@@ -101,7 +101,7 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
     cat(sum(flag1)," samples are outliers based on averaged total intensity value","\n")
 
     #outliers in beta value distribution
-    beta=getBeta(mdat, "Illumina")
+    beta=getB(mdat, type="Illumina")
     qq=apply(beta,2,function(x) quantile(x, probs=c(0.25,0.5,0.75), na.rm=TRUE))
     q2575 <- apply(qq,1,function(x) quantile(x, probs=c(0.25,0.75), na.rm=TRUE))
     qr <- q2575["75%",]-q2575["25%",]
@@ -123,7 +123,7 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
     if(distplot)
     {
     mdat=preprocessRaw(rgSet)
-    beta=getBeta(mdat, "Illumina")
+    beta=getB(mdat, type="Illumina")
 
     cat("Ploting freqpolygon_beta_beforeQC.jpg ...")
     jpeg(filename="freqpolygon_beta_beforeQC.jpg",width=1000,

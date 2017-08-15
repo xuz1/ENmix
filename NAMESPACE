@@ -1,3 +1,4 @@
+importFrom("stats", "median")
 import(parallel,doParallel,foreach,SummarizedExperiment,minfi)
 importFrom(MASS,huber)
 importFrom(preprocessCore,normalize.quantiles)
@@ -14,5 +15,5 @@ importFrom("graphics","abline","axis","boxplot","hist","legend",
 export(preprocessENmix,bmiq.mc,ComBat.mc,
     nmode.mc,normalize.quantile.450k,norm.quantile,plotCtrl,
     QCinfo,QCfilter,pcrplot,freqpoly,multifreqpoly,
-    rm.outlier,rcp,oxBS.MLE,ctrlsva,relic,mpreprocess)
+    rm.outlier,rcp,oxBS.MLE,ctrlsva,relic,mpreprocess,getBeta,B2M,M2B)
 

@@ -130,8 +130,14 @@ enmix <- function(meth,bg,bgParaEst,nCores)
     gc(); meth.o
 }
 
-huber_mus <- function(x){ests <- huber(x);c(mu=ests$mu,s=ests$s)}
-huber_mu <- function(x){ests <- huber(x);ests$mu}
+huber_mus <- function(x){ests <- try(huber(x)); if(class(ests)[1]=="try-error"){
+    cat("Warning:Check negtive control data, or do quality control before ENmix\n");
+    c(mu=median(x,na.rm=TRUE),s=sd(x,na.rm=TRUE))
+    }else{c(mu=ests$mu,s=ests$s)}}
+huber_mu <- function(x){ests <- try(huber(x));if(class(ests)[1]=="try-error"){
+    cat("Warning: Check NORM control data, or do quality control before ENmix\n");
+    median(x,na.rm=TRUE)
+    }else{ests$mu}}
 
 estBG  <- function(meth_i)
 {

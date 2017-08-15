@@ -15,8 +15,8 @@ c(bibentry(bibtype = "Article",
   bibentry(bibtype = "Article",
            key = "RCP",
            author = c(
-           person("Zongli", "Xu"),
            person("Liang", "Niu"),
+           person("Zongli", "Xu"),
            person("Jack,A.", "Taylor")
                 ),
            title = "RCP: a novel probe design bias correction method for Illumina Methylation BeadChip",
@@ -35,8 +35,9 @@ c(bibentry(bibtype = "Article",
            person("Liang", "Niu")
                 ),
            title = "oxBS-MLE: An efficient method to estimate 5-methylcytosine and 5-hydroxymethylcytosine in paired bisulfite and oxidative bisulfite treated DNA",
-           journal = "In review",
+           journal = "Bioinformatics",
            year = "2016",
+           pubmed = "27522082",
            header = "oxBS-MLE to estimate 5-hydroxymethylcytosine"),
 
   bibentry(bibtype = "Article",
@@ -49,8 +50,9 @@ c(bibentry(bibtype = "Article",
            person("Liang", "Niu")
                 ),
            title = "RELIC: a novel dye-bias correction method for Illumina Methylation BeadChip",
-           journal = "In review",
-           year = "2016",
+           journal = "BMC Genomics",
+           year = "2017",
+           pubmed = "28049437",
            header = "RELIC dye-bias correction")
 )
 

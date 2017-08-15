@@ -4,7 +4,7 @@ rcp <- function(mdat,dist=25,quantile.grid=seq(0.001,0.999,by=0.001),
     if(!is(mdat, "MethylSet")){stop("the input needs to be of class 
     'MethylSet'")}
 
-    beta<-getBeta(mdat,type="Illumina")
+    beta<-getB(mdat,type="Illumina")
     raw.M<-logit2(beta)
 
 # find therby pairs of type I probes and type II probes
