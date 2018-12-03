@@ -168,7 +168,7 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
     cat(length(exSample), " samples were excluded before ENmix correction\n")
     }
     mdat <- preprocessRaw(rgSet)
-    }else if(is(mdat, "MethylSet")){
+    }else if(is(rgSet, "MethylSet")){
     if(!is.null(QCinfo) & exQCsample){exSample=unique(c(QCinfo$badsample,
      exSample))}
     exSample=exSample[exSample %in% colnames(rgSet)]

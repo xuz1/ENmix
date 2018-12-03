@@ -3,12 +3,12 @@ B2M<-function (x)
 {
     x[x == 0] <- min(x[x != 0])
     x[x == 1] <- max(x[x != 1])
-    log(x/(1 - x))
+    log2(x/(1 - x))
 }
 
 #convert M value to Beta value
 M2B<-function(x)
-{exp(x)/(1+exp(x))}
+{2^x/(1+2^x)}
 
 #extract Beta value
 getB <- function(mdat,type="Illumina",offset=100)
