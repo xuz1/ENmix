@@ -24,7 +24,7 @@ bmiq.mc <-function(mdat,nCores=1,...)
     registerDoParallel(c1)
     for(i in 1:N){
     id=which(parts==i)
-    beta.b1=beta.b[,id]
+    beta.b1=as.matrix(beta.b[,id])
 
     beta.b1 <- foreach (s = 1:ncol(beta.b1),.combine=cbind,.export=c("BMIQ"))%dopar%{
     s=s;out <- BMIQ(beta.b1[, s], design.v=design.v, plots = FALSE,...)

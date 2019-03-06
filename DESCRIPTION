@@ -1,6 +1,6 @@
 Package: ENmix
-Version: 1.19.1
-Date: 2018-12-03
+Version: 1.19.2
+Date: 2019-03-06
 Title: Data preprocessing and quality control for Illumina
    HumanMethylation450 and MethylationEPIC BeadChip
 Type: Package
