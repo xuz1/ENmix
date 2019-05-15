@@ -12,7 +12,7 @@ Fuction mpreprocess is a pipeline to easy preprocess steps for Illumina DNA meth
                 foutlier=TRUE,rmcr=FALSE,impute=FALSE)
 }
 \arguments{
-  \item{rgSet}{An object of class \code{RGChannelSetExtended}, \code{RGChannelSet} or \code{MethylSet}.}
+  \item{rgSet}{An object of class \code{rgDataSet},\code{methDataSet}, \code{RGChannelSetExtended}, \code{RGChannelSet} or \code{MethylSet}.}
   \item{nCores}{Number of cores will be used for computation}
   \item{bgParaEst}{Method to estimate background normal distribution parameters. This must be one of the strings: "oob","est", or "neg".}
   \item{dyeCorr}{Dye bias correction, "mean": correction based on averaged red/green ratio; or "RELIC": correction with RELIC method; or "none": no dye bias correction. The default is RELIC}

@@ -1,32 +1,54 @@
 QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05,
       bisulthre=NULL,outlier=TRUE,distplot=TRUE)
 {
+
     ##number of bead
-    if(!is(rgSet, "RGChannelSetExtended"))
-      stop("ERROR: rgSet is not an object of class 'RGChannelSetExtended'")
+    if(!is(rgSet, "rgDataSet") & !is(rgSet, "RGChannelSetExtended"))
+      stop("[QCinfo] The input should be an object of 'rgDataSet' or 'RGChannelSetExtended'")
 
-    nb <- assays(rgSet)$NBeads
-    typeI <- getProbeInfo(rgSet, type = "I")
-    bcA <- nb[typeI$AddressA, ]
-    bcB <- nb[typeI$AddressB, ]
-    bc_I <- bcA
-    flag <- bcA>bcB
-    bc_I[flag] <- bcB[flag];
-    typeII <- getProbeInfo(rgSet, type = "II")
-    locusNames <- getManifestInfo(rgSet, "locusNames")
+    if(is(rgSet, "rgDataSet")){
+      cginfo=getCGinfo(rgSet)
+      typeI <- cginfo[cginfo$Infinium_Design_Type %in% c("I","snpI"),]
+      typeIred=typeI[typeI$Color_Channel=="Red",]
+      typeIgrn=typeI[typeI$Color_Channel=="Grn",]
+      typeII<-cginfo[cginfo$Infinium_Design_Type %in% c("II","snpII"),]
+      locusNames=c(typeIred$Name,typeIgrn$Name,typeII$Name)
+      ##detection P value
+      detP<-calc_detP(rgSet,detPtype="negative")
+      ctrls<-metadata(rgSet)$ictrl
+    }else if(is(rgSet, "RGChannelSetExtended")){
+      typeI <- getProbeInfo(rgSet, type = "I")
+      typeII <- getProbeInfo(rgSet, type = "II")
+      locusNames <- getManifestInfo(rgSet, "locusNames")
+      ##detection P value
+      detP<-detectionP(rgSet)
+      ctrls<-getProbeInfo(rgSet,type="Control")
+    }
+
+    bc_I <- assays(rgSet)$NBeads[typeI$AddressA,]
+    flag<-bc_I>assays(rgSet)$NBeads[typeI$AddressB,]
+    bc_I[flag] <- assays(rgSet)$NBeads[typeI$AddressB,][flag];
     nbead <- matrix(NA_real_, ncol = ncol(rgSet), nrow = length(locusNames),
-    dimnames = list(locusNames, sampleNames(rgSet)))
+    dimnames = list(locusNames, colnames(rgSet)))
     nbead[typeI$Name,]<-bc_I
-    nbead[typeII$Name,]<-nb[typeII$AddressA,]
+    nbead[typeII$Name,]<-assays(rgSet)$NBeads[typeII$AddressA,]
+    rm(list=c("bc_I","flag"))
 
-    ##detection P value
-    detP<-detectionP(rgSet)
+    if(!identical(rownames(detP),rownames(nbead))){
+        idx=intersect(rownames(detP),rownames(nbead))
+        detP=detP[idx,]
+        nbead=nbead[idx,]
+    }
+    if(!identical(colnames(detP),colnames(nbead))){
+        idx=intersect(colnames(detP),colnames(nbead))
+        detP=detP[,idx]
+        nbead=nbead[,idx]
+    }
 
     ## bisulfite conversion internal controls
-    ctrls<-getProbeInfo(rgSet,type="Control")
     ctrls=ctrls[ctrls$Address %in% rownames(rgSet),]
-    ctrl_r <- getRed(rgSet)[ctrls$Address,]
-    ctrl_g <- getGreen(rgSet)[ctrls$Address,]
+    ctrl_r <- assays(rgSet)$Red[ctrls$Address,]
+    ctrl_g <- assays(rgSet)$Green[ctrls$Address,]
     cc=ctrls[(ctrls$Type %in% c("BISULFITE CONVERSION I")) & (ctrls$ExtendedType 
        %in% c("BS Conversion I C1","BS Conversion I-C2","BS Conversion I-C3")),]
     I_green=colMeans(ctrl_g[cc$Address,])
@@ -44,8 +66,8 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
     qcmat <- nbead<nbthre | detP>detPthre
     badValuePerSample <- apply(qcmat,2,sum)/nrow(qcmat)
     flag <- badValuePerSample > samplethre | bisul < bisulthre
-    cat(sum(flag)," samples with percentage of low quality CpG value greater
-     than ",samplethre, " or bisulfite intensity less than ", bisulthre, "\n")
+    cat(sum(flag)," samples with percentage of low quality CpG value greater than ",
+      samplethre, " or bisulfite intensity less than ", bisulthre, "\n")
     badsample=colnames(qcmat)[flag]
 
     ##low quality CpGs
@@ -87,7 +109,10 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
     if(outlier)
     {
     cat("Identifying ourlier samples based on beta or total intensity values...\n")
-    mdat=preprocessRaw(rgSet)
+
+    if(is(rgSet, "rgDataSet")){mdat=getmeth(rgSet)
+    }else if(is(rgSet, "RGChannelSetExtended")){mdat=preprocessRaw(rgSet)}
+
     mdat=mdat[rownames(qcmat),]
     mdat=mdat[,colnames(qcmat)]
     #outliers based on total intensity values
@@ -122,7 +147,10 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
 
     if(distplot)
     {
-    mdat=preprocessRaw(rgSet)
+
+    if(is(rgSet, "rgDataSet")){mdat=getmeth(rgSet)
+    }else if(is(rgSet, "RGChannelSetExtended")){mdat=preprocessRaw(rgSet)}
+
     beta=getB(mdat, type="Illumina")
 
     cat("Ploting freqpolygon_beta_beforeQC.jpg ...")
@@ -153,5 +181,3 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
       outlier_sample=outlier_sample)
     }else{list(detP=detP,nbead=nbead,bisul=bisul,badsample=badsample,badCpG=badCpG)}
 }
-
-

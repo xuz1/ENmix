@@ -1,13 +1,23 @@
 bmiq.mc <-function(mdat,nCores=1,...)
 {
-    if(!is(mdat, "MethylSet")){stop("object needs to be of class 'MethylSet'")}
+    if(!is(mdat,"methDataSet") & !is(mdat, "MethylSet")){
+       stop("object needs to be of class 'MethylSet'")}
+#    if(!require(wateRmelon)){stop("Can not load package wateRmelon")}
     if(nCores>detectCores()){
     nCores <- detectCores();
     cat("Only ",nCores," cores are avialable in your computer,", 
        "argument nCores was reset to nCores=",nCores,"\n")
     }
 
-    anno <- getAnnotation(mdat)
+    if(is(mdat,"MethylSet")){
+      anno <- getAnnotation(mdat)
+    }else if(is(mdat,"methDataSet")){
+      anno=rowData(mdat)
+      names(anno)[which(names(anno)=="Infinium_Design_Type")]="Type"
+      anno$Type[anno$Type %in% "snpI"]="I"
+      anno$Type[anno$Type %in% "snpII"]="II"
+    }
+
     cat("Analysis is running, please wait...!","\n")
     beta.b <- getB(mdat,type="Illumina")
     rm(mdat)

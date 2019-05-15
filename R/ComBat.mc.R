@@ -1,6 +1,7 @@
 ComBat.mc <-
 function(dat,batch,nCores=1,...)
 {
+#    if(!require("sva")){stop("Can not load sva package")}
     if(nCores>detectCores()){
     nCores <- detectCores();
     cat("Only ",detectCores()," Cores avialable, nCores was reset to ",

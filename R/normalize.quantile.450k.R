@@ -13,12 +13,22 @@ normalize.q <- function(x)
 
 normalize.quantile.450k <- function(mdat,method="quantile1")
 {
-    if(!is(mdat, "MethylSet")){stop("object needs to be of class 'MethylSet'")}
+    if(!require("preprocessCore")){stop("Can not load preprocessCore package")}
+    if(!is(mdat, "methDataSet") & !is(mdat, "MethylSet")){
+      stop("object needs to be of class 'methDataSet' or 'MethylSet'")}
     cat("Analysis is running, please wait...!","\n")
+
+    if(is(mdat,"MethylSet")){
+      anno <- getAnnotation(mdat)
+    }else if(is(mdat,"methDataSet")){
+      anno=rowData(mdat)
+      names(anno)[which(names(anno)=="Infinium_Design_Type")]="Type"
+      anno$Type[anno$Type %in% "snpI"]="I"
+      anno$Type[anno$Type %in% "snpII"]="II"
+    }
 
     if (method == "quantile1")
     {
-    anno <- getAnnotation(mdat)
     mdat_I <- mdat[anno$Type == "I",]
     mdat_II <- mdat[anno$Type == "II",]
     assays(mdat_I)$Meth<-normalize.q(assays(mdat_I)$Meth)
@@ -36,7 +46,6 @@ normalize.quantile.450k <- function(mdat,method="quantile1")
     }
     else if(method == "quantile2")
     {
-    anno <- getAnnotation(mdat)
     mdat_I <- mdat[anno$Type == "I",]
     mdat_II <- mdat[anno$Type == "II",]
     mat <- rbind(assays(mdat_I)$Meth,assays(mdat_I)$Unmeth)
@@ -68,7 +77,13 @@ normalize.quantile.450k <- function(mdat,method="quantile1")
     assays(mdat)$Meth<-methData
     assays(mdat)$Unmeth<-unmethData
     }
-    mdat@preprocessMethod <- c(mu.norm="normalize.quantile", 
-    preprocessMethod(mdat))
+
+    if(is(mdat, "methDataSet")){
+      annotation=metadata(mdat)$preprocessMethod
+      metadata(mdat)$preprocessMethod=c(annotation,paste("Normalization: ", method,sep=""))
+    }else if(is(mdat, "MethylSet")){
+      annotation=mdat@preprocessMethod
+      mdat@preprocessMethod <- c(annotation,paste("Normalization: ", method,sep=""))
+    }
     mdat
 }

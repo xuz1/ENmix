@@ -35,9 +35,6 @@ Zongli Xu, Sabine A. S. Langie, Patrick De Boever, Jack A. Taylor1 and Liang Niu
 \author{
 Zongli Xu and Liang Niu
 }
-\seealso{
-  Package \code{minfi} for classes \code{\linkS4class{RGChannelSet}} and \code{\linkS4class{MethylSet}}
-}
 \examples{
 if(FALSE){
 if (require(minfiData)) {

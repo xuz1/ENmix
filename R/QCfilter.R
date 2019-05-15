@@ -2,8 +2,8 @@ QCfilter <-function(mdat,qcinfo=NULL,detPthre=0.000001,nbthre=3,
     samplethre=0.05,CpGthre=0.05,
     bisulthre=NULL,outlier=FALSE,outid=NULL, outCpG=NULL,plot=FALSE)
 {    
-    if(!(is(mdat, "MethylSet") | is(mdat,"matrix"))){
-     stop("input needs to be MethylSet or a beta value matrix\n")}
+    if(!is(mdat,"methDataSet") & !is(mdat, "MethylSet") & !is(mdat,"matrix")){
+     stop("The input needs to be a methDataSet, MethylSet or a beta value matrix\n")}
 
     if(is.null(qcinfo)){stop("ERROR: Please provide QC information
      from function QCinfo'")}
@@ -105,10 +105,7 @@ QCfilter <-function(mdat,qcinfo=NULL,detPthre=0.000001,nbthre=3,
     cat("Done\n")
 
     ##distribution plot before and after filtering
-    mdat=preprocessRaw(mdat)
-    beta=getB(mdat, type="Illumina")
-
-    if(is(mdat, "MethylSet")){
+    if(is(mdat, "methDataSet") | is(mdat, "MethylSet")){
        beta=getB(mdat, type="Illumina")
     }else{beta=mdat} 
 

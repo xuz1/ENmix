@@ -20,7 +20,7 @@ options(width=70)
 
 \title{The \Rpackage{ENmix} User's Guide}
 
-\date{Modified: May 17, 2017.  Compiled: \today}
+\date{Modified: May 7, 2019.  Compiled: \today}
 \begin{document}
 \maketitle
 
@@ -98,9 +98,8 @@ require(minfiData)
 beta=mpreprocess(RGsetEx,nCores=6)
 #or
 #read in IDAT files
-sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
-         "extdata"), pattern = "csv$")
-rgSet <- read.metharray.exp(targets = sheet,extended = TRUE)
+path <- file.path(find.package("minfiData"),"extdata")
+rgSet <- readidat(path = path,recursive = TRUE)
 #quality control and data pre-processing
 beta=mpreprocess(rgSet,nCores=6,qc=TRUE,foutlier=TRUE,
      rmcr=TRUE,impute=TRUE)
@@ -114,9 +113,9 @@ more transparent, and has more customized options.
 <<example, eval=FALSE>>=
 library(ENmix)
 #read in data
-sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
-    "extdata"), pattern = "csv$")
-rgSet <- read.metharray.exp(targets = sheet, extended = TRUE)
+path <- file.path(find.package("minfiData"),"extdata")
+rgSet <- readidat(path = path,recursive = TRUE)
+
 #QC info
 qc<-QCinfo(rgSet)
 #background correction and dye bias correction
@@ -140,20 +139,27 @@ beta <- rm.outlier(beta,qcscore=qc,impute=TRUE,rmcr=TRUE)
 This example is to demonstrate the flexibility of the package functions. 
 Getting detailed information about data quality, SNP-like probes, excluding 
 user specified probes and/or samples, principal component regression analysis,
-outlier removal and control surrogate variables. 
+outlier removal, sex prediction, cell sub-type proportion estimates and control surrogate variables. 
 
 <<example, eval=FALSE>>=
 library(ENmix)
 #read in data
-sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
-    "extdata"), pattern = "csv$")
-rgSet <- read.metharray.exp(targets = sheet, extended = TRUE)
+path <- file.path(find.package("minfiData"),"extdata")
+rgSet <- readidat(path = path,recursive = TRUE)
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),"extdata"), pattern = "csv$")
+rownames(sheet)=paste(sheet$Slide,sheet$Array,sep="_")
+colData(rgSet)=as(sheet[colnames(rgSet),],"DataFrame")
 #control plots
 plotCtrl(rgSet)
 #QC info
 qc<-QCinfo(rgSet)
-mraw <- preprocessRaw(rgSet)
-beta<-getBeta(mraw, "Illumina")
+#calculate detection P values
+detp=calc_detP(rgSet,detPtype = "negative")
+detp2=calc_detP(rgSet,detPtype = "oob")
+#get methDataSet
+mraw <- getmeth(rgSet)
+#get raw methyaltion beta values
+beta<-getB(mraw)
 #distribution plot
 multifreqpoly(beta,main="Methylation Beta value distribution")
 #Search for multimodal CpGs
@@ -167,34 +173,41 @@ mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr="RELIC",
                       QCinfo=qc, exCpG=outCpG, nCores=6)
 #inter-array normalization
 mdat<-norm.quantile(mdat, method="quantile1")
+colData(mdat)=as(sheet[colnames(mdat),],"DataFrame")
 #probe-type bias adjustment
 beta<-rcp(mdat,qcscore=qc)
 # Principal component regression analysis plot
-cov<-data.frame(group=pData(mdat)$Sample_Group,
-    slide=factor(pData(mdat)$Slide))
+cov<-data.frame(group=colData(mdat)$Sample_Group,
+    slide=factor(colData(mdat)$Slide))
 pcrplot(beta, cov, npc=6)
 #filter out low quality and outlier data points for each probe;
 #rows and columns with too many missing value can be removed 
 #if specify; Do imputation to fill missing data if specify.
 beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
 #Non-negative control surrogate variables
-sva<-ctrlsva(rgSet)
+csva<-ctrlsva(rgSet)
+#estimate cell type proportions
+#based on rgDataset
+celltype=estimateCellProp(userdata=rgSet,refdata="FlowSorted.Blood.450k",nonnegative = TRUE,normalize=TRUE)
+#using methDataSet
+celltype=estimateCellProp(userdata=mdat,refdata="FlowSorted.Blood.450k",nonnegative = TRUE,normalize=TRUE)
+#using beta value
+celltype=estimateCellProp(userdata=beta,refdata="FlowSorted.Blood.450k",nonnegative = TRUE,normalize=TRUE)
+#predic sex based on rgDataSet or methDataset
+sex=predSex(rgSet)
+sex=predSex(mdat)
+#Methylation age calculation
+mage=methyAge(beta)
 @
 
 \section{Setting up the data}
-The first step is to import array raw data files (*.idat) using functions
- provided in R package \Rpackage{minfi} to create an object of 
-\Robject{RGChannelSetExtended}. 
+The first step is to import array raw data files (*.idat)
+ to create an object of \Robject{rgDataSet}, which is similar to 
+\Robject{RGChannelSetExtended} in minfi package, but with probe annotation integrated into data object, and having smaller data size. User can also use minfi package to read in idat files and create \Robject{RGChannelSetExtended}. Most functions in ENmix support \Robject{RGChannelSetExtended} or \Robject{RGChannelSet}.
 
 <<UnevaluatedCode, eval=FALSE>>=
 library(ENmix)
-require(minfi)
-#see minfi user's guide for the format of sample_sheet.txt file
-targets <- read.table("./sample_sheet.txt", header=T)
-rgSet <- read.metharray.exp( targets = targets, extended = TRUE)
-# or read in all idat files under a directory
-rgSet <- read.metharray.exp(base = "path_to_directory_idat_files", 
-targets = NULL, extended = TRUE, recursive=TRUE)
+rgSet <- readidat(path = "directory containing idat files",recursive = TRUE)
 @
 When methylation IDAT raw data files are not available, such as in many
  publically available datasets, users can use methylated (M) and unmethylated
@@ -211,18 +224,6 @@ anno<-c("IlluminaHumanMethylation450k", "ilmn12.hg19")
 names(anno)<-c("array", "annotation")
 mdat<-MethylSet(Meth = M, Unmeth = U, annotation=anno, 
 phenoData=pheno)
-@
-
-As an example for testing, users can use IDAT files provided in R data
- package minfiData to create an object of \Robject{RGChannelSetExtended}.
-
-<<load, eval=FALSE>>=
-library(ENmix)
-require(minfi)
-require(minfiData)
-sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
-"extdata"), pattern = "csv$")
-rgSet <- read.metharray.exp(targets = sheet, extended = TRUE)
 @
 
 \section{Quality Control}
@@ -292,8 +293,14 @@ how experimental factors affect methylation measures, such as batch,
  plate, array or array location.
 
 <<ctrlplot, eval=FALSE>>=
-pinfo=pData(rgSet)
-IDorder=rownames(pinfo)[order(pinfo$Slide,pinfo$Array)]
+
+path <- file.path(find.package("minfiData"),"extdata")
+rgSet <- readidat(path = path,recursive = TRUE)
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),"extdata"), pattern = "csv$")
+rownames(sheet)=paste(sheet$Slide,sheet$Array,sep="_")
+colData(rgSet)=as(sheet[colnames(rgSet),],"DataFrame")
+#control plots
+IDorder=rownames(colData(rgSet))[order(colData(rgSet)$Slide,colData(rgSet)$Array)]
 plotCtrl(rgSet,IDorder)
 @
 
@@ -317,16 +324,16 @@ understand. It is also much faster, and only take a few
 minutes to produce a distribution plot for >1000 samples. 
 
 <<ctrlplot, eval=FALSE>>=
-mraw <- preprocessRaw(rgSet)
+mraw <- getmeth(rgSet)
 #total intensity plot is userful for data quality inspection
 #and identification of outlier samples
-multifreqpoly(assayData(mraw)$Meth+assayData(mraw)$Unmeth,
+multifreqpoly(assays(mraw)$Meth+assays(mraw)$Unmeth,
 xlab="Total intensity")
 #Compare frequency polygon plot and density plot
-beta<-getBeta(mraw, "Illumina")
-anno=getAnnotation(rgSet)
-beta1=beta[anno$Type=="I",]
-beta2=beta[anno$Type=="II",]
+beta<-getB(mraw)
+anno=rowData(mraw)
+beta1=beta[anno$Infinium_Design_Type=="I",]
+beta2=beta[anno$Infinium_Design_Type=="II",]
 library(geneplotter)
 jpeg("dist.jpg",height=900,width=600)
 par(mfrow=c(3,2))
@@ -481,10 +488,6 @@ internal control probes. These variables can then be adjusted as covariables in
 downstream association analysis to remove unwanted data variation.  
 
 <<ctrlsva, eval=FALSE>>=
-require(minfiData) 
-sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
-                             "extdata"), pattern = "csv$")
-rgSet <- read.metharray.exp(targets = sheet,extended = TRUE)
 sva<-ctrlsva(rgSet)
 @
 
@@ -507,8 +510,8 @@ plotted to explore methylation data variance structure and to identify possible
  confounding variables to guide association statistical analysis.
 
 <<pcrplot, eval=FALSE>>=
-cov<-data.frame(group=pData(mdat)$Sample_Group,
-    slide=factor(pData(mdat)$Slide))
+cov<-data.frame(group=colData(mdat)$Sample_Group,
+    slide=factor(colData(mdat)$Slide))
 pcrplot(beta, cov, npc=6)
 @
 
@@ -574,7 +577,7 @@ rgSet <- read.metharray.exp(targets = sheet, extended = TRUE)
 plotCtrl(rgSet)
 #minfi functions to extract methylation and annotation data
 mraw <- preprocessRaw(rgSet)
-beta<-getBeta(mraw, "Illumina")
+beta<-getB(mraw, "Illumina")
 anno=getAnnotation(rgSet)
 #ENmix function for fast and accurate distribution plot
 multifreqpoly(beta,main="Data distribution")
@@ -600,7 +603,7 @@ mset<-preprocessENmix(myLoad$rgSet,bgParaEst="oob", nCores=6)
 mset=mset[rownames(myLoad$beta),]
 #update myLoad object with background corrected intensity data
 myLoad$mset=mset
-myLoad$beta=getBeta(mset)
+myLoad$beta=getB(mset)
 myLoad$intensity=getMeth(mset)+getUnmeth(mset)
 #continue ChAMP pipeline
 myNorm=champ.norm()

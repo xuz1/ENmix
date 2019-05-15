@@ -1,14 +1,18 @@
 
 ctrlsva<-function(rgSet,percvar=0.9,npc=1,flag=1)
 {
-    if(!is(rgSet, "RGChannelSet")){stop("Input needs to an RGChannelSet\n")}
+    if(!is(rgSet, "rgDataSet") & !is(rgSet, "RGChannelSet")){
+       stop("Input needs to an RGChannelSet\n")}
     if(percvar<0 | percvar>1){stop("Percentage of variation threshold needs 
     to be between 0 and 1\n")}
 
-    ctrls<-getProbeInfo(rgSet,type="Control")
-    ctrls <- ctrls[ctrls$Address %in% featureNames(rgSet),]
-    ctrl_r <- getRed(rgSet)[ctrls$Address[!(ctrls$Type %in% "NEGATIVE")],]
-    ctrl_g <- getGreen(rgSet)[ctrls$Address[!(ctrls$Type %in% "NEGATIVE")],]
+    if(is(rgSet, "rgDataSet")){ctrls<-metadata(rgSet)$ictrl
+    }else if(is(rgSet, "RGChannelSet")){
+      ctrls<-getProbeInfo(rgSet,type="Control")
+      ctrls <- ctrls[ctrls$Address %in% featureNames(rgSet),]
+    }
+    ctrl_r <- assays(rgSet)$Red[ctrls$Address[!(ctrls$Type %in% "NEGATIVE")],]
+    ctrl_g <- assays(rgSet)$Green[ctrls$Address[!(ctrls$Type %in% "NEGATIVE")],]
     ctrl_nneg=rbind(ctrl_r,ctrl_g)
 #PCA of control-probe intensities
     pca <- prcomp(t(ctrl_nneg))

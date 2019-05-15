@@ -1,19 +1,33 @@
+import(SummarizedExperiment)
+import(doParallel)
+import(foreach)
+import(parallel)
+import(illuminaio)
 importFrom("stats", "median")
-import(parallel,doParallel,foreach,SummarizedExperiment,minfi)
-importFrom(MASS,huber)
-importFrom(preprocessCore,normalize.quantiles)
+importFrom(preprocessCore, normalize.quantiles)
+importFrom("matrixStats", "colMedians","colMads")
+importFrom("grDevices","dev.off","jpeg","colorRampPalette", "pdf")
+importFrom("graphics","abline","axis","boxplot","hist","legend",
+    "lines","par","plot","polygon","text","points")
+importFrom("methods", "as", "callNextMethod", "is", "new")
+importFrom("stats","density","dexp","dnorm","lm","na.omit","pf",
+    "pnorm","prcomp","quantile","screeplot","sd")
+importFrom("stats", "coef", "dbeta", "mad", "optim", "pbeta", "qbeta",
+             "rbeta", "rmultinom")
+importFrom("utils", "read.table")
 importFrom(wateRmelon,BMIQ)
 importFrom(sva,ComBat)
 importFrom(geneplotter,multidensity)
 importFrom(impute,impute.knn)
-importFrom("grDevices","dev.off","jpeg")
-importFrom("graphics","abline","axis","boxplot","hist","legend",
-    "lines","par","plot","polygon","text")
-    importFrom("stats","density","dexp","dnorm","lm","na.omit","pf",
-    "pnorm","prcomp","quantile","screeplot","sd")
+
+exportClasses(rgDataSet,methDataSet)
 
 export(preprocessENmix,bmiq.mc,ComBat.mc,
     nmode.mc,normalize.quantile.450k,norm.quantile,plotCtrl,
     QCinfo,QCfilter,pcrplot,freqpoly,multifreqpoly,
-    rm.outlier,rcp,oxBS.MLE,ctrlsva,relic,mpreprocess,getBeta,B2M,M2B)
+    rm.outlier,rcp,oxBS.MLE,ctrlsva,relic,mpreprocess,
+    getB,B2M,M2B,rgDataSet,methDataSet,
+    calc_detP,getCGinfo,getmeth,readidat,
+    readmanifest,estimateCellProp,predSex,methyAge)
+
 
