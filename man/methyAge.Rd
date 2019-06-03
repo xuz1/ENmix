@@ -21,15 +21,9 @@ methyAge(beta,type="all",fastImputation=FALSE,normalize=TRUE,nCores=2)
 }
 
 \references{
-  Hovath 
-  \emph{Title}
-  Journal 
-  Hannum 
-  \emph{Title}
-  Journal 
-  PhenoAge 
-  \emph{Title}
-  Journal 
+Horvath S. \emph{DNA methylation age of human tissues and cell types}. Genome biology 2013 14:R115.
+Hannum G, Guinney J, Zhao L, Zhang L, Hughes G, Sadda S, et al. \emph{Genome-wide methylation profiles reveal quantitative views of human aging rates}. Molecular cell 2013 49:359-367.
+Levine ME, Lu AT, Quach A, Chen BH, Assimes TL, Bandinelli S, et al. \emph{An epigenetic biomarker of aging for lifespan and healthspan}. Aging (Albany NY) 2018 10:573-591.
 }
 
 \author{

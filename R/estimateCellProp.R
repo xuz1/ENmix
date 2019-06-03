@@ -40,8 +40,14 @@ if(refdata=="FlowSorted.Blood.450k"){
  refdata=refdata[,!flag]
 }else if(refdata=="FlowSorted.Blood.EPIC"){
   library(refdata, character.only = TRUE)
+  library(ExperimentHub)
+  hub <- ExperimentHub()
+  query(hub, "FlowSorted.Blood.EPIC")
+  FlowSorted.Blood.EPIC <- hub[["EH1136"]]
   refdata=get(refdata)
   refdata=preprocessRaw(refdata)
+  flag=refdata$CellType %in% c("MIX")
+  refdata=refdata[,!flag]
 #need to check
 }
 
