@@ -74,7 +74,7 @@ if(!require(manifestpkg, character.only = TRUE)){
 manifest=get(manifestpkg)
 
 if(!require(annopak,character.only = TRUE)){
-    stop(sprintf("cannot load annotation package %s", annopkg))}
+    stop(sprintf("cannot load annotation package %s", annopak))}
 anno=get(annopak)
 anno <- do.call(cbind, lapply(anno@defaults, get))
 

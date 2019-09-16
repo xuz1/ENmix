@@ -1,6 +1,6 @@
 #Adopted from Hovath modified BMIQ method code
 
-require(RPMM);
+#require(RPMM);
 betaEst2=function (y, w, weights) 
 {
     yobs = !is.na(y)
@@ -16,7 +16,7 @@ betaEst2=function (y, w, weights)
         1))
     if (sum(yobs) == 2) 
         return(exp(logab))
-    opt = try(optim(logab, betaObjf, ydata = y, wdata = w, weights = weights, 
+    opt = try(optim(logab, RPMM::betaObjf, ydata = y, wdata = w, weights = weights, 
         method = "Nelder-Mead",control=list(maxit=50) ), silent = TRUE)
     if (inherits(opt, "try-error")) 
         return(c(1, 1))
@@ -92,7 +92,7 @@ w0.m[which(beta1.v > th1.v[2]),3] = 1;
 print("Fitting EM beta mixture to goldstandard probes");
 set.seed(1)
 rand.idx = sample(1:length(beta1.v),min(c(nfit, length(beta1.v))  )   ,replace=FALSE)
-em1.o = blc(matrix(beta1.v[rand.idx],ncol=1),w=w0.m[rand.idx,],maxiter=niter,tol=tol);
+em1.o =RPMM::blc(matrix(beta1.v[rand.idx],ncol=1),w=w0.m[rand.idx,],maxiter=niter,tol=tol);
 subsetclass1.v = apply(em1.o$w,1,which.max);
 subsetth1.v = c(mean(max(beta1.v[rand.idx[subsetclass1.v==1]]),min(beta1.v[rand.idx[subsetclass1.v==2]])),mean(max(beta1.v[rand.idx[subsetclass1.v==2]]),min(beta1.v[rand.idx[subsetclass1.v==3]])));
 class1.v = rep(2,length(beta1.v));

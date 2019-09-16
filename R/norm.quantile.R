@@ -13,7 +13,7 @@ normalize.q <- function(x)
 
 norm.quantile <- function(mdat,method="quantile1")
 {
-   if(!require("preprocessCore")){stop("Can not load preprocessCore package")}
+#   if(!require("preprocessCore")){stop("Can not load preprocessCore package")}
     if(!is(mdat, "methDataSet") & !is(mdat, "MethylSet")){
       stop("object needs to be of class 'methDataSet' or 'MethylSet'")}
     cat("Analysis is running, please wait...!","\n")

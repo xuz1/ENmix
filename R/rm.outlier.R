@@ -1,7 +1,7 @@
 rm.outlier <-function(mat,byrow=TRUE,qcscore=NULL,detPthre=0.000001,nbthre=3,
      rmcr=FALSE,rthre=0.05,cthre=0.05,impute=FALSE,imputebyrow=TRUE,...)
 {
-    if(impute){if(!require("impute")){stop("Can not load impute package")}}
+#    if(impute){if(!require("impute")){stop("Can not load impute package")}}
     if(!(is.numeric(mat) & is.matrix(mat))){stop("Input data must be a
      numeric matrix")}
 
@@ -65,7 +65,7 @@ rm.outlier <-function(mat,byrow=TRUE,qcscore=NULL,detPthre=0.000001,nbthre=3,
     if(impute)
     {
     if(imputebyrow){mat=t(mat)}
-    resu=impute.knn(mat,...)
+    resu=impute::impute.knn(mat,...)
 
     #error checking and imperfect fix
     rg=apply(mat,2,function(x) range(x,na.rm=TRUE))

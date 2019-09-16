@@ -1,4 +1,4 @@
-QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05,
+QCinfo <- function(rgSet,detPthre=0.000001,detPtype="negative",nbthre=3,samplethre=0.05,CpGthre=0.05,
       bisulthre=NULL,outlier=TRUE,distplot=TRUE)
 {
 
@@ -14,7 +14,7 @@ QCinfo <- function(rgSet,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05
       typeII<-cginfo[cginfo$Infinium_Design_Type %in% c("II","snpII"),]
       locusNames=c(typeIred$Name,typeIgrn$Name,typeII$Name)
       ##detection P value
-      detP<-calc_detP(rgSet,detPtype="negative")
+      detP<-calc_detP(rgSet,detPtype=detPtype)
       ctrls<-metadata(rgSet)$ictrl
     }else if(is(rgSet, "RGChannelSetExtended")){
       typeI <- getProbeInfo(rgSet, type = "I")

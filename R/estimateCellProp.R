@@ -40,7 +40,7 @@ if(refdata=="FlowSorted.Blood.450k"){
  refdata=refdata[,!flag]
 }else if(refdata=="FlowSorted.Blood.EPIC"){
   library(refdata, character.only = TRUE)
-  library(ExperimentHub)
+#  library(ExperimentHub)
   hub <- ExperimentHub()
   query(hub, "FlowSorted.Blood.EPIC")
   FlowSorted.Blood.EPIC <- hub[["EH1136"]]
@@ -119,15 +119,15 @@ if(refplot){
 }
 
 #select a set of CpG probes best differentiating celltypes
-require(genefilter)
-Ftest=rowFtests(ref, pd$CellType)
+#require(genefilter)
+Ftest=genefilter::rowFtests(ref, pd$CellType)
 ref=ref[!is.na(Ftest$p.value) & Ftest$p.value<1e-8,]
 
     tIndexes <- split(x=seq(length(pd$CellType)),f=factor(pd$CellType))
     tstatList <- lapply(tIndexes, function(i) {
         x <- rep(0,ncol(ref))
         x[i] <- 1
-        rowttests(ref, factor(x))
+        genefilter::rowttests(ref, factor(x))
     })
     if (probeSelect == "any"){
         probeList <- lapply(tstatList, function(x) {
@@ -151,13 +151,13 @@ ref=ref[!is.na(Ftest$p.value) & Ftest$p.value<1e-8,]
     refmean <- sapply(split(x=seq(length(pd$CellType)),f=factor(pd$CellType)), 
                function(i) rowMeans(ref[,i]))
     refmedian <- sapply(split(x=seq(length(pd$CellType)),f=factor(pd$CellType)), 
-               function(i) rowMedians(ref[,i]))
+               function(i) Biobase::rowMedians(ref[,i]))
     rownames(refmedian)=rownames(ref)
 
 if(refplot){
-if (!require("gplots")){stop("Please install gplots for methylation heatmap")}
+#if (!require("gplots")){stop("Please install gplots for methylation heatmap")}
 jpeg("refdata_heatmap.jpg",width=700,height=700,quality=100)
-heatmap.2(ref,labCol=pd$CellType,labRow="",col=colorRampPalette(c("blue", "white", "red"))(256),key=TRUE,trace="none")
+gplots::heatmap.2(ref,labCol=pd$CellType,labRow="",col=colorRampPalette(c("blue", "white", "red"))(256),key=TRUE,trace="none")
 dev.off()
 }
 
@@ -215,7 +215,7 @@ nSubj = dim(userdata)[2]
   colnames(mixCoef) = colnames(Xmat)
 
   if(nonnegative){
-   if(!require(quadprog))stop("Can not load package quadprog")
+#   if(!require(quadprog))stop("Can not load package quadprog")
 
     Amat = diag(nCol)
     b0vec = rep(0,nCol)
@@ -223,7 +223,7 @@ nSubj = dim(userdata)[2]
     for(i in 1:nSubj){
       obs = which(!is.na(userdata[,i]))
       Dmat = t(Xmat[obs,])%*%Xmat[obs,]
-      mixCoef[i,] = solve.QP(Dmat, t(Xmat[obs,])%*%userdata[obs,i], Amat, b0vec)$sol
+      mixCoef[i,] = quadprog::solve.QP(Dmat, t(Xmat[obs,])%*%userdata[obs,i], Amat, b0vec)$sol
     }
   }else{
     for(i in 1:nSubj){

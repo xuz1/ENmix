@@ -1,14 +1,19 @@
 methyAge<-function(beta,type="all",fastImputation=FALSE,normalize=TRUE,nCores=2)
 {
 #source("mage_norm_function.R")
-require(sqldf)
-require(impute)
-require(flashClust)
-require(dynamicTreeCut)
-require(RPMM)
+#require(sqldf)
+#require(impute)
+#require(flashClust)
+#require(dynamicTreeCut)
+#require(RPMM)
 
 if(min(beta,na.rm=TRUE)<0 | max(beta,na.rm=TRUE)>1){
 stop("Warning: Methylation beta value input should be within [0,1]")}
+
+hovath=data.frame()
+hannum=data.frame()
+phenoage=data.frame()
+
 load(system.file("mage_ref.RData",package="ENmix"))
 
 missing_hovath=as.vector(hovath$cg[-1])[!(as.vector(hovath$cg[-1]) %in% rownames(beta))]
@@ -46,7 +51,7 @@ noMissingPerSample=apply(as.matrix(is.na(beta)),1,sum)
 if(!fastImputation & nSamples>1){
 if(max(noMissingPerSample,na.rm=TRUE)>0 ){
 dimnames1=dimnames(beta)
-beta= data.frame(t(impute.knn(t(beta))$data))
+beta= data.frame(t(impute::impute.knn(t(beta))$data))
 dimnames(beta)=dimnames1
 }}
 if(fastImputation | nSamples==1){

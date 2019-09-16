@@ -56,7 +56,7 @@ readidat <- function(path = NULL,manifestfile=NULL,recursive = FALSE, verbose = 
         stop("[readidat] Array size are different.\n")
     }
     if(!sameArray){
-        message(arrayType)
+        message(arrayTypes)
         stop("[readidat] Samples are from different array")
      }else{arraytype=as.character(arrayTypes[,"array"][1])
            annotation=as.character(arrayTypes[,"annotation"][1])

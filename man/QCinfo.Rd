@@ -8,12 +8,14 @@ Extract informations for data quanlity controls: detection P values, number of b
 The function can also identify low quality samples and probes, as well as outlier samples based on total intensity or beta value distribution.
 }
 \usage{
-QCinfo(rgSet, detPthre=0.000001, nbthre=3, samplethre=0.05, CpGthre=0.05,
+QCinfo(rgSet, detPthre=0.000001, detPtype="negative", nbthre=3, samplethre=0.05, CpGthre=0.05,
        bisulthre=NULL, outlier=TRUE, distplot=TRUE)
 }
 \arguments{
   \item{rgSet}{An object of class \code{RGChannelSetExtended}.}
   \item{detPthre}{Detection P value threshold to identify low quality data point}
+  \item{detPtype}{Calculate detection P values based on negtive internal control ("negative")
+    probes or out of the band ("oob") probes}
   \item{nbthre}{Number of bead threshold to identify low quality data point}
   \item{samplethre}{Threshold to identify low quality samples, the percentage of low quality methylation data points across probes for each sample}
   \item{CpGthre}{Threshold to identify low quality probes, percentage of low quality methylation data points across samples for each probe}
