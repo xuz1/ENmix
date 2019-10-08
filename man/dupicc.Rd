@@ -7,7 +7,7 @@ Methylation duplicates evaluation.
 Calcuate ICC (consistency and twoway) and Pearson's correlation coefficient for each CpG probes. Calculate Pearson's correlation coefficient and methylation differences between duplicate samples.  
 }
 \usage{
-dupicc(dat,dupid,mvalue=FALSE,center=FALSE,ncores=2,qcflag=FALSE,qc=NULL,detPthre=0.05,nbthre=3)
+dupicc(dat,dupid,mvalue=FALSE,center=FALSE,ncores=2,qcflag=FALSE,qc=NULL,detPthre=0.05,nbthre=3,skipicc=FALSE)
 }
 \arguments{
   \item{dat}{Methylation beta value matrix}
@@ -19,6 +19,7 @@ dupicc(dat,dupid,mvalue=FALSE,center=FALSE,ncores=2,qcflag=FALSE,qc=NULL,detPthr
   \item{qc}{QC object from ENmix package}
   \item{detPthre}{Detection P value threshold to identify low quality data point}
   \item{nbthre}{Number of bead threshold to identify low quality data point}
+  \item{skipicc}{If TRUE, ICC calculation will be skipped}
 }
 \value{
 icc:  a data frame contain ICC and P values for each probes

@@ -1,4 +1,4 @@
-dupicc<-function(dat,dupid,mvalue=FALSE,center=FALSE,ncores=2,qcflag=FALSE,qc=NULL,detPthre=0.05,nbthre=3)
+dupicc<-function(dat,dupid,mvalue=FALSE,center=FALSE,ncores=2,qcflag=FALSE,qc=NULL,detPthre=0.05,nbthre=3,skipicc=FALSE)
 {
 dupid=data.frame(dupid)
 
@@ -45,6 +45,7 @@ resu=data.frame(id=colnames(b1),cor=cc,diff=dist)
 resu
 }
 
+if(!skipicc){
 dupid=dupid[dupid$id1 %in% colnames(dat) & dupid$id2 %in% colnames(dat),]
 dat1=dat[,as.vector(dupid$id1)]
 dat2=dat[,as.vector(dupid$id2)]
@@ -54,6 +55,7 @@ resu=as.data.frame(resu)
 names(resu)=c("probe","icc","p")
 resu$icc=as.numeric(as.vector(resu$icc))
 resu$p=as.numeric(as.vector(resu$p))
+}
 
 if(center){dat=t(scale(t(dat),center=T,scale=F))
 	dat1=dat[,as.vector(dupid$id1)]
@@ -61,7 +63,7 @@ if(center){dat=t(scale(t(dat),center=T,scale=F))
 }
 	dupcor=dcor(dat1,dat2)
 
-list(icc=resu,dupcor=dupcor)
+if(!skipicc){list(icc=resu,dupcor=dupcor)}else{dupcor}
 }
 
 
