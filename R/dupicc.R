@@ -15,6 +15,9 @@ if(qcflag){
 	dat[qc$detP>detPthre | qc$nbead<nbthre]<-NA
 }      
 
+flag=dupid$id1 %in% colnames(dat) & dupid$id2 %in% colnames(dat) 
+dupid=dupid[flag,]
+
 icc_all <-function(probe,mat1,mat2)
 {
         m1=mat1[probe,]
@@ -39,7 +42,7 @@ for(i in 1:ncol(b1))
 	flag=!(is.na(x1) | is.na(x2))
 	x1=x1[flag];x2=x2[flag]
         cc[i]=cor(x1,x2,method="pearson",use="pairwise.complete.obs")
-        dist[i]=sum(abs(x1[,i]-x2[,i]))/nrow(b1)
+        dist[i]=sum(abs(x1-x2))/length(x1)
 }
 resu=data.frame(id=colnames(b1),cor=cc,diff=dist)
 resu
