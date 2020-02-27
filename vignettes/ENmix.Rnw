@@ -306,7 +306,8 @@ how experimental factors affect methylation measures, such as batch,
 path <- file.path(find.package("minfiData"),"extdata")
 rgSet <- readidat(path = path,recursive = TRUE)
 sheet <- read.metharray.sheet(file.path(find.package("minfiData"),"extdata"),
-    pattern = "csv$") rownames(sheet)=paste(sheet$Slide,sheet$Array,sep="_")
+    pattern = "csv$") 
+rownames(sheet)=paste(sheet$Slide,sheet$Array,sep="_")
 colData(rgSet)=as(sheet[colnames(rgSet),],"DataFrame")
 #control plots
 IDorder=rownames(colData(rgSet))[order(colData(rgSet)$Slide,colData(rgSet)$Array)]
@@ -480,17 +481,6 @@ Niu L, Xu Z, Taylor JA.
 RCP: a novel probe design bias correction method for Illumina Methylation
 BeadChip. Bioinformatics, 2016
 
-
-Alternatively, the \Rfunction{BMIQ} function in R package \Rpackage{wateRmelon}
- can also be used to reduce probe type bias. However the funtion is computation 
-intensive and can take very long time for large dataset. Therefore we here 
-provided a multi-core parallel computing 
-wrapper in the function \Rfunction{bmiq.mc} to speed up the process.
-
-<<bmiq.mc, eval=FALSE>>=
-beta<-bmiq.mc(mdat, nCores=6)
-@
-
 \section{Batch effect correction}
 
 Function \Rfunction{ctrlsva} can be used to estimate surrogate variables for batch 
@@ -500,15 +490,6 @@ downstream association analysis to remove unwanted data variation.
 
 <<ctrlsva, eval=FALSE>>=
 sva<-ctrlsva(rgSet)
-@
-
-Alternatively, a batch variable can be estimated using function ComBat. Function 
-\Rfunction{ComBat.mc} is a multi-core parallel computing wrapper
- for the \Rfunction{ComBat} function in R package \Rpackage{sva}.
-
-<<combat.mc, eval=FALSE>>=
-batch<-factor(pData(mdat)$Slide)
-betaC<-ComBat.mc(beta, batch, nCores=6, mod=NULL)
 @
 
 \section{Principal component regression analysis plot}

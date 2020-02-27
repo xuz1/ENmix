@@ -4,16 +4,21 @@
 Methylation duplicates evaluation.
 }
 \description{
-Calcuate ICC (consistency and twoway) and Pearson's correlation coefficient for each CpG probes. Calculate Pearson's correlation coefficient and methylation differences between duplicate samples.  
+Calcuate ICC (consistency and twoway) and Pearson's correlation coefficient for
+ each CpG probes. Calculate Pearson's correlation coefficient and methylation 
+differences between duplicate samples.  
 }
 \usage{
-dupicc(dat,dupid,mvalue=FALSE,center=FALSE,ncores=2,qcflag=FALSE,qc=NULL,detPthre=0.05,nbthre=3,skipicc=FALSE)
+dupicc(dat,dupid,mvalue=FALSE,center=FALSE,ncores=2,qcflag=FALSE,qc=NULL,
+       detPthre=0.05,nbthre=3,skipicc=FALSE)
 }
 \arguments{
   \item{dat}{Methylation beta value matrix}
-  \item{dupid}{A data frame with two variables, id1 and id2, for corresponding duplicates ids in methylation matrix}
+  \item{dupid}{A data frame with two variables, id1 and id2, for corresponding
+               duplicates ids in methylation matrix}
   \item{mvalue}{Whether to convert to M value for calculation of ICC}
-  \item{center}{Whether methylation beta values will be centered for calculation of correlation between duplicate samples}
+  \item{center}{Whether methylation beta values will be centered for calculation
+                of correlation between duplicate samples}
   \item{ncores}{Number of core will be used for calculation of ICC}
   \item{qcflag}{Whether to perform QC before calculation of ICC}
   \item{qc}{QC object from ENmix package}
@@ -24,12 +29,14 @@ dupicc(dat,dupid,mvalue=FALSE,center=FALSE,ncores=2,qcflag=FALSE,qc=NULL,detPthr
 \value{
 icc:  a data frame contain ICC and P values for each probes
 
-dupcor: a data frame contain Pearson's correlation and averaged absolute difference between duplicates. 
+dupcor: a data frame contain Pearson's correlation and averaged absolute 
+ difference between duplicates. 
 
 }
 \references{
 Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor,
-\emph{ENmix: a novel background correction method for Illumina HumanMethylation450 BeadChip}. Nucleic Acids Research 2015.
+\emph{ENmix: a novel background correction method for Illumina HumanMethylation450
+ BeadChip}. Nucleic Acids Research 2015.
 }
 \author{
 Zongli Xu
@@ -38,7 +45,8 @@ Zongli Xu
 \examples{
 if(FALSE){
 if (require(minfiData)) {
-sheet <- read.metharray.sheet(file.path(find.package("minfiData"),"extdata"), pattern = "csv$")
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),"extdata"),
+         pattern = "csv$")
 rgSet <- read.metharray.exp(targets = sheet,extended = TRUE)
 mdat=preprocessRaw(rgSet)
 beta=getBeta(mdat,"Illumina")

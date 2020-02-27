@@ -1,26 +1,40 @@
 \name{relic}
 \alias{relic}
 \title{
-RELIC dye bias correction method for Illumina HumanMethylation450 and MethylationEPIC  BeadChip
+RELIC dye bias correction method for Illumina HumanMethylation450 and 
+MethylationEPIC  BeadChip
 }
-\description{REgression on Logarithm of Internal Control probes (RELIC) correct for dye bias on whole array by utilizing the intensity values of paired internal control probes that monitor the two color channels. 
+\description{REgression on Logarithm of Internal Control probes (RELIC) 
+correct for dye bias on whole array by utilizing the intensity values
+ of paired internal control probes that monitor the two color channels. 
 }
 \usage{
 relic (mdat,at_red,cg_grn)
 }
 \arguments{
   \item{mdat}{An object of class \code{MethylSet}.}
-  \item{at_red}{an intensity matrix for Illumina control probes "NORM_A" and "NORM_T"}
-  \item{cg_grn}{an intensity matrix for Illumina control probes "NORM_C" and "NORM_G"}
+  \item{at_red}{an intensity matrix for Illumina control probes "NORM_A" 
+and "NORM_T"}
+  \item{cg_grn}{an intensity matrix for Illumina control probes "NORM_C" 
+and "NORM_G"}
 }
 \details{
-The Illumina MethylationEPIC BeadChip contains 85 pairs of internal normalization control probes (name with prefix NORM_A, NORM_T, NORM_G or NORM_C), while its predecessor, Illumina HumanMethyl-ation450 BeadChip contains 93 pairs. RELIC first performs a regression on the logarithms of the intensity values of the normalization control probes to derive a quantitative relationship between red and green channels, and then uses the relation-ship to correct for dye-bias on intensity values for whole array. 
+The Illumina MethylationEPIC BeadChip contains 85 pairs of internal 
+normalization control probes (name with prefix NORM_A, NORM_T, NORM_G
+ or NORM_C), while its predecessor, Illumina HumanMethyl-ation450
+ BeadChip contains 93 pairs. RELIC first performs a regression on
+ the logarithms of the intensity values of the normalization control
+ probes to derive a quantitative relationship between red and green 
+channels, and then uses the relation-ship to correct for dye-bias on
+ intensity values for whole array. 
 }
 \value{
 An object of class \code{MethylSet}
 }
 \references{
-Zongli Xu, Sabine A. S. Langie, Patrick De Boever, Jack A. Taylor and Liang Niu, RELIC: a novel dye-bias correction method for Illumina Methylation BeadChip, in review 2016
+Zongli Xu, Sabine A. S. Langie, Patrick De Boever, Jack A. Taylor and 
+Liang Niu, RELIC: a novel dye-bias correction method for Illumina 
+Methylation BeadChip, in review 2016
 }
 \author{
 Zongli Xu and Liang Niu

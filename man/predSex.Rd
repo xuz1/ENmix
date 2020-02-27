@@ -11,10 +11,12 @@ predSex(mdat, cutoff = -2)
 }
 \arguments{
   \item{mdat}{An object of class \code{MethDataSet} or \code{rgDataSet}.}
-  \item{cutoff}{The difference in log2 total intensity between X and Y chromosomes}
+  \item{cutoff}{The difference in log2 total intensity between X and Y 
+chromosomes}
 }
 \details{
-  Estimation of sex is based on the difference of log2 median total intensity measures on the
+  Estimation of sex is based on the difference of log2 median total 
+intensity measures on the
   X and Y chromosomes. 
 
 }

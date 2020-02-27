@@ -15,7 +15,8 @@ multifreqpoly(mat, nbreaks=100, col=1:ncol(mat), xlab="",
 \arguments{
   \item{mat}{A numeric matrix}
   \item{nbreaks}{The number of bins for frequency counting}
-  \item{col}{Line plot color code, the length should be equal to the number of columns in mat}
+  \item{col}{Line plot color code, the length should be equal to the number of
+ columns in mat}
   \item{xlab}{x-axis lable}
   \item{ylab}{y-axis lable}
   \item{legend}{A list of arguments that get passed to the function "legend"}
@@ -26,7 +27,8 @@ Frequency polygon plot.
 }
 \references{
 Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor,
-\emph{ENmix: a novel background correction method for Illumina HumanMethylation450 BeadChip}. Nucleic Acids Research 2015.
+\emph{ENmix: a novel background correction method for Illumina HumanMethylation450
+ BeadChip}. Nucleic Acids Research 2015.
 }
 \author{
 Zongli Xu
