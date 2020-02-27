@@ -139,14 +139,16 @@ beta <- rm.outlier(beta,qcscore=qc,impute=TRUE,rmcr=TRUE)
 This example is to demonstrate the flexibility of the package functions. 
 Getting detailed information about data quality, SNP-like probes, excluding 
 user specified probes and/or samples, principal component regression analysis,
-outlier removal, sex prediction, cell sub-type proportion estimates and control surrogate variables. 
+outlier removal, sex prediction, cell sub-type proportion estimates and control
+ surrogate variables. 
 
 <<example, eval=FALSE>>=
 library(ENmix)
 #read in data
 path <- file.path(find.package("minfiData"),"extdata")
 rgSet <- readidat(path = path,recursive = TRUE)
-sheet <- read.metharray.sheet(file.path(find.package("minfiData"),"extdata"), pattern = "csv$")
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),"extdata"), 
+         pattern = "csv$")
 rownames(sheet)=paste(sheet$Slide,sheet$Array,sep="_")
 colData(rgSet)=as(sheet[colnames(rgSet),],"DataFrame")
 #control plots
@@ -188,11 +190,14 @@ beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
 csva<-ctrlsva(rgSet)
 #estimate cell type proportions
 #based on rgDataset
-celltype=estimateCellProp(userdata=rgSet,refdata="FlowSorted.Blood.450k",nonnegative = TRUE,normalize=TRUE)
+celltype=estimateCellProp(userdata=rgSet,refdata="FlowSorted.Blood.450k",
+         nonnegative = TRUE,normalize=TRUE)
 #using methDataSet
-celltype=estimateCellProp(userdata=mdat,refdata="FlowSorted.Blood.450k",nonnegative = TRUE,normalize=TRUE)
+celltype=estimateCellProp(userdata=mdat,refdata="FlowSorted.Blood.450k",
+         nonnegative = TRUE,normalize=TRUE)
 #using beta value
-celltype=estimateCellProp(userdata=beta,refdata="FlowSorted.Blood.450k",nonnegative = TRUE,normalize=TRUE)
+celltype=estimateCellProp(userdata=beta,refdata="FlowSorted.Blood.450k",
+         nonnegative = TRUE,normalize=TRUE)
 #predic sex based on rgDataSet or methDataset
 sex=predSex(rgSet)
 sex=predSex(mdat)
@@ -203,7 +208,11 @@ mage=methyAge(beta)
 \section{Setting up the data}
 The first step is to import array raw data files (*.idat)
  to create an object of \Robject{rgDataSet}, which is similar to 
-\Robject{RGChannelSetExtended} in minfi package, but with probe annotation integrated into data object, and having smaller data size. User can also use minfi package to read in idat files and create \Robject{RGChannelSetExtended}. Most functions in ENmix support \Robject{RGChannelSetExtended} or \Robject{RGChannelSet}.
+\Robject{RGChannelSetExtended} in minfi package, but with probe annotation 
+integrated into data object, and having smaller data size. User can also 
+use minfi package to read in idat files and create 
+\Robject{RGChannelSetExtended}. Most functions in ENmix support 
+\Robject{RGChannelSetExtended} or \Robject{RGChannelSet}.
 
 <<UnevaluatedCode, eval=FALSE>>=
 library(ENmix)
@@ -231,10 +240,10 @@ phenoData=pheno)
 Illumina 450k chip incorporated 15 different types of internal control
 probes (total of 848 probes). The control plots generated using the data 
 by Illumina GenomeStudio software are very useful to inspect experimental 
-process and data quality. However, GenomeStudio only works on the windows operating 
-system, it is time consuming to generate these plots for larger dataset, and 
-there is also no option to save the plots into file. The function \Rfunction{plotCtrl}
- can generate similar plots for each type of control.
+process and data quality. However, GenomeStudio only works on the windows 
+operating system, it is time consuming to generate these plots for larger 
+dataset, and there is also no option to save the plots into file. The function
+ \Rfunction{plotCtrl} can generate similar plots for each type of control.
 
 <<ctrlplot, eval=FALSE>>=
 plotCtrl(rgSet)
@@ -296,8 +305,8 @@ how experimental factors affect methylation measures, such as batch,
 
 path <- file.path(find.package("minfiData"),"extdata")
 rgSet <- readidat(path = path,recursive = TRUE)
-sheet <- read.metharray.sheet(file.path(find.package("minfiData"),"extdata"), pattern = "csv$")
-rownames(sheet)=paste(sheet$Slide,sheet$Array,sep="_")
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),"extdata"),
+    pattern = "csv$") rownames(sheet)=paste(sheet$Slide,sheet$Array,sep="_")
 colData(rgSet)=as(sheet[colnames(rgSet),],"DataFrame")
 #control plots
 IDorder=rownames(colData(rgSet))[order(colData(rgSet)$Slide,colData(rgSet)$Array)]
@@ -319,8 +328,8 @@ lead part of the distribution to be out of range, and may obscure important
 details in data distribution. 
 
 ENmix's frequency polygon plot provides a better alternative for inspection of data
-distribution. It can accurately reflect data distribution and, like histogram it is easy to 
-understand. It is also much faster, and only take a few
+distribution. It can accurately reflect data distribution and, like histogram 
+it is easy to understand. It is also much faster, and only take a few
 minutes to produce a distribution plot for >1000 samples. 
 
 <<ctrlplot, eval=FALSE>>=
@@ -452,13 +461,14 @@ mdat<-norm.quantile(mdat, method="quantile1")
 @
 
 \section{Probe type bias adjustment}
-The majority of probes on Illumina 450K and EPIC BeadChips are type II probes. Although 
-type II probes facilitate increased array genome coverage, they were shown to have 
-decreased dynamic range and reproducibility compared to type I probes. Taking advantage 
-of the high spatial correlation of DNA methylation levels along the human genome, The RCP 
-(Regression on Correlated Probes) method utilizes nearby (<25 bp) type I and II probe 
-pairs to derive the quantitative relationship between probe types and then recalibrates
- type II probe measurements using type I probes as referents. 
+The majority of probes on Illumina 450K and EPIC BeadChips are type II probes.
+ Although type II probes facilitate increased array genome coverage, they were
+ shown to have decreased dynamic range and reproducibility compared to type I
+ probes. Taking advantage of the high spatial correlation of DNA methylation 
+levels along the human genome, The RCP 
+(Regression on Correlated Probes) method utilizes nearby (<25 bp) type I and 
+II probe pairs to derive the quantitative relationship between probe types and
+ then recalibrates type II probe measurements using type I probes as referents. 
 
 <<rcp, eval=FALSE>>=
 beta<-rcp(mdat)
@@ -471,9 +481,10 @@ RCP: a novel probe design bias correction method for Illumina Methylation
 BeadChip. Bioinformatics, 2016
 
 
-Alternatively, the \Rfunction{BMIQ} function in R package \Rpackage{wateRmelon} can also be used to 
-reduce probe type bias. However the funtion is computation intensive and can take very 
-long time for large dataset. Therefore we here provided a multi-core parallel computing 
+Alternatively, the \Rfunction{BMIQ} function in R package \Rpackage{wateRmelon}
+ can also be used to reduce probe type bias. However the funtion is computation 
+intensive and can take very long time for large dataset. Therefore we here 
+provided a multi-core parallel computing 
 wrapper in the function \Rfunction{bmiq.mc} to speed up the process.
 
 <<bmiq.mc, eval=FALSE>>=
@@ -560,9 +571,9 @@ nmode<- nmode.mc(beta, minN = 3, modedist=0.2, nCores = 5)
 \section{Compatibility with other related R packages}
 
 The \Rpackage{ENmix} uses the data structure provided by R \Rpackage{minfi}
- packages as input and output, and thus is fully compatible with the minfi package. 
-The same data structures were also used by several other R packages, such as
- \Rpackage{ChAMP} and \Rpackage{wateRmelon}, so the output from ENmix
+ packages as input and output, and thus is fully compatible with the minfi
+ package. The same data structures were also used by several other R packages,
+ such as \Rpackage{ChAMP} and \Rpackage{wateRmelon}, so the output from ENmix
  functions can be easily utilized in 
 these packages for further analysis. Here are some examples:
 

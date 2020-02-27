@@ -108,4 +108,10 @@
   \itemize{
     \item getBeta: bugfix for handling large dataset
 }}
+\section{Version 1.23.1}{
+  \itemize{
+    \item removed function bmiq.mc and ComBat.mc due to compiling issue in related packages
+}}
+
+
 

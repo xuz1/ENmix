@@ -12,8 +12,6 @@ importFrom(graphics,abline,axis,boxplot,hist,legend,
     lines,par,plot,polygon,text,points)
 importFrom(methods, as, callNextMethod, is, new)
 importFrom(utils, read.table)
-importFrom(wateRmelon,BMIQ)
-importFrom(sva,ComBat)
 importFrom(geneplotter,multidensity)
 importFrom(impute,impute.knn)
 importFrom(RPMM,blc,betaObjf)
@@ -32,7 +30,7 @@ importFrom(irr,icc)
 
 exportClasses(rgDataSet,methDataSet)
 
-export(preprocessENmix,bmiq.mc,ComBat.mc,
+export(preprocessENmix,
     nmode.mc,normalize.quantile.450k,norm.quantile,plotCtrl,
     QCinfo,QCfilter,pcrplot,freqpoly,multifreqpoly,
     rm.outlier,rcp,oxBS.MLE,ctrlsva,relic,mpreprocess,
