@@ -53,7 +53,7 @@ c(bibentry(bibtype = "Article",
            journal = "BMC Genomics",
            year = "2017",
            pubmed = "28049437",
-           header = "RELIC dye-bias correction")
+           header = "RELIC dye-bias correction"),
 
   bibentry(bibtype = "Article",
            key = "ipDMR",
@@ -67,7 +67,7 @@ c(bibentry(bibtype = "Article",
            journal = "Bioinformatics, in review",
            year = "2020",
            pubmed = "",
-           header = "DMR analysis"),
+           header = "DMR analysis")
 
 )
 
