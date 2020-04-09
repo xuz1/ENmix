@@ -20,7 +20,7 @@ options(width=70)
 
 \title{The \Rpackage{ENmix} User's Guide}
 
-\date{Modified: May 7, 2019.  Compiled: \today}
+\date{Modified: April 9 2020.  Compiled: \today}
 \begin{document}
 \maketitle
 
@@ -47,8 +47,10 @@ distributions due to SNPs or other factors; exploration of data variance
  structure using principal component regression analysis plot; preparation
 of experimental factors related surrogate control variables 
 to be adjusted in downstream 
-statistical analysis; and an efficient algorithm oxBS-MLE to estimate 
-5-methylcytosine and 5-hydroxymethylcytosine level.
+statistical analysis; an efficient algorithm oxBS-MLE to estimate
+5-methylcytosine and 5-hydroxymethylcytosine level; estimation of celltype
+proporitons; methlation age calculation and differentially methylated
+region (DMR) analysis.
 
 The data structure used by the \Rpackage{ENmix} package is compatible with
 several other related R packages, such as \Rpackage{minfi},
@@ -81,6 +83,10 @@ oxBS-MLE: an efficient method to estimate 5-methylcytosine and
 5-hydroxymethylcytosine in paired bisulfite and oxidative 
 bisulfite treated DNA.
 Bioinformatics. 2016 
+
+Xu Z, Xie C, Taylor JA, Niu L. 
+ipDMR: Identification of differentially methylated regions with interval P values
+in review, 2020
 
 \section{Example Analysis}
 
@@ -203,6 +209,8 @@ sex=predSex(rgSet)
 sex=predSex(mdat)
 #Methylation age calculation
 mage=methyAge(beta)
+#ICC analysis, see manual
+#DMR analysis, see manual
 @
 
 \section{Setting up the data}

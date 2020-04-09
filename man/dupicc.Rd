@@ -9,7 +9,7 @@ Calcuate ICC (consistency and twoway) and Pearson's correlation coefficient for
 differences between duplicate samples.  
 }
 \usage{
-dupicc(dat,dupid,mvalue=FALSE,center=FALSE,ncores=2,qcflag=FALSE,qc=NULL,
+dupicc(dat,dupid,mvalue=FALSE,center=FALSE,nCores=2,qcflag=FALSE,qc=NULL,
        detPthre=0.05,nbthre=3,skipicc=FALSE)
 }
 \arguments{
@@ -19,7 +19,7 @@ dupicc(dat,dupid,mvalue=FALSE,center=FALSE,ncores=2,qcflag=FALSE,qc=NULL,
   \item{mvalue}{Whether to convert to M value for calculation of ICC}
   \item{center}{Whether methylation beta values will be centered for calculation
                 of correlation between duplicate samples}
-  \item{ncores}{Number of core will be used for calculation of ICC}
+  \item{nCores}{Number of core will be used for calculation of ICC}
   \item{qcflag}{Whether to perform QC before calculation of ICC}
   \item{qc}{QC object from ENmix package}
   \item{detPthre}{Detection P value threshold to identify low quality data point}

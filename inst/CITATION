@@ -54,5 +54,20 @@ c(bibentry(bibtype = "Article",
            year = "2017",
            pubmed = "28049437",
            header = "RELIC dye-bias correction")
+
+  bibentry(bibtype = "Article",
+           key = "ipDMR",
+           author = c(
+           person("Zongli", "Xu"),
+           person("Changchun", "Xie"),
+           person("Jack,A.", "Taylor")
+           person("Liang", "Niu"),
+                ),
+           title = "ipDMR: Identification of differentially methyl-ated regions with interval P values",
+           journal = "Bioinformatics, in review",
+           year = "2020",
+           pubmed = "",
+           header = "DMR analysis"),
+
 )
 

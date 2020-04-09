@@ -9,7 +9,7 @@ probes. These variables can be modeled in association analysis to adjust for
 experimental batch effects. 
 }
 \usage{
-ctrlsva(rgSet,percvar=0.9,npc=1,flag=1)
+ctrlsva(rgSet,percvar=0.95,npc=1,flag=1)
 }
 \arguments{
   \item{rgSet}{An object of class \code{RGChannelSet}.}

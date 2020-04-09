@@ -17,6 +17,7 @@ estimateCellProp(userdata,refdata="FlowSorted.Blood.450k",
         code{MethylSet},\code{RGChannelSet} or methylation beta vaue matrix.}
   \item{refdata}{Reference data set will used: "FlowSorted.Blood.450k", 
      "FlowSorted.DLPFC.450k","FlowSorted.CordBlood.450k",
+     "FlowSorted.CordBloodCombined.450k",
      "FlowSorted.CordBloodNorway.450k" or "FlowSorted.Blood.EPIC". }
   \item{cellTypes}{Specify cell type data in reference data will be used for 
               deconvolution. if "NULL" all cell types will be used. }

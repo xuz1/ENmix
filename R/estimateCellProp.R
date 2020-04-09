@@ -49,6 +49,18 @@ if(refdata=="FlowSorted.Blood.450k"){
   flag=refdata$CellType %in% c("MIX")
   refdata=refdata[,!flag]
 #need to check
+}else if(refdata=="FlowSorted.CordBloodCombined.450k"){
+  library(refdata, character.only = TRUE)
+  hub <- ExperimentHub()
+  query(hub, "FlowSorted.CordBloodCombined.450k")
+  FlowSorted.CordBloodCombined.450k <- hub[["EH2256"]]
+  refdata=get(refdata)
+  refdata=preprocessRaw(refdata)
+#table(refdata$CellType)
+#Bcell  CD4T  CD8T  Gran  Mono    NK  nRBC   WBC
+#   42    41    33    43    48    45    11    26
+ flag=refdata$CellType %in% c("WBC")
+ refdata=refdata[,!flag]
 }
 
     if(!is.null(cellTypes)) {

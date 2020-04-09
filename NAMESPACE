@@ -3,15 +3,16 @@ import(doParallel)
 import(foreach)
 import(stats)
 import(SummarizedExperiment)
+importFrom(IRanges,IRanges,reduce)
 importFrom(S4Vectors,metadata,SimpleList)
 importFrom(illuminaio,readIDAT)
 importFrom(preprocessCore, normalize.quantiles)
 importFrom(matrixStats, colMedians,colMads)
 importFrom(grDevices,dev.off,jpeg,colorRampPalette, pdf)
 importFrom(graphics,abline,axis,boxplot,hist,legend,
-    lines,par,plot,polygon,text,points)
+    lines,par,plot,polygon,text,points,mtext)
 importFrom(methods, as, callNextMethod, is, new)
-importFrom(utils, read.table)
+importFrom(utils, read.table,write.table,head,tail)
 importFrom(geneplotter,multidensity)
 importFrom(impute,impute.knn)
 importFrom(RPMM,blc,betaObjf)
@@ -36,6 +37,6 @@ export(preprocessENmix,
     rm.outlier,rcp,oxBS.MLE,ctrlsva,relic,mpreprocess,
     getB,B2M,M2B,rgDataSet,methDataSet,dupicc,
     calc_detP,getCGinfo,getmeth,readidat,
-    readmanifest,estimateCellProp,predSex,methyAge)
-
+    readmanifest,estimateCellProp,predSex,methyAge,
+    combp,ipdmr,mhtplot,p.qqplot)
 

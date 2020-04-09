@@ -1,5 +1,5 @@
 
-ctrlsva<-function(rgSet,percvar=0.9,npc=1,flag=1)
+ctrlsva<-function(rgSet,percvar=0.95,npc=1,flag=1)
 {
     if(!is(rgSet, "rgDataSet") & !is(rgSet, "RGChannelSet")){
        stop("Input needs to an RGChannelSet\n")}

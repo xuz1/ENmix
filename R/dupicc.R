@@ -1,5 +1,6 @@
-dupicc<-function(dat,dupid,mvalue=FALSE,center=FALSE,ncores=2,qcflag=FALSE,qc=NULL,detPthre=0.05,nbthre=3,skipicc=FALSE)
+dupicc<-function(dat,dupid,mvalue=FALSE,center=FALSE,nCores=2,qcflag=FALSE,qc=NULL,detPthre=0.05,nbthre=3,skipicc=FALSE)
 {
+if(nCores>detectCores()){nCores=detectCores()}
 dupid=data.frame(dupid)
 
 if(mvalue){dat=M2B(dat)}
@@ -52,7 +53,7 @@ if(!skipicc){
 dupid=dupid[dupid$id1 %in% colnames(dat) & dupid$id2 %in% colnames(dat),]
 dat1=dat[,as.vector(dupid$id1)]
 dat2=dat[,as.vector(dupid$id2)]
-resu1=mclapply(dimnames(dat1)[[1]],icc_all,mat1=dat1,mat2=dat2, mc.cores=ncores)
+resu1=mclapply(dimnames(dat1)[[1]],icc_all,mat1=dat1,mat2=dat2, mc.cores=nCores)
 resu <- do.call(rbind, lapply(resu1, unlist))
 resu=as.data.frame(resu)
 names(resu)=c("probe","icc","p")
