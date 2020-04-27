@@ -3,6 +3,8 @@
 mhtplot <-function(dat,color="bg",sigthre=NULL,markprobe=NULL,markcolor="red",
           outf="mht.jpg")
 {
+flag=!is.na(dat$V1) & !is.na(dat$V2) & !is.na(dat$V4) & !is.na(dat$V5)
+dat=dat[flag,]
 tmp=toupper(as.vector(dat$V1))
 tmp[tmp %in% "X"]="23"
 tmp[tmp %in% "Y"]="24"
@@ -17,13 +19,15 @@ chrlen$mid=(chrlen$cumx-c(0,chrlen$cumx[1:(nrow(chrlen)-1)]))/2+
 for(i in 2:nrow(chrlen))
 {dat$V2[dat$V1 %in% chrlen$Group.1[i]]=dat$V2[dat$V1 %in% chrlen$Group.1[i]]+
             chrlen$cumx[i-1]}
-chrlen$Group.1[chrlen$Group.1 == 23]="X"
-chrlen$Group.1[chrlen$Group.1 == 24]="Y"
 
 if(color=="bg"){
 dat$col="gray"
 dat$col[dat$V1 %in% chrlen$Group.1[(1:nrow(chrlen) %% 2)==0]]="black"
 }else{dat$col=color}
+
+chrlen$Group.1[chrlen$Group.1 == 23]="X"
+chrlen$Group.1[chrlen$Group.1 == 24]="Y"
+
 
 dsig=dat[dat$V5 %in% markprobe,]
 

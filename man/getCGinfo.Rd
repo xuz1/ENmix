@@ -14,7 +14,7 @@ getCGinfo(rgSet, type="IandII")
   \item{type}{One of the following options "I","II","IandII","ctrl". "all" }
 }
 \value{
-An object of class dataframe}
+An object of dataframe class}
 \author{
 Zongli Xu
 }

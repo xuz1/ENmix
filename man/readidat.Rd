@@ -17,7 +17,10 @@ readidat(path = NULL,manifestfile=NULL,recursive = FALSE, verbose = FALSE)
   \item{verbose}{if TRUE, detailed running info will be printed on screen}
 }
 \value{
-An object of class \code{rgDataSet}
+An object of class \code{rgDataSet}, 
+}
+\details{
+Probe annotation info can be extracted using command \code{rowData}
 }
 \author{
 Zongli Xu

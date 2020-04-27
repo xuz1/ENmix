@@ -1,6 +1,6 @@
 
 #detection P values
-calc_detP <- function(rgSet, detPtype = "negative") {
+calcdetP <- function(rgSet, detPtype = "negative") {
     if(!is(rgSet, "rgDataSet") & !is(rgSet, "RGChannelSetExtended"))
       stop("[QCinfo] The input should be an object of 'rgDataSet' or 'RGChannelSetExtended'")
 

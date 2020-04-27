@@ -4,7 +4,8 @@
 Sample or CpG probe filter.
 }
 \description{
-Filter low quality samples or CpGs, outlier samples or user specified samples or CpGs. 
+Filtering out low quality samples or CpGs, outlier samples or user 
+specified samples or CpGs. 
 }
 \usage{
 QCfilter(mdat,qcinfo=NULL,detPthre=0.000001,nbthre=3,samplethre=0.05,CpGthre=0.05,

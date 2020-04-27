@@ -13,7 +13,7 @@ readmanifest(file)
   \item{file}{Illumina methylation array manifest file, downloaded from Illuminal website}
 }
 \value{
-An object of dataframe caintains probe annotation information
+An object of dataframe caintaining probe annotation information
 }
 \author{
 Zongli Xu

@@ -7,7 +7,7 @@ Principal component regression plot
 First, principal component analysis will be performed in the standadized input data
 matrix (standadized for each row/CpG), and then the specified number of top
 principal components (that explain most data variation) will be used to perform
-linear regression with each specified variables. Regression P values will be
+linear regression with each specified variable. Regression P values will be
 plotted for exploration of methylation data variance structure or identification 
 of possible confounding variables for association analysis.
 }

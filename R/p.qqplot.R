@@ -13,9 +13,10 @@ p.qqplot<-function(pvalues,outf="qq.jpg",draw.conf=TRUE,
     if(min(pvalues)<=0){stop("Some pvalues is less or equal to 0")}
     if(max(pvalues)>1){stop("Some pvalues is greater than 1")}
 
+    pvalues=sort(pvalues)
     n=length(pvalues)+1
     exp.x <- -log10((1:(n-1))/n)
-    pvalues <- sort(-log10(pvalues))
+    pvalues <- -log10(pvalues)
 
     if(draw.conf){
         conf.points = n-1;

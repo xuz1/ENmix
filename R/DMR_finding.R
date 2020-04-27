@@ -48,7 +48,8 @@ regplot<-function(ref,sig,extend=2000,outf="region_plot.pdf"){
     subset$cor="black"
     subset$cor[subset$V2>=pos1 &subset$V2<=pos2]="red"
     plot(subset$V2,-log10(subset$V4),col=subset$cor,pch=20,xlim=c(pos1-extend,
-          pos2+extend))
+          pos2+extend),xlab="Chromosome position",ylab=expression(paste(
+          -log[10],"(", italic(P), " value)")))
   }
   dev.off()
 }

@@ -6,6 +6,10 @@
 \alias{show, methDataSet-method}
 
 \title{Class \code{"methDataSet"}}
+\description{A class for storing Illumina methylation array 
+methylated and unmethylated intensity data, and CpG annotation 
+infomation.
+}
 \usage{
 methDataSet(Meth = new("matrix"), Unmeth = new("matrix"),
     rowData=new("DataFrame"),...)
@@ -19,14 +23,13 @@ methDataSet(Meth = new("matrix"), Unmeth = new("matrix"),
 \item{...}{Other arguments for class SummarizedExperiment}
 }
 
-\description{A class for storing Illumina methylation array 
-methylated and unmethylated intensity data, and CpG annotation 
-infomation.}
-
 \value{
   An object of class \code{methDataSet}
 }
-
+\details{
+CpG annotation information is incorporated in the object, and can 
+be extracted using command \code{rowData}
+}
 \examples{
 showClass("methDataSet")
 }

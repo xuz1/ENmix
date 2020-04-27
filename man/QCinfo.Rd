@@ -1,7 +1,7 @@
 \name{QCinfo}
 \alias{QCinfo}
 \title{
-QC information.
+QC information
 }
 \description{
 Extract informations for data quanlity controls: detection P values, number of

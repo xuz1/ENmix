@@ -1,12 +1,11 @@
 Package: ENmix
-Version: 1.23.5
-Date: 2020-04-09
+Version: 1.23.7
+Date: 2020-04-27
 Title: Data preprocessing and quality control for Illumina
    HumanMethylation450 and MethylationEPIC BeadChip
 Type: Package
 Authors@R: c(person("Zongli","Xu",role=c("cre","aut"),email="xuz@niehs.nih.gov"),
     person("Liang","Niu",role=c("aut"),email="niulg@ucmail.uc.edu"),
-    person("Leping","Li",role=c("ctb"),email="li3@niehs.nih.gov"),
     person("Jack","Taylor",role=c("ctb"),email="taylor@niehs.nih.gov"))
 Description: The ENmix package provides a set of quality control and data
     pre-processing tools for Illumina

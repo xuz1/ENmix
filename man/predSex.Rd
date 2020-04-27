@@ -1,7 +1,7 @@
 \name{predSex}
 \alias{predSex}
 \title{
-  Estimating sample sex based on methylation data
+  Estimating sample sex
 }
 \description{
   Estimating sample sex based on methylation data
@@ -16,9 +16,7 @@ chromosomes}
 }
 \details{
   Estimation of sex is based on the difference of log2 median total 
-intensity measures on the
-  X and Y chromosomes. 
-
+intensity measures on the   X and Y chromosomes. 
 }
 \author{
 Zongli Xu

@@ -4,7 +4,7 @@
 Create a methDataSet
 }
 \description{
-Create a methDataSet based on a rgDataset.
+To create a methDataSet based on a rgDataset
 }
 \usage{
 getmeth(rgSet)
@@ -14,6 +14,11 @@ getmeth(rgSet)
 }
 \value{
 An object of class \code{methDataSet}
+}
+
+\details{
+CpG annotation information is incorporated in the output object, and can 
+be extracted using command \code{rowData}
 }
 \author{
 Zongli Xu

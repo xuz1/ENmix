@@ -1,11 +1,11 @@
 \name{estimateCellProp}
 \alias{estimateCellProp}
 \title{
-Cell Proportion Estimation
+Cell type proportion estimation
 }
 \description{
-Estimates relative proportion of underlying cell types in a sample based on reference
-methylation data of pure cell types.  
+To estimates relative proportion of underlying cell types of a sample based
+ on reference methylation data of pure cell types.  
 }
 \usage{
 estimateCellProp(userdata,refdata="FlowSorted.Blood.450k",
@@ -14,7 +14,7 @@ estimateCellProp(userdata,refdata="FlowSorted.Blood.450k",
 }
 \arguments{
   \item{userdata}{The input can be \code{rgDataSet},\code{methDataSet}\,
-        code{MethylSet},\code{RGChannelSet} or methylation beta vaue matrix.}
+        code{MethylSet},\code{RGChannelSet} or methylation beta value matrix.}
   \item{refdata}{Reference data set will used: "FlowSorted.Blood.450k", 
      "FlowSorted.DLPFC.450k","FlowSorted.CordBlood.450k",
      "FlowSorted.CordBloodCombined.450k",
@@ -33,37 +33,41 @@ estimateCellProp(userdata,refdata="FlowSorted.Blood.450k",
 \details{
 
 This function use the method in Houseman et al (2012) to estimate cell type
-  proportions using DNA methylation data. 
+  proportions based on DNA methylation data. 
 
-The following reference datasets can be used for the estimation. User should
- select a reference most resemble to user's data in tissue, age, and Illumina
+The following reference datasets can be used to assist the estimation. User 
+should select a reference most resemble to user's data in tissue, age, and 
  array type. 
 
-FlowSorted.Blood.450k: consisting 450K methylation data for 60 blood samples
+FlowSorted.Blood.450k: consisting of 450K methylation data for 60 blood samples
  from 6 male adults. 6 samples each for cell types: Bcell  CD4T  CD8T   Eos 
  Gran  Mono   Neu    NK  PBMC   WBC;  See Reinius et al. 2012 for details.
 
-FlowSorted.CordBlood.450k: consisting 450k methylation data for 104 cord blood
+FlowSorted.CordBlood.450k: consisting of 450k methylation data for 104 cord blood
  samples from 17 male and female individuals. Cell type (# samples) are:
  Bcell(15) CD4T(15)  CD8T(14) Gran(12) Mono(15) NK(14) nRBC(4) WholeBlood(15).
  See Bakulski et al. Epigenetics 2016 for details.
 
-FlowSorted.CordBloodNorway.450k: consisting 450K methylation data for 77 cord
+FlowSorted.CordBloodNorway.450k: consisting of 450K methylation data for 77 cord
  blood samples from 11 individuals (6 girls and 5 boys). 11 samples for each
  of the cell types: Bcell  CD4T  CD8T  Gran  Mono    NK   WBC. See P Yousefi
  et al Environ. Mol. Mutagen 2015 for details.
 
-FlowSorted.Blood.EPIC: consisting EPIC methylation data for 37 magnetic sorted
+FlowSorted.Blood.EPIC: consisting of EPIC methylation data for 37 magnetic sorted
  blood cell references and 12 samples. See LA Salas et al. 2018 for details. 
 
-FlowSorted.DLPFC.450k: consisting 450K methylation data for 58 brain tissue
+FlowSorted.DLPFC.450k: consisting of 450K methylation data for 58 brain tissue
  samples from 29 individuals. 15 females and 14 males, 6 Africans and 23
  Caucasians, age between 13 to 79. 29 samples for each of the cell types:
  NeuN_neg and NeuN_pos. See Guintivano et al. 2013 for details.
 
+FlowSorted.CordBloodCombined.450k: consisting of 289 combined umbilical cord blood 
+ cells samples assayed by Bakulski et al, Gervin et al., de Goede et al., and 
+ Lin et al. see https://github.com/immunomethylomics/FlowSorted.CordBloodCombined.450k.
+ details.
 }
 \value{
-  Matrix of composition estimates across all samples and cell types.
+  A matrix of composition estimates with columns for cell types and rows for samples.
 }
 
 \references{
@@ -71,7 +75,6 @@ FlowSorted.DLPFC.450k: consisting 450K methylation data for 58 brain tissue
   Nelson, JK Wiencke and KT Kelsey.
   \emph{DNA methylation arrays as surrogate measures of cell mixture distribution.}
   BMC bioinformatics (2012) 13:86.
-  doi:\href{http://www.dx.doi.org10.1186/1471-2105-13-86}{10.1186/1471-2105-13-86}.
 }
 
 \author{

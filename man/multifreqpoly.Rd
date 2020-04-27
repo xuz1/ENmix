@@ -1,10 +1,12 @@
 \name{multifreqpoly}
 \alias{multifreqpoly}
 \title{
-Frequency polygon plot to display data distribution.
+Frequency polygon plot
 }
 \description{
-Produce Frequency polygon plot for each column of a numeric data matrix.
+Produce Frequency polygon plot for each column of a numeric data matrix. 
+Similar to multidensity function, the plot can be used to inspect data distribution
+but with much faster speed.
 }
 \usage{
 multifreqpoly(mat, nbreaks=100, col=1:ncol(mat), xlab="", 

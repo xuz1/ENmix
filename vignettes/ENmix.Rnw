@@ -20,7 +20,7 @@ options(width=70)
 
 \title{The \Rpackage{ENmix} User's Guide}
 
-\date{Modified: April 9 2020.  Compiled: \today}
+\date{Modified: April 27 2020.  Compiled: \today}
 \begin{document}
 \maketitle
 
@@ -52,7 +52,7 @@ statistical analysis; an efficient algorithm oxBS-MLE to estimate
 proporitons; methlation age calculation and differentially methylated
 region (DMR) analysis.
 
-The data structure used by the \Rpackage{ENmix} package is compatible with
+The \Rpackage{ENmix} package can also support the data structure used by 
 several other related R packages, such as \Rpackage{minfi},
 \Rpackage{wateRmelon} and \Rpackage{ChAMP},
 providing straightforward integration of 
@@ -87,6 +87,86 @@ Bioinformatics. 2016
 Xu Z, Xie C, Taylor JA, Niu L. 
 ipDMR: Identification of differentially methylated regions with interval P values
 in review, 2020
+
+\section{List of functions}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|l|l|} 
+\hline
+\textbf{Function} & \textbf{Description} \\
+\hline
+\textbf{Data acquisition} &  \\	 
+\hline
+readidat & Read idat files into R \\
+\hline
+readmanifest   &  Read array manifest file into R  \\
+\hline
+\textbf{Quality control}  &    \\
+\hline
+ QCinfo	 & Extract QC info and identify outlier samples  \\
+\hline
+plotCtrl & Generate internal control plots   \\
+\hline
+getCGinfo & Extract CpG probe annotation information \\
+\hline
+calcdetP & Estimate detection P values   \\
+\hline
+Qcfilter & Filter out low quality CpGs or samples   \\
+\hline
+rm.outlier & Remove low quality values, samples or CpGs; \\
+  &  remove outlier samples and do imputation  \\
+\hline
+nmode.mc & Identify gap probes   \\
+\hline
+dupicc  & Calculate ICC based on duplicates  \\
+\hline
+multifreqpoly & Frequency polygon plot   \\
+\hline
+\textbf{Preprocessing}	&      \\
+\hline
+mpreprocess &	Preprocessing pipeline   \\
+\hline
+preprocessENmix	 & ENmix background correction and dye bias correction   \\
+\hline
+relic & RELIC dye bias correction     \\
+\hline
+norm.quantile & Quantile normalization    \\
+\hline
+rcp & RCP probe design type bias correction   \\
+\hline
+\textbf{Differential analysis}	&     \\
+\hline
+ipdmr & ipDMR differentially methylated region analysis  \\
+\hline
+combp & Combp differentially methylated region analysis  \\
+\hline
+\textbf{Other functions}  &     \\
+\hline
+oxBS.MLE & MLE estimates of 5-methylcytosine (5mC) and  \\ 
+    &   5-hydroxymethylcytosine (5hmC)    \\
+\hline
+estimateCellProp & Cell type proportion Estimation  \\
+\hline
+methyAge  &  Methylation age estimates    \\
+\hline
+predSex	 &  Sample sex estimation  \\
+\hline
+ctrlsva  &  Estimates of non-negative control surrogate variables  \\
+\hline
+pcrplot &  Principal component regression plot  \\
+\hline
+mhtplot	& P value manhattan plot  \\
+\hline
+p. qqplot & P value Q-Q plot with optional confidence interval   \\
+\hline
+B2M & Convert Beta value to M value  \\
+\hline
+M2B & Convert M value to Beta value  \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
 
 \section{Example Analysis}
 

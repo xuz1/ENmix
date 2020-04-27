@@ -4,7 +4,7 @@
 Frequency polygon plot 
 }
 \description{
-Similar to histogram, frequency polygon plot can be used to display data distribution.
+Similar to histogram, frequency polygon plot can be used to inspect data distribution.
 }
 \usage{
 freqpoly(mat, nbreaks=15, col="black", xlab="", ylab="Frequency", 

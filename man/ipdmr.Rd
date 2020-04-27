@@ -4,7 +4,7 @@
    Differentially methylated region finder using interval P values
 }
 \description{
-   Identifing differentially methylated regions using interval P value method
+   To identify differentially methylated regions using an interval P value method
 }
 \usage{
        ipdmr(data,include.all.sig.sites=TRUE,dist.cutoff=1000,bin.size=50,
@@ -22,11 +22,15 @@
   \item{mht_plot}{Whether to draw mahattan plot}
 }
 \details{
-  The input should be a data frame with column number V1-V5, indicate chromosome, 
-start position, end position, P values and probe names. The function will used a 
-novel interval p value to identify differentially methylated regions. DMR results
- will be output to a file with name "resu_ipdmr.csv". If plot options were selected,
+  The input should be a data frame with column names V1-V5, indicating chromosome, 
+start position, end position, P value and probe name. The function will use a 
+novel interval p value method to identify differentially methylated regions. DMR results
+ will be stored in a file with name "resu_ipdmr.csv". If plot options were selected,
  two figure files will be generated: mht.jpg and region_plot.pdf.
+}
+\references{
+Zongli Xu, Changchun Xie, Jack A. Taylor, Liang Niu, ipDMR: Identification
+of differentially methyl-ated regions with interval p-values, in review
 }
 \author{
 Liang Niu, Zongli Xu

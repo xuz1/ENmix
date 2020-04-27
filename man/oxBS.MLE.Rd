@@ -4,8 +4,8 @@
 oxBS-MLE.
 }
 \description{
-Find the Maximum Likelihood Estimate (MLE) of 5-methylcytosine (5mC) and
- 5-hydroxymethylcytosine (5hmC)
+Maximum Likelihood Estimate (MLE) of 5-methylcytosine (5mC) and
+ 5-hydroxymethylcytosine (5hmC) 
 using sequencing/array data from paired bisulfite and oxidative bisulfite
  treated DNA experiments.
 }
@@ -46,9 +46,9 @@ and 5hmC levels will be set as \code{NA}.
 }
 \references{
 Zongli Xu, Jack A. Taylor, Yuet-Kin Leung, Shuk-Mei Ho and Liang Niu,
-\emph{oxBS-MLE: An efficient method to estimate 5-methylcytosine and 
+\emph{oxBS-MLE: an efficient method to estimate 5-methylcytosine and 
 5-hydroxymethylcytosine in paired bisulfite and oxidative bisulfite 
-treated DNA}, under review.
+treated DNA}, Bioinformatics. 2016
 }
 \author{
 Liang Niu and Zongli Xu

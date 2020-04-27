@@ -1,12 +1,13 @@
 \name{nmode.mc}
 \alias{nmode.mc}
 \title{
-Estimating number of mode in methylaion data for each probe.
+Estimating number of mode for each row of data
 }
 \description{
 Due to SNPs in CpG probe region or other unknow factors, methylation beta 
 values for some CpGs have multimodal distribution. This function is to
- identify this type of probes with obovious multimoal distribution. 
+ identify this type of probes (so called gap probes) with obovious 
+multimoal distribution. 
 }
 \usage{
 nmode.mc(x, minN = 3, modedist=0.2, nCores = 1)
@@ -19,14 +20,15 @@ for samples.}
   \item{nCores}{Number of cores used for computation}
 }
 \details{
-This function used an empirical approach to estimate number of mode in 
+This function uses an empirical approach to estimate number of mode in 
 methylation beta value for each CpG probe. By default, the function 
 requires the distance between modes have to be greater than 0.2 in 
 methylation beta value, and each mode clusters should has at least 3 
 data points or 5\% of data points whichever is greater. 
 }
 \value{
-A vector of integers
+A vector of integers indicating number of mode. Gap probes are probes 
+with number of mode greater than 1.
 }
 \references{
 Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor,

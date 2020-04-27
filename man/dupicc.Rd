@@ -1,12 +1,12 @@
 \name{dupicc}
 \alias{dupicc}
 \title{
-Methylation duplicates evaluation.
+Evaluations of methylation duplicates
 }
 \description{
-Calcuate ICC (consistency and twoway) and Pearson's correlation coefficient for
- each CpG probes. Calculate Pearson's correlation coefficient and methylation 
-differences between duplicate samples.  
+To calcuate ICC (consistency and twoway) and Pearson's correlation coefficient for
+ each CpG probes, and to calculate centered/un-centered Pearson's correlation 
+coefficient and methylation differences between duplicate samples.  
 }
 \usage{
 dupicc(dat,dupid,mvalue=FALSE,center=FALSE,nCores=2,qcflag=FALSE,qc=NULL,
@@ -27,9 +27,9 @@ dupicc(dat,dupid,mvalue=FALSE,center=FALSE,nCores=2,qcflag=FALSE,qc=NULL,
   \item{skipicc}{If TRUE, ICC calculation will be skipped}
 }
 \value{
-icc:  a data frame contain ICC and P values for each probes
+icc:  a data frame containing ICC and P values for each probes
 
-dupcor: a data frame contain Pearson's correlation and averaged absolute 
+dupcor: a data frame containing Pearson's correlation and averaged absolute 
  difference between duplicates. 
 
 }

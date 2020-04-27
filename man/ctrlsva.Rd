@@ -1,11 +1,11 @@
 \name{ctrlsva}
 \alias{ctrlsva}
 \title{
-Non-negative control surrogate variables
+Non-negative internal control surrogate variables
 }
 \description{
 Surrogate variables derived from intensity data for non-negative internal control 
-probes. These variables can be modeled in association analysis to adjust for 
+probes. These variables can be used in association analysis to adjust for 
 experimental batch effects. 
 }
 \usage{
@@ -20,8 +20,8 @@ surrogate variables, range from 0 to 1,default is 0.9}
  \code{percvar}; 2: select number of surrogate variables based on argument \code{npc}}
 }
 \value{
-ctrlsva:  a matrix of surrogate variables (columns) with row corresponding 
-to samples
+ctrlsva:  an numerical matrix with columns indicating surrogate variables and rows
+ corresponding to samples
 }
 \references{
 Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor,

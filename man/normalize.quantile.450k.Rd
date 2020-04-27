@@ -4,19 +4,17 @@
 Quantile normalization.
 }
 \description{
-Quantile normalization of methylation intensity data across samples for Illumina
- Infinium HumanMethylation 450 BeadChip.
+To perform quantile normalization with methylation intensity data across samples
 }
 \usage{
 normalize.quantile.450k(mdat, method = "quantile1")
 }
 \arguments{
   \item{mdat}{An object of class \code{MethylSet}.}
-  \item{method}{Quantile normalization method. This should be one of the 
-following strings: "quantile1", "quantile2", or "quantile3".}
+  \item{method}{Quantile normalization method: "quantile1", "quantile2", or "quantile3".}
 }
 \details{
-By default,  method = "quantile1" will separately quantile normalize 
+By default, method = "quantile1", which will separately quantile normalize 
 Methylated or Unmethylated intensities for Infinium I or II probes. 
 The "quantile2" will quantile normalize combined Methylated or 
 Unmethylated intensities for Infinium I or II probes. The "quantile3"

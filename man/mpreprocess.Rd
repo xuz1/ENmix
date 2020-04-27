@@ -1,16 +1,15 @@
 \name{mpreprocess}
 \alias{mpreprocess}
 \title{
-A pipeline to perform background correction, dye bias correction, inter-array
- normalization and probe type bias correction for HumanMethylation 450 and
- MethylationEPIC BeadChip data.
+methylation QC and preprocessing pipeline for Illuminal arrays
 }
 \description{
-Fuction mpreprocess is a pipeline to easy preprocess steps for Illumina DNA
- methylation BeadChip. It comprehensively removes background noise and correct
- bias due to array design, including background correction, dye bias correction,
- inter-array normalization, probe type bias correction. It will also identify and
- exclude low quality samples and probes, remove outlier values, and perform imputation.
+The pipeline performs background correction, dye bias correction, inter-array
+ normalization and probe type bias correction for HumanMethylation 450 and
+ MethylationEPIC BeadChip data. It removes or mitigates background noise and  
+systematic experimental bias,It also perform quality controls, identifing and
+ excluding low quality samples and probes, removing outlier values, 
+and performing imputation.
 }
 \usage{
     mpreprocess(rgSet,nCores=1,bgParaEst="oob",dyeCorr="RELIC",

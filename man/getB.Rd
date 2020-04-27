@@ -1,7 +1,7 @@
 \name{getB}
 \alias{getB}
 \title{
-Extract Beta value.
+Extract methylation Beta values.
 }
 \description{
 Extract Methylation Beta value, Beta = Meth / (Meth + Unmeth + offset)

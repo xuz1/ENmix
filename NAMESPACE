@@ -36,7 +36,7 @@ export(preprocessENmix,
     QCinfo,QCfilter,pcrplot,freqpoly,multifreqpoly,
     rm.outlier,rcp,oxBS.MLE,ctrlsva,relic,mpreprocess,
     getB,B2M,M2B,rgDataSet,methDataSet,dupicc,
-    calc_detP,getCGinfo,getmeth,readidat,
+    calcdetP,getCGinfo,getmeth,readidat,
     readmanifest,estimateCellProp,predSex,methyAge,
     combp,ipdmr,mhtplot,p.qqplot)
 

@@ -1,11 +1,12 @@
 \name{plotCtrl}
 \alias{plotCtrl}
 \title{
-Plot internal controls of 450K  or MethylationEPIC BeadChip.
+Internal control plot
 }
 \description{
-Intensity data are ploted for all internal control probe types on the Illumina
- Infinium HumanMethylation450 or MethylationEPIC BeadChip. These figures can
+The function will generate a series of internal control plots, which are similar to 
+the plots from Illumina genomic studio software. Users should refer to the software's
+online guide to interpret these figures. These figures can
  be used to check data quality and experimental procedures. 
 }
 \usage{

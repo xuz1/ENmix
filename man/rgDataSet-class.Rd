@@ -6,6 +6,9 @@
 \alias{show, rgDataSet-method}
 
 \title{Class \code{"rgDataSet"}}
+\description{A class for storing Illumina methylation array 
+raw intensity data of two color channels, and probe annotation 
+infomation.}
 \usage{
 rgDataSet(Red = new("matrix"), Green = new("matrix"),
     NBeads = new("matrix"),rowData=new("DataFrame"),ictrl= new("DataFrame"),...)
@@ -22,11 +25,6 @@ rgDataSet(Red = new("matrix"), Green = new("matrix"),
 \item{ictrl}{A dataframe contais detailed information for Illumina internal control probes}
 \item{...}{other arguments for class SummarizedExperiment}
 }
-
-\description{A class for storing Illumina methylation array 
-raw intensity data of two color channels, and probe annotation 
-infomation.}
-
 \value{
   An object of class \code{rgDataSet}
 }
