@@ -90,83 +90,52 @@ in review, 2020
 
 \section{List of functions}
 
-\begin{table}
-\begin{center}
-\begin{tabular}{|l|l|} 
-\hline
+\begin{tabular}{ l | l }
+\toprule
 \textbf{Function} & \textbf{Description} \\
-\hline
-\textbf{Data acquisition} &  \\	 
-\hline
-readidat & Read idat files into R \\
-\hline
+\midrule
+\textbf{Data acquisition}   &   \\
+readidat  &  Read idat files into R \\
 readmanifest   &  Read array manifest file into R  \\
-\hline
+\midrule
 \textbf{Quality control}  &    \\
-\hline
- QCinfo	 & Extract QC info and identify outlier samples  \\
-\hline
-plotCtrl & Generate internal control plots   \\
-\hline
-getCGinfo & Extract CpG probe annotation information \\
-\hline
-calcdetP & Estimate detection P values   \\
-\hline
-Qcfilter & Filter out low quality CpGs or samples   \\
-\hline
+QCinfo     & Extract QC info and identify outlier samples  \\
+plotCtrl   & Generate internal control plots   \\
+getCGinfo  & Extract CpG probe annotation information \\
+calcdetP   & Estimate detection P values   \\
+Qcfilter   & Filter out low quality CpGs or samples   \\
 rm.outlier & Remove low quality values, samples or CpGs; \\
-  &  remove outlier samples and do imputation  \\
-\hline
-nmode.mc & Identify gap probes   \\
-\hline
-dupicc  & Calculate ICC based on duplicates  \\
-\hline
+           & remove outlier samples and do imputation  \\
+nmode.mc   & Identify gap probes   \\
+dupicc     & Calculate ICC based on duplicates  \\
 multifreqpoly & Frequency polygon plot   \\
-\hline
-\textbf{Preprocessing}	&      \\
-\hline
-mpreprocess &	Preprocessing pipeline   \\
-\hline
-preprocessENmix	 & ENmix background correction and dye bias correction   \\
-\hline
-relic & RELIC dye bias correction     \\
-\hline
-norm.quantile & Quantile normalization    \\
-\hline
-rcp & RCP probe design type bias correction   \\
-\hline
-\textbf{Differential analysis}	&     \\
-\hline
-ipdmr & ipDMR differentially methylated region analysis  \\
-\hline
-combp & Combp differentially methylated region analysis  \\
-\hline
+\midrule
+\textbf{Preprocessing}  &      \\
+mpreprocess      & Preprocessing pipeline   \\
+preprocessENmix  & ENmix background correction and dye bias correction \\
+relic            & RELIC dye bias correction     \\
+norm.quantile    & Quantile normalization    \\
+rcp              & RCP probe design type bias correction   \\
+\midrule
+\textbf{Differential analysis}  &     \\
+ipdmr   & ipDMR differentially methylated region analysis  \\
+combp   & Combp differentially methylated region analysis  \\
+\midrule
 \textbf{Other functions}  &     \\
-\hline
-oxBS.MLE & MLE estimates of 5-methylcytosine (5mC) and  \\ 
-    &   5-hydroxymethylcytosine (5hmC)    \\
-\hline
-estimateCellProp & Cell type proportion Estimation  \\
-\hline
-methyAge  &  Methylation age estimates    \\
-\hline
-predSex	 &  Sample sex estimation  \\
-\hline
-ctrlsva  &  Estimates of non-negative control surrogate variables  \\
-\hline
-pcrplot &  Principal component regression plot  \\
-\hline
-mhtplot	& P value manhattan plot  \\
-\hline
-p. qqplot & P value Q-Q plot with optional confidence interval   \\
-\hline
-B2M & Convert Beta value to M value  \\
-\hline
-M2B & Convert M value to Beta value  \\
-\hline
+oxBS.MLE   &  MLE estimates of 5-methylcytosine (5mC) and  \\
+           &  5-hydroxymethylcytosine (5hmC)    \\
+estimateCellProp  &  Cell type proportion Estimation  \\
+methyAge   &  Methylation age estimates    \\
+predSex    &  Sample sex estimation  \\
+ctrlsva    &  Estimates of non-negative control surrogate variables  \\
+pcrplot    &  Principal component regression plot  \\
+mhtplot    &  P value manhattan plot  \\
+p. qqplot  &  P value Q-Q plot with optional confidence interval   \\
+B2M        &  Convert Beta value to M value  \\
+M2B        &  Convert M value to Beta value  \\
+\bottomrule
 \end{tabular}
-\end{center}
-\end{table}
+
 
 \section{Example Analysis}
 
@@ -242,8 +211,8 @@ plotCtrl(rgSet)
 #QC info
 qc<-QCinfo(rgSet)
 #calculate detection P values
-detp=calc_detP(rgSet,detPtype = "negative")
-detp2=calc_detP(rgSet,detPtype = "oob")
+detp=calcdetP(rgSet,detPtype = "negative")
+detp2=calcdetP(rgSet,detPtype = "oob")
 #get methDataSet
 mraw <- getmeth(rgSet)
 #get raw methyaltion beta values
