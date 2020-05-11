@@ -13,7 +13,7 @@ modified comb-p method
 }
 \arguments{
   \item{data}{A data frame from bed format file with colname name "V1","V2",
-   "V3","V4","V5", V1 indicate chromosome (1,2,3,...,X,Y), V2 is chromosome 
+   "V3","V4","V5", V1 indicate chromosome (1,2,3,...,X,Y), V2 and V3 are chromosome 
    position, V4 is for P value and V5 for name of CpGs}
   \item{dist.cutoff}{Maximum distance in base pair to combine adjacent DMRs}
   \item{bin.size}{bin size for autocorrelation calculation}

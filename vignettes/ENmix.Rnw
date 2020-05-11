@@ -90,7 +90,7 @@ in review, 2020
 
 \section{List of functions}
 
-\begin{tabular}{ l | l }
+\begin{tabular}{| l | l |}
 \toprule
 \textbf{Function} & \textbf{Description} \\
 \midrule
@@ -130,7 +130,7 @@ predSex    &  Sample sex estimation  \\
 ctrlsva    &  Estimates of non-negative control surrogate variables  \\
 pcrplot    &  Principal component regression plot  \\
 mhtplot    &  P value manhattan plot  \\
-p. qqplot  &  P value Q-Q plot with optional confidence interval   \\
+p.qqplot  &  P value Q-Q plot with optional confidence interval   \\
 B2M        &  Convert Beta value to M value  \\
 M2B        &  Convert M value to Beta value  \\
 \bottomrule
@@ -202,8 +202,8 @@ library(ENmix)
 #read in data
 path <- file.path(find.package("minfiData"),"extdata")
 rgSet <- readidat(path = path,recursive = TRUE)
-sheet <- read.metharray.sheet(file.path(find.package("minfiData"),"extdata"), 
-         pattern = "csv$")
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
+         "extdata"),pattern = "csv$")
 rownames(sheet)=paste(sheet$Slide,sheet$Array,sep="_")
 colData(rgSet)=as(sheet[colnames(rgSet),],"DataFrame")
 #control plots
@@ -245,13 +245,16 @@ beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
 csva<-ctrlsva(rgSet)
 #estimate cell type proportions
 #based on rgDataset
-celltype=estimateCellProp(userdata=rgSet,refdata="FlowSorted.Blood.450k",
+celltype=estimateCellProp(userdata=rgSet,
+         refdata="FlowSorted.Blood.450k",
          nonnegative = TRUE,normalize=TRUE)
 #using methDataSet
-celltype=estimateCellProp(userdata=mdat,refdata="FlowSorted.Blood.450k",
+celltype=estimateCellProp(userdata=mdat,
+         refdata="FlowSorted.Blood.450k",
          nonnegative = TRUE,normalize=TRUE)
 #using beta value
-celltype=estimateCellProp(userdata=beta,refdata="FlowSorted.Blood.450k",
+celltype=estimateCellProp(userdata=beta,
+         refdata="FlowSorted.Blood.450k",
          nonnegative = TRUE,normalize=TRUE)
 #predic sex based on rgDataSet or methDataset
 sex=predSex(rgSet)
@@ -273,7 +276,8 @@ use minfi package to read in idat files and create
 
 <<UnevaluatedCode, eval=FALSE>>=
 library(ENmix)
-rgSet <- readidat(path = "directory containing idat files",recursive = TRUE)
+rgSet <- readidat(path = "directory containing idat files",
+         recursive = TRUE)
 @
 When methylation IDAT raw data files are not available, such as in many
  publically available datasets, users can use methylated (M) and unmethylated
@@ -362,12 +366,13 @@ how experimental factors affect methylation measures, such as batch,
 
 path <- file.path(find.package("minfiData"),"extdata")
 rgSet <- readidat(path = path,recursive = TRUE)
-sheet <- read.metharray.sheet(file.path(find.package("minfiData"),"extdata"),
-    pattern = "csv$") 
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),
+         "extdata"), pattern = "csv$") 
 rownames(sheet)=paste(sheet$Slide,sheet$Array,sep="_")
 colData(rgSet)=as(sheet[colnames(rgSet),],"DataFrame")
 #control plots
-IDorder=rownames(colData(rgSet))[order(colData(rgSet)$Slide,colData(rgSet)$Array)]
+IDorder=rownames(colData(rgSet))[order(colData(rgSet)$Slide,
+        colData(rgSet)$Array)]
 plotCtrl(rgSet,IDorder)
 @
 
@@ -473,11 +478,11 @@ specified to impute missing data using k-nearest neighbors method.
 b1=rm.outlier(beta)
 #filter out low quality and outlier values
 b2=rm.outlier(beta,qcscore=qcscore)
-#filter out low quality and outlier values, remove rows and columns
-# with too many missing values
+#filter out low quality and outlier values, remove rows 
+#and columns with too many missing values
 b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE)
-#filter out low quality and outlier values, remove rows and columns
-# with too many missing values, and then do imputation
+#filter out low quality and outlier values, remove rows and
+# columns with too many missing values, and then do imputation
 b3=rm.outlier(beta,qcscore=qcscore,rmcr=TRUE,impute=TRUE)
 @
 
