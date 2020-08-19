@@ -9,7 +9,7 @@ modified comb-p method
 }
 \usage{
        combp(data,dist.cutoff=1000,bin.size=310,seed=0.01,
-             region_plot=TRUE,mht_plot=TRUE,nCores=10)
+             region_plot=TRUE,mht_plot=TRUE,nCores=10,verbose=TRUE)
 }
 \arguments{
   \item{data}{A data frame from bed format file with colname name "V1","V2",
@@ -21,6 +21,7 @@ modified comb-p method
   \item{region_plot}{Whether to draw regional plot}
   \item{mht_plot}{Whether to draw mahattan plot}
   \item{nCores}{Number of computer cores used in calculation}
+  \item{verbose}{Whether to output detailed information}
 }
 \details{
 The input should be a data frame with column name V1-V5, indicating chromosome,

@@ -7,13 +7,14 @@
 P value manhattan plot
 }
 \usage{
-        mhtplot(dat,color="bg",sigthre=NULL,markprobe=NULL,
+        mhtplot(probe=NULL,chr=NULL, pos=NULL, p=NULL,color="bg",sigthre=NULL,markprobe=NULL,
                  markcolor="red", outf="mht.jpg")
 }
 \arguments{
-  \item{dat}{A data frame from bed format file with colname name "V1","V2",
-   "V3","V4","V5", V1 indicate chromosome (1,2,3,...,X,Y), V2 and V3 are chromosome 
-   position (V3 is an optional variable), V4 is for P value and V5 for name of CpGs}
+  \item{probe}{probe name}
+  \item{chr}{Chromosome, 1,2,...,22,X,Y}
+  \item{pos}{Chromosome positions}
+  \item{p}{P values}
   \item{color}{Color scheme of manhattan plot, "bg" indicate "black and gray"}
   \item{sigthre}{P value of significant threshold line}
   \item{markprobe}{A list of CpGs to be marked out}

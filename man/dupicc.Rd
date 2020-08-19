@@ -10,7 +10,7 @@ coefficient and methylation differences between duplicate samples.
 }
 \usage{
 dupicc(dat,dupid,mvalue=FALSE,center=FALSE,nCores=2,qcflag=FALSE,qc=NULL,
-       detPthre=0.05,nbthre=3,skipicc=FALSE)
+       detPthre=0.05,nbthre=3,skipicc=FALSE,corfig=FALSE,...)
 }
 \arguments{
   \item{dat}{Methylation beta value matrix}
@@ -25,6 +25,9 @@ dupicc(dat,dupid,mvalue=FALSE,center=FALSE,nCores=2,qcflag=FALSE,qc=NULL,
   \item{detPthre}{Detection P value threshold to identify low quality data point}
   \item{nbthre}{Number of bead threshold to identify low quality data point}
   \item{skipicc}{If TRUE, ICC calculation will be skipped}
+  \item{corfig}{If TRUE, a figure will be generated to summarize correlations 
+         for duplicates and non-duplicates}
+  \item{...}{Any further arguments for function "icc" in "irr" R package}
 }
 \value{
 icc:  a data frame containing ICC and P values for each probes

@@ -1,4 +1,5 @@
-dupicc<-function(dat,dupid,mvalue=FALSE,center=FALSE,nCores=2,qcflag=FALSE,qc=NULL,detPthre=0.05,nbthre=3,skipicc=FALSE)
+dupicc<-function(dat,dupid,mvalue=FALSE,center=FALSE,nCores=2,qcflag=FALSE,qc=NULL,
+       detPthre=0.05,nbthre=3,skipicc=FALSE,corfig=FALSE,...)
 {
 if(nCores>detectCores()){nCores=detectCores()}
 dupid=data.frame(dupid)
@@ -25,7 +26,7 @@ icc_all <-function(probe,mat1,mat2)
         m2=mat2[probe,]
         mm=cbind(m1,m2)
 	mm=mm[!(is.na(m1) | is.na(m2)),]
-        fit=try(icc(mm,type="consistency",model = c("twoway")))
+        fit=try(icc(mm,type="consistency",model = c("twoway"),...))
         if(class(fit)[1] == "try-error"){return(c(probe,NA,NA,NA))}else{
         icc=fit$value
         p=fit$p.value
@@ -61,11 +62,22 @@ resu$icc=as.numeric(as.vector(resu$icc))
 resu$p=as.numeric(as.vector(resu$p))
 }
 
-if(center){dat=t(scale(t(dat),center=T,scale=F))
-	dat1=dat[,as.vector(dupid$id1)]
-	dat2=dat[,as.vector(dupid$id2)]
+if(center){
+    dat=t(scale(t(dat),center=T,scale=F))
+    dat1=dat[,as.vector(dupid$id1)]
+    dat2=dat[,as.vector(dupid$id2)]
 }
-	dupcor=dcor(dat1,dat2)
+    dupcor=dcor(dat1,dat2)
+    nd1=cor(dat1,method="pearson",use="pairwise.complete.obs");nd1=nd1[lower.tri(nd1)]
+    nd2=cor(dat2,method="pearson",use="pairwise.complete.obs");nd2=nd2[lower.tri(nd2)]
+    nondupcor=c(nd1,nd2)
+    if(corfig){
+      jpeg("dupcorfig.jpg",height=800,width=500,quality=100)
+      par(mfrow=c(2,1))
+      plot(dupcor$cor,xlab="Duplicate pairs",ylab="Correlation",main="",ylim=c(-1,1))
+      plot(nondupcor,xlab="Non-duplicate pairs",ylab="Correlation",main="",ylim=c(-1,1))
+      dev.off()
+    }
 
 if(!skipicc){list(icc=resu,dupcor=dupcor)}else{dupcor}
 }

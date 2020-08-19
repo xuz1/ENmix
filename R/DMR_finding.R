@@ -59,9 +59,13 @@ regplot<-function(ref,sig,extend=2000,outf="region_plot.pdf"){
 ###3. combine nearby sig. intervals and sig. probes (probes with fdr<seed)
 ### into regions; 4. find region p-values
 ipdmr<-function(data,include.all.sig.sites=TRUE,dist.cutoff=1000,bin.size=50,
-                seed=0.01,region_plot=TRUE,mht_plot=TRUE){
+                seed=0.01,region_plot=TRUE,mht_plot=TRUE,verbose=TRUE){
   data=as.data.frame(data)
   acf<-get.acf(data,dist.cutoff,bin.size)
+  if(verbose){
+    cat("P value correlations:\n")
+    print(data.frame(bin=seq(bin.size,dist.cutoff,bin.size),acf=acf))
+  }
   result<-NULL
   for (chr in unique(data$V1)){
     y=data[data$V1==chr,]; y=y[order(y$V3),]
@@ -143,10 +147,14 @@ ipdmr<-function(data,include.all.sig.sites=TRUE,dist.cutoff=1000,bin.size=50,
 ##### comb_p-like method
 ##### 1. get smoothed p-values; 2. select all probes with smoothed p-values with fdr<seed; 3. combine nearby sig. probes into regions; 4. find region p-values
 combp<-function(data,dist.cutoff=1000,bin.size=310,seed=0.01,
-               region_plot=TRUE,mht_plot=TRUE,nCores=10){
+               region_plot=TRUE,mht_plot=TRUE,nCores=10,verbose=TRUE){
   if(nCores>detectCores()){nCores=detectCores()}
   data=as.data.frame(data)
   acf<-get.acf(data,dist.cutoff,bin.size)
+  if(verbose){
+    cat("P value correlations:\n")
+    print(data.frame(bin=seq(bin.size,dist.cutoff,bin.size),acf=acf))
+  }
 
   result<-mclapply(unique(data$V1), function(chr){
     y=data[data$V1==chr,]; y=y[order(y$V3),]
@@ -192,8 +200,9 @@ combp<-function(data,dist.cutoff=1000,bin.size=310,seed=0.01,
       result.fdr=rbind(result.fdr,data.frame(chr,start,end,p=temp))
     }
 
-    ##### BH FDR correction
+    ##### BH FDR correction and Sidak correction
     result.fdr$fdr=p.adjust(result.fdr$p,method="fdr")
+    result.fdr$sidak=(1-(1-result.fdr$p)^(nrow(data)/(result.fdr$end-result.fdr$start+1)))
     result.fdr<-result.fdr[order(result.fdr$p),]
 
     ##### use 0-coordinate
@@ -206,7 +215,7 @@ combp<-function(data,dist.cutoff=1000,bin.size=310,seed=0.01,
     if(region_plot){
       cat("Drawing regional plot: region_plot.pdf ...\n")
       sig=result.fdr
-      colnames(sig)=c("V1","V2","V3","V4","V5")
+      colnames(sig)=c("V1","V2","V3","V4","V5","V6")
       regplot(ref=data,sig)
     }
   if(mht_plot){
