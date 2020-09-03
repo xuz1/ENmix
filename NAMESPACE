@@ -9,6 +9,7 @@ importFrom(illuminaio,readIDAT)
 importFrom(preprocessCore, normalize.quantiles)
 importFrom(matrixStats, colMedians,colMads)
 importFrom(grDevices,dev.off,jpeg,colorRampPalette, pdf)
+importFrom("grDevices", "postscript")
 importFrom(graphics,abline,axis,boxplot,hist,legend,
     lines,par,plot,polygon,text,points,mtext)
 importFrom(methods, as, callNextMethod, is, new)
