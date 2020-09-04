@@ -64,9 +64,9 @@ c(bibentry(bibtype = "Article",
            person("Liang", "Niu")
                 ),
            title = "ipDMR: Identification of differentially methyl-ated regions with interval P values",
-           journal = "in review",
+           journal = "Bioinformatics",
            year = "2020",
-           pubmed = "",
+           pubmed = "32805005",
            header = "DMR analysis")
 
 )
