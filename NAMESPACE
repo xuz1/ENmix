@@ -39,5 +39,5 @@ export(preprocessENmix,
     getB,B2M,M2B,rgDataSet,methDataSet,dupicc,
     calcdetP,getCGinfo,getmeth,readidat,
     readmanifest,estimateCellProp,predSex,methyAge,
-    combp,ipdmr,mhtplot,p.qqplot)
+    combp,ipdmr,mhtplot,p.qqplot,simubed)
 

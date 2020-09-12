@@ -29,4 +29,19 @@ getBeta <- function(mdat,type="Illumina",offset=100)
     beta
 }
 
+#bed example file simulation
+simubed <-function(nprobe=1000)
+{
+   chrset=c(1:22,"X","Y")
+   resu=NULL
+   for(i in 1:length(chrset)){
+     start=sample(1:(90*nprobe),nprobe)
+     end=start+1
+     p=runif(nprobe)
+     resu=rbind(resu,data.frame(chr=chrset[i],start=start,end=end,p=p))
+  }
+  resu$probe=paste("cg",1:nrow(resu),sep="")
+  return(resu)
+}
+
 

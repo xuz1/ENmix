@@ -28,4 +28,9 @@ P value Q-Q plot with optional confidence interval
 Zongli Xu
 }
 
+\examples{
+\dontrun{
+dat=simubed()
+p.qqplot(pvalues=dat$p,draw.conf=TRUE,outf="qq_try",outfmt="jpg")
+}}
 

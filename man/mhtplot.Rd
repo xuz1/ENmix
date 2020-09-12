@@ -27,10 +27,17 @@ P value manhattan plot
   \item{reducesize}{Reduce eps file size by skipping some densely packed data points,
         larger the value, smaller the file size}
 }
-\details{Draw manhattan plot based on bed file format input file. Optional 
-      and colored marks fo a subset of probes
-}
 \author{
 Zongli Xu
 }
+
+\examples{
+\dontrun{
+dat=simubed()
+thre1=0.0001
+thre2=0.00001
+mprobe=dat$probe[dat$p<=thre1]
+mhtplot(probe=dat$probe,chr=dat$chr,pos=dat$start,p=dat$p,sigthre=thre1,sigthre2=thre2,
+        markprobe=mprobe,outf="mht_try",outfmt="jpg")
+}}
 

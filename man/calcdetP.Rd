@@ -4,7 +4,7 @@
 To calculate detection P values
 }
 \description{
-Calculate detection P values based on negtive internal control probes or out of the
+Calculation of detection P values based on negtive internal control probes or out of the
  band (oob) probes
 }
 \usage{
@@ -12,7 +12,7 @@ calcdetP(rgSet,detPtype = "negative")
 }
 \arguments{
   \item{rgSet}{An object of class \code{rgDataSet}}
-  \item{detPtype}{Calculate detection P values based on negtive internal control
+  \item{detPtype}{Calculation of detection P values based on negtive internal control
  ("negative") probes or out of the band ("oob") probes}
 }
 \value{
