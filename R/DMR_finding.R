@@ -36,15 +36,15 @@ get.acf<-function(data,dist.cutoff,bin.size){
 
 #regional P value plot
 regplot<-function(ref,sig,extend=2000,outf="region_plot.pdf"){
-  sig=sig[order(sig[,1],sig[,2]),]
-  ref=ref[order(ref[,1],ref[,2]),]
+  sig=sig[order(sig[,"chr"],sig[,"start"]),]
+  ref=ref[order(ref[,"chr"],ref[,"start"]),]
 
   pdf(outf)
   for(i in 1:nrow(sig)){
-    chr=sig$chr[i]
+    chr=as.vector(sig$chr[i])
     pos1=sig$start[i]
     pos2=sig$end[i]
-    subset=ref[ref$chr==chr & ref$start>=(pos1-extend) & ref$start<=(pos2+extend),]
+    subset=ref[as.vector(ref$chr)==chr & ref$start>=(pos1-extend) & ref$start<=(pos2+extend),]
     subset$cor="black"
     subset$cor[subset$start>=pos1 &subset$start<=pos2]="red"
     plot(subset$start,-log10(subset$p),col=subset$cor,pch=20,xlim=c(pos1-extend,
@@ -132,17 +132,16 @@ ipdmr<-function(data,include.all.sig.sites=TRUE,dist.cutoff=1000,bin.size=50,
     if(region_plot){
       cat("Drawing regional plot: region_plot.pdf ...\n")
       sig=result.fdr
-      colnames(sig)=c("chr","start","end","p","probe")
       regplot(ref=data,sig)
     }
     if(mht_plot){
       cat("Drawing manhattan plot: mht.jpg ...\n")
-      set2=c()
+      set2=NULL
       for(i in 1:ndmr){
-        set2=c(set2,as.vector(data$probe[data$chr==result.fdr$chr[i] 
+        set2=c(set2,as.vector(data$probe[as.vector(data$chr)==as.vector(result.fdr$chr[i]) 
               & data$start>=result.fdr$start[i] & data$start<=result.fdr$end[i]]))
       }
-      mhtplot(probe=data$probe,chr=data$chr,pos=data$start,p=data$p,color="gray",markprobe=set2)
+      mhtplot(probe=as.vector(data$probe),chr=as.vector(data$chr),pos=data$start,p=data$p,color="gray",markprobe=set2)
   }
   #number of probes within eath DMR
   result.fdr$nprobe=NA
@@ -229,17 +228,16 @@ combp<-function(data,dist.cutoff=1000,bin.size=310,seed=0.01,
     if(region_plot){
       cat("Drawing regional plot: region_plot.pdf ...\n")
       sig=result.fdr
-      colnames(sig)=c("chr","start","end","p","probe","sidak")
       regplot(ref=data,sig)
     }
   if(mht_plot){
     cat("Drawing manhattan plot: mht.jpg ...\n")
-    set2=c()
+    set2=NULL
     for(i in 1:ndmr){
-        set2=c(set2,as.vector(data$probe[data$chr==result.fdr$chr[i]
+        set2=c(set2,as.vector(data$probe[as.vector(data$chr)==as.vector(result.fdr$chr[i])
            & data$start>=result.fdr$start[i] & data$start<=result.fdr$end[i]]))
     }
-  mhtplot(probe=data$probe,chr=data$chr,pos=data$start,p=data$p,color="gray",markprobe=set2)
+  mhtplot(probe=data$probe,chr=as.vector(data$chr),pos=data$start,p=data$p,color="gray",markprobe=set2)
   }
   #number of probes within eath DMR
   result.fdr$nprobe=NA

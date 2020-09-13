@@ -11,9 +11,9 @@
              seed=0.01,region_plot=TRUE,mht_plot=TRUE,verbose=TRUE)
 }
 \arguments{
-  \item{data}{A data frame from bed format file with colname name "chr","start",
-   "end","p","probe", "chr" indicate chromosome (1,2,3,...,X,Y), "start" and "end" are chromosome 
-   position, "p" is for P value and "probe" for name of CpGs}
+  \item{data}{A data frame with colname name "chr","start",
+   "end","p" and "probe", indicating chromosome (1,2,3,...,X,Y), chromosome 
+   start and end position, P value and probe names}
   \item{include.all.sig.sites}{Whether to use CpG singletons in calculate of FDR}
   \item{dist.cutoff}{Maximum distance in base pair to combine adjacent DMRs, and 
          the maximum distance between CpGs where auto-correlation will be calculated}
@@ -24,16 +24,15 @@
   \item{verbose}{Whether to output detailed information}
 }
 \details{
-  The input should be a data frame with column names "chr","start", "end","p","probe", "chr"
-, indicating chromosome, 
-start position, end position, P value and probe name. The function will use a 
+  The input should be a data frame with column names "chr","start", "end","p" and "probe",
+indicating chromosome, start and end position, P value and probe name. The function will use a 
 novel interval p value method to identify differentially methylated regions. DMR results
- will be stored in a file with name "resu_ipdmr.csv". If plot options were selected,
+ will be stored in a file with name resu_ipdmr.csv. If plot options were selected,
  two figure files will be generated: mht.jpg and region_plot.pdf.
 }
 \references{
 Zongli Xu, Changchun Xie, Jack A. Taylor, Liang Niu, ipDMR: Identification
-of differentially methyl-ated regions with interval p-values, in review
+of differentially methyl-ated regions with interval p-values, Bioinfomatics 2020
 }
 \author{
 Liang Niu, Zongli Xu
@@ -43,7 +42,7 @@ Liang Niu, Zongli Xu
 \dontrun{
 dat=simubed()
 names(dat)
-ipdmr(data=dat,seed=0.05)
+ipdmr(data=dat,seed=0.1)
 }}
 
 
