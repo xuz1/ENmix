@@ -1,8 +1,6 @@
 \name{calcdetP}
 \alias{calcdetP}
-\title{
-To calculate detection P values
-}
+\title{To calculate detection P values}
 \description{
 Calculation of detection P values based on negtive internal control probes or out of the
  band (oob) probes

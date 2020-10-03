@@ -106,7 +106,7 @@ calcdetP   & Estimate detection P values   \\
 Qcfilter   & Filter out low quality CpGs or samples   \\
 rm.outlier & Remove low quality values, samples or CpGs; \\
            & remove outlier samples and do imputation  \\
-nmode.mc   & Identify gap probes   \\
+nmode   & Identify gap probes   \\
 dupicc     & Calculate ICC based on duplicates  \\
 multifreqpoly & Frequency polygon plot   \\
 \midrule
@@ -223,7 +223,7 @@ multifreqpoly(beta,main="Methylation Beta value distribution")
 #sample size in this example data is too small for this purpose!
 #exclude low quality data first
 bb=beta; bb[qc$detP>0.05 | qc$nbead<3]=NA 
-nmode<-nmode.mc(bb, minN = 3, modedist=0.2, nCores = 6)
+nmode<-nmode(bb, minN = 3, modedist=0.2, nCores = 6)
 outCpG = names(nmode)[nmode>1]
 #background correction and dye bias correction
 mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr="RELIC",
@@ -578,7 +578,7 @@ generated using 450K methylation data from a published study}
 
 \section{Multimodal CpGs}
 
-Function \Rfunction{nmode.mc} uses an empirical approach to identify
+Function \Rfunction{nmode} uses an empirical approach to identify
  multimodal distributed CpGs (SNP like probes). When measured in a
 population of people
  the majority of CpGs on the Illumina HumanMethylation450 BeadChip have
@@ -607,8 +607,8 @@ Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor
 ENmix: a novel background correction method for Illumina
 HumanMethylation450 BeadChip, Nucleic Acids Research, 2015
 
-<<nmode.mc, eval=FALSE>>=
-nmode<- nmode.mc(beta, minN = 3, modedist=0.2, nCores = 5)
+<<nmode, eval=FALSE>>=
+nmode<- nmode(beta, minN = 3, modedist=0.2, nCores = 5)
 @
 
 \section{Compatibility with other related R packages}

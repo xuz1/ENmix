@@ -20,15 +20,6 @@ getB <- function(mdat,type="Illumina",offset=100)
     beta
 }
 
-getBeta <- function(mdat,type="Illumina",offset=100)
-{
-    if(!is(mdat, "MethylSet"))
-        {stop("The input must be an object of MethylSet\n")}
-    if(type=="Illumina"){offset=100}
-    beta<-assays(mdat)$Meth/(assays(mdat)$Meth+assays(mdat)$Unmeth+offset)
-    beta
-}
-
 #bed example file simulation
 simubed <-function(nprobe=1000)
 {

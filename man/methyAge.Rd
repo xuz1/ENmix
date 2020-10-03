@@ -1,7 +1,7 @@
 \name{methyAge}
 \alias{methyAge}
 \title{
-Methylation Age estimation
+Methylation Age estimator
 }
 \description{
 To calculate Methylation Age using Hovath, Hannum or PhenoAge methods
@@ -21,7 +21,7 @@ methyAge(beta,type="all",fastImputation=FALSE,normalize=TRUE,nCores=2)
   \item{nCores}{Number of cores will be used for normalization}
 }
 \value{
-  A data frame with rows for sample and columns for estimates methylation age.
+  A data frame with rows for sample and columns for types of methylation age.
 }
 
 \references{

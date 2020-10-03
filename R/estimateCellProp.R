@@ -7,7 +7,7 @@ probeSelect="both"
       userdata=getmeth(userdata)}else if(is(userdata, "RGChannelSet")){
       userdata=preprocessRaw(userdata)}else if(is.matrix(userdata)){
       if(min(userdata,na.rm=TRUE)<0 | max(userdata,na.rm=TRUE)>1){stop("[estimateCellProp] Methylation data should within [0,1]")}
-      if(normalize){normalize=FALSE; message("rgDataSet or methDataSet required for normalization")}
+      if(normalize){normalize=FALSE; message("rgDataSet or methDataSet required for normalization, reset normalize=FALSE")}
     }
 
 #edit
@@ -114,9 +114,9 @@ colnames(methy)=cname
 ref=methy[,colnames(refdata)]
 userdata=methy[,colnames(userdata)]
 }else{
-ref=getBeta(refdata)
+ref=getB(refdata)
 if(is(userdata,"methDataSet")){userdata=getB(userdata)
-}else if(is(userdata,"MethylSet")){userdata=getBeta(userdata)}
+}else if(is(userdata,"MethylSet")){userdata=getB(userdata)}
 }
 
 if(refplot){

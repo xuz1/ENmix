@@ -7,7 +7,7 @@
   Estimating sample sex based on methylation data
 }
 \usage{
-predSex(mdat, cutoff = -2)
+predSex(mdat, cutoff = 2)
 }
 \arguments{
   \item{mdat}{An object of class \code{MethDataSet} or \code{rgDataSet}.}
@@ -23,8 +23,9 @@ Zongli Xu
 }
 \examples{
 \dontrun{
+if (require(minfiData)) {
 path <- file.path(find.package("minfiData"),"extdata")
 rgSet <- readidat(path = path,recursive = TRUE)
 sex=predSex(rgSet)
-}
+}}
 }

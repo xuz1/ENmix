@@ -1,10 +1,10 @@
 \name{M2B}
 \alias{M2B}
 \title{
-Convert methylation M value to methylation beta value.
+Converting methylation M value to beta value.
 }
 \description{
-Convert methylation M value to methylation beta value.
+Converting methylation M value to methylation beta value.
 }
 \usage{
 M2B(x)
@@ -26,4 +26,15 @@ A matrix of methylation Beta values.
 Zongli Xu
 }
 
+\examples{
+\dontrun{
+if (require(minfiData)){
+path <- file.path(find.package("minfiData"),"extdata")
+rgSet <- readidat(path = path,recursive = TRUE)
+mdat=getmeth(rgSet)
+beta=getB(mdat,"Illumina")
+m=B2M(beta)
+b=M2B(m)
+}}
+}
 

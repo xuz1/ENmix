@@ -21,11 +21,11 @@ P value manhattan plot
   \item{sigthre2}{P value of second significant threshold line}
   \item{threlty}{Threshold line type, default is c(2,1)}
   \item{markprobe}{A list of CpGs to be marked out}
-  \item{markcolor}{Color code for marked probe}
-  \item{outf}{figure file name, default "mht.jpg"}
+  \item{markcolor}{Color code for marked probe, "red" in default}
+  \item{outf}{figure file name, default "mht"}
   \item{outfmt}{Output figure file format, "jpg" or "eps"}
-  \item{reducesize}{Reduce eps file size by skipping some densely packed data points,
-        larger the value, smaller the file size}
+  \item{reducesize}{A positive interger, larger the value, smaller the eps file size.
+      Smaller file size is achieved by skipping some densely packed data points}
 }
 \author{
 Zongli Xu

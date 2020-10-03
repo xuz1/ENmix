@@ -1,7 +1,7 @@
 \name{rcp}
 \alias{rcp}
 \title{
-Regression on Correlated Probes(RCP)
+Illumina methylation array probe type bias correction
 }
 \description{
 Probe design type bias correction using Regression on Correlated Probes (RCP) method
@@ -11,24 +11,23 @@ Probe design type bias correction using Regression on Correlated Probes (RCP) me
  nbthre=3, detPthre=0.000001)
 }
 \arguments{
-  \item{mdat}{An object of class \code{MethylSet}.}
+  \item{mdat}{An object of class \code{methDataSet} or \code{MethylSet}.}
   \item{dist}{Maximum distance in base pair between type I and type II probe pairs 
 for regression calibration}
   \item{quantile.grid}{Quantile grid used in linear regression}
-  \item{qcscore}{If the data quality infomation (the output from function QCinfo) 
-is provied, low quality data points as defined by detection p value threshold 
-(detPthre=0.000001) or number of bead threshold (nbthre=3) will be set to missing.}
-  \item{detPthre}{Detection P value threshold to define low qualitye data points,
- detPthre=0.000001 in default.}
+  \item{qcscore}{Data quality infomation object, the output from function QCinfo.  
+       If the object is provied, low quality data points as defined by detection 
+       p value threshold (detPthre) or number of bead threshold (nbthre) will 
+       be set as missing values.}
+  \item{detPthre}{Detection P value threshold to define low qualitye data points}
   \item{nbthre}{Number of beads threshold to define low qualitye data points, 
-nbthre=3 in default.}
-
+       nbthre=3 in default.}
 }
 \details{
-The function will first identify type I and type II probe pairs within specified
- distance, and then perform linear regression between the probe types to estimate
- regression coefficients. With the estimates the function will then calibrates 
-type II data using type I data as references. 
+The function will first identify type I and type II probe pairs within a specified
+ distance, and then perform linear regression calibration between the probe types.
+ With the estimates the function will then adjust type II data using type I data 
+ as references. 
 }
 \value{
 A beta value matrix 
@@ -42,11 +41,24 @@ BeadChip, Bioinformatics 2016}
 Liang Niu, Zongli Xu
 }
 \examples{
-if(FALSE){
+\dontrun{
 if (require(minfiData)) {
-mdat=preprocessENmix(RGsetEx,bgParaEst="oob",nCores=6)
-mdatq1=norm.quantile(mdat,method="quantile1")
-beta=rcp(mdatq1)
+#methDataSet as input
+path <- file.path(find.package("minfiData"),"extdata")
+rgSet <- readidat(path = path,recursive = TRUE)
+qc=QCinfo(rgSet)
+mdat=preprocessENmix(rgSet,QCinfo=qc,nCores=6)
+mdat=norm.quantile(mdat,method="quantile1")
+beta=rcp(mdat)
+
+#methylset as input
+sheet <- read.metharray.sheet(file.path(find.package("minfiData"),"extdata"),
+ pattern = "csv$")
+rgSet <- read.metharray.exp(targets = sheet,extended = TRUE)
+qc=QCinfo(rgSet)
+mdat=preprocessENmix(rgSet,QCinfo=qc,nCores=6)
+mdat=norm.quantile(mdat,method="quantile1")
+beta=rcp(mdat)
 }}
 }
 

@@ -16,8 +16,8 @@ acf.table<-function(x,loc,dist.cutoff){
 ##### a function to estimate acf
 get.acf<-function(data,dist.cutoff,bin.size){
   temp<-NULL
-  for (chr in unique(data$chr)){
-    y<-data[data$chr==chr,]; y<-y[order(y$end),]
+  for (chr in unique(as.vector(data$chr))){
+    y<-data[as.vector(data$chr)==chr,]; y<-y[order(y$end),]
     temp<-rbind(temp,acf.table(y$p,y$end,dist.cutoff))
   }
   bin.label<-findInterval(temp$dist,seq(bin.size,dist.cutoff,bin.size))
@@ -47,9 +47,11 @@ regplot<-function(ref,sig,extend=2000,outf="region_plot.pdf"){
     subset=ref[as.vector(ref$chr)==chr & ref$start>=(pos1-extend) & ref$start<=(pos2+extend),]
     subset$cor="black"
     subset$cor[subset$start>=pos1 &subset$start<=pos2]="red"
+
+    ylab=bquote('-log'['10']*'(P) value')
+
     plot(subset$start,-log10(subset$p),col=subset$cor,pch=20,xlim=c(pos1-extend,
-          pos2+extend),xlab="Chromosome position",ylab=expression(paste(
-          -log[10],"(", italic(P), " value)")))
+          pos2+extend),xlab="Chromosome position",ylab=ylab)
   }
   dev.off()
 }
@@ -59,8 +61,12 @@ regplot<-function(ref,sig,extend=2000,outf="region_plot.pdf"){
 ###3. combine nearby sig. intervals and sig. probes (probes with fdr<seed)
 ### into regions; 4. find region p-values
 ipdmr<-function(data,include.all.sig.sites=TRUE,dist.cutoff=1000,bin.size=50,
-                seed=0.01,region_plot=TRUE,mht_plot=TRUE,verbose=TRUE){
+                seed=0.05,region_plot=TRUE,mht_plot=TRUE,verbose=TRUE){
   data=as.data.frame(data)
+  data$start=as.numeric(as.vector(data$start))
+  data$end=as.numeric(as.vector(data$end))
+  data$p=as.numeric(as.vector(data$p))
+
   acf<-get.acf(data,dist.cutoff,bin.size)
   if(verbose){
     cat("P value correlations:\n")
@@ -69,8 +75,8 @@ ipdmr<-function(data,include.all.sig.sites=TRUE,dist.cutoff=1000,bin.size=50,
     print(data.frame(bin=bin,acf=acf))
   }
   result<-NULL
-  for (chr in unique(data$chr)){
-    y=data[data$chr==chr,]; y=y[order(y$end),]
+  for (chr in unique(as.vector(data$chr))){
+    y=data[as.vector(data$chr)==chr,]; y=y[order(y$end),]
     pos=y$end; p=qnorm(y$p)
     index=which(diff(pos)<dist.cutoff)
     int<-findInterval(diff(pos)[index],seq(bin.size,dist.cutoff,bin.size))
@@ -85,17 +91,17 @@ ipdmr<-function(data,include.all.sig.sites=TRUE,dist.cutoff=1000,bin.size=50,
   }else{
     int.sites=unique(c(paste(result$chr,result$start),
                   paste(result$chr,result$end)))
-    data.1=data[!(paste(data$chr,data$end) %in% int.sites),]
+    data.1=data[!(paste(as.vector(data$chr),data$end) %in% int.sites),]
     temp=data.1[p.adjust(data.1$p,method="fdr")<seed,]
   }
 
   result=result[p.adjust(result$int.p,method="fdr")<seed,]
-  result=rbind(result,data.frame(chr=temp$chr,start=temp$start,end=temp$end,int.p=temp$p))
+  result=rbind(result,data.frame(chr=temp$chr,start=temp$end,end=temp$end,int.p=temp$p))
 
   result.fdr=NULL
   if (nrow(result)>0){
     for (chr in unique(result$"chr")){
-      y=data[data$chr==chr,]; y=y[order(y$end),]
+      y=data[as.vector(data$chr)==chr,]; y=y[order(y$end),]
       pos=y$end; p=qnorm(y$p)
 
       result.chr=result[result$"chr"==chr,]
@@ -127,6 +133,10 @@ ipdmr<-function(data,include.all.sig.sites=TRUE,dist.cutoff=1000,bin.size=50,
   }
 
   if(is.null(result.fdr)){cat("Number of identified DMR:  0\n")}else{
+  result.fdr$start=as.numeric(as.vector(result.fdr$start))
+  result.fdr$end=as.numeric(as.vector(result.fdr$end))
+  result.fdr$chr=factor(result.fdr$chr)
+
     ndmr=nrow(result.fdr)
     cat("Number of DMRs identified:  ",ndmr, "\n")
     if(region_plot){
@@ -146,7 +156,8 @@ ipdmr<-function(data,include.all.sig.sites=TRUE,dist.cutoff=1000,bin.size=50,
   #number of probes within eath DMR
   result.fdr$nprobe=NA
   for(i in 1:nrow(result.fdr)){
-result.fdr$nprobe[i]=nrow(data[data$chr==result.fdr$chr[i] & data$start>=result.fdr$start[i] & data$end<=result.fdr$end[i],])
+result.fdr$nprobe[i]=nrow(data[as.vector(data$chr)==as.vector(result.fdr$chr[i]) 
+& data$start>=result.fdr$start[i] & data$end<=result.fdr$end[i],])
   }
 
   write.table(result.fdr,"resu_ipdmr.csv",row.names=FALSE,sep=",")
@@ -159,6 +170,10 @@ combp<-function(data,dist.cutoff=1000,bin.size=310,seed=0.01,
                region_plot=TRUE,mht_plot=TRUE,nCores=10,verbose=TRUE){
   if(nCores>detectCores()){nCores=detectCores()}
   data=as.data.frame(data)
+  data$start=as.numeric(as.vector(data$start))
+  data$end=as.numeric(as.vector(data$end))
+  data$p=as.numeric(as.vector(data$p))
+
   acf<-get.acf(data,dist.cutoff,bin.size)
   if(verbose){
     cat("P value correlations:\n")
@@ -167,8 +182,8 @@ combp<-function(data,dist.cutoff=1000,bin.size=310,seed=0.01,
     print(data.frame(bin=bin,acf=acf))
   }
 
-  result<-mclapply(unique(data$chr), function(chr){
-    y=data[data$chr==chr,]; y=y[order(y$end),]
+  result<-mclapply(unique(as.vector(data$chr)), function(chr){
+    y=data[as.vector(data$chr)==chr,]; y=y[order(y$end),]
     pos=y$end; p=qnorm(y$p)
 
     temp=sapply(pos,function(i){
@@ -191,7 +206,7 @@ combp<-function(data,dist.cutoff=1000,bin.size=310,seed=0.01,
   result.fdr=NULL
   if (nrow(result)>0){
     for (chr in unique(result$"chr")){
-      y=data[data$chr==chr,]; y=y[order(y$end),]
+      y=data[as.vector(data$chr)==chr,]; y=y[order(y$end),]
       pos=y$end; p=qnorm(y$p)
 
       result.chr=result[result$"chr"==chr,]
@@ -224,6 +239,10 @@ combp<-function(data,dist.cutoff=1000,bin.size=310,seed=0.01,
 
   if(is.null(result.fdr)){cat("Number of identified DMR:  0\n")}else{
     ndmr=nrow(result.fdr)
+  result.fdr$start=as.numeric(as.vector(result.fdr$start))
+  result.fdr$end=as.numeric(as.vector(result.fdr$end))
+  result.fdr$chr=factor(result.fdr$chr)
+
     cat("Number of DMRs identified:  ",ndmr, "\n")
     if(region_plot){
       cat("Drawing regional plot: region_plot.pdf ...\n")
@@ -240,10 +259,12 @@ combp<-function(data,dist.cutoff=1000,bin.size=310,seed=0.01,
   mhtplot(probe=data$probe,chr=as.vector(data$chr),pos=data$start,p=data$p,color="gray",markprobe=set2)
   }
   #number of probes within eath DMR
+
   result.fdr$nprobe=NA
   for(i in 1:nrow(result.fdr)){
-result.fdr$nprobe[i]=nrow(data[data$chr==result.fdr$chr[i] & data$start>=result.fdr$start[i] & data$end<=result.fdr$end[i],])
-  }
+result.fdr$nprobe[i]=nrow(data[as.vector(data$chr)==as.vector(result.fdr$chr[i])
+& data$start>=result.fdr$start[i] & data$end<=result.fdr$end[i],])
+}
 
   write.table(result.fdr,"resu_combp.csv",row.names=FALSE,sep=",")
   }

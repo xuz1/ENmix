@@ -34,10 +34,8 @@ Zongli Xu
 }
 
 \examples{
-if(FALSE){
-if (require(minfiData)) {
-mdat <- preprocessRaw(RGsetEx)
-beta=getBeta(mdat, "Illumina")
-freqpoly(beta[,1])
+\dontrun{
+freqpoly(rnorm(1000))
 }}
-}
+
+

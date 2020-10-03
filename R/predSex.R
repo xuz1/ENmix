@@ -1,4 +1,4 @@
-predSex <-function(mdat,cutoff=-2){
+predSex <-function(mdat,cutoff=2){
   if(!is(mdat, "rgDataSet") & !is(mdat, "methDataSet")){
     stop("[predSex] The input must be a rgDataSet or methDataSet")}
 
@@ -9,8 +9,8 @@ predSex <-function(mdat,cutoff=-2){
   yCN <- log2(assays(ymdat)$Meth + assays(ymdat)$Unmeth)
   xMed=apply(xCN,2,median,na.rm=TRUE)    
   yMed=apply(yCN,2,median,na.rm=TRUE)
-  diff=yMed - xMed
-  sex <- ifelse(diff < cutoff, "F", "M")
+  diff=xMed -yMed
+  sex <- ifelse(diff > cutoff, "F", "M")
   return(data.frame(id=colnames(mdat),sex=sex))
 
 #add in prediction based on beta values

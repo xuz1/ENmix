@@ -1,7 +1,7 @@
 \name{mpreprocess}
 \alias{mpreprocess}
 \title{
-methylation QC and preprocessing pipeline for Illuminal arrays
+methylation data QC and preprocessing pipeline for Illuminal BeadChips
 }
 \description{
 The pipeline performs background correction, dye bias correction, inter-array
@@ -21,7 +21,7 @@ and performing imputation.
 \code{RGChannelSetExtended}, \code{RGChannelSet} or \code{MethylSet}.}
   \item{nCores}{Number of cores will be used for computation}
   \item{bgParaEst}{Method to estimate background normal distribution parameters.
- This must be one of the strings: "oob","est", or "neg".}
+  Possible options: "oob","est", or "neg".}
   \item{dyeCorr}{Dye bias correction, "mean": correction based on averaged 
 red/green ratio; or "RELIC": correction with RELIC method; or "none": no dye
  bias correction. The default is RELIC}
@@ -41,10 +41,10 @@ red/green ratio; or "RELIC": correction with RELIC method; or "none": no dye
 Fuction mpreprocess is a pipeline that perform methylaiton data preprocessing
  and quality controls using functions: preprocessENmix, norm.quantile, rcp,
  QCinfo and rm.outlier. More customized preprocessing steps can be achieved
- using the individual functions.
+ using the individual functions, see user's guide.
 }
 \value{
-a methylation beta value matrix.
+A methylation beta value matrix with rows for CpGs and columns for samples.
 }
 \references{
 Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor, ENmix: a novel background
@@ -53,7 +53,7 @@ Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor, ENmix: a novel background
 
 Zongli Xu, Sabine A. S. Langie, Patrick De Boever, Jack A. Taylor1 and Liang
  Niu, RELIC: a novel dye-bias correction method for Illumina Methylation 
-BeadChip, in review 2016
+BeadChip, BMC Genomics, 2017
 
 Liang Niu, Zongli Xu and Jack A. Taylor: RCP: a novel probe design bias
  correction method for Illumina Methylation BeadChip, Bioinformatics 2016
@@ -66,14 +66,32 @@ Zongli Xu
 and \code{\linkS4class{MethylSet}}
 }
 \examples{
-if(FALSE){
+\dontrun{
 if (require(minfiData)) {
+#rgDataSet as input
+path <- file.path(find.package("minfiData"),"extdata")
+rgSet <- readidat(path = path,recursive = TRUE)
+beta=mpreprocess(rgSet,nCores=6,qc=TRUE,foutlier=TRUE,rmcr=TRUE,impute=TRUE)
+
+#methDataSet as input
+mdat=getmeth(rgSet)
+beta=mpreprocess(mdat,nCores=6)
+
+#RGChannelSet as input
 beta=mpreprocess(RGsetEx,nCores=6)
 
+#RGChannelSetExtended as input
 sheet <- read.metharray.sheet(file.path(find.package("minfiData"),"extdata"),
  pattern = "csv$")
 rgSet <- read.metharray.exp(targets = sheet,extended = TRUE)
 beta=mpreprocess(rgSet,nCores=6,qc=TRUE,foutlier=TRUE,rmcr=TRUE,impute=TRUE)
+
+#MethylSet as input
+mdat=preprocessRaw(rgSet)
+beta=mpreprocess(mdat,nCores=6)
+
 }}
 }
+
+
 

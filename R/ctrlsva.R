@@ -2,7 +2,7 @@
 ctrlsva<-function(rgSet,percvar=0.95,npc=1,flag=1)
 {
     if(!is(rgSet, "rgDataSet") & !is(rgSet, "RGChannelSet")){
-       stop("Input needs to an RGChannelSet\n")}
+       stop("Input needs to an rgDataSet or an RGChannelSet\n")}
     if(percvar<0 | percvar>1){stop("Percentage of variation threshold needs 
     to be between 0 and 1\n")}
 

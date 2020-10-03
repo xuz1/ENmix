@@ -1,26 +1,26 @@
 \name{ipdmr}
 \alias{ipdmr}
 \title{
-   Differentially methylated region finder using interval P values
+   Differentially methylated regions
 }
 \description{
    To identify differentially methylated regions using an interval P value method
 }
 \usage{
        ipdmr(data,include.all.sig.sites=TRUE,dist.cutoff=1000,bin.size=50,
-             seed=0.01,region_plot=TRUE,mht_plot=TRUE,verbose=TRUE)
+             seed=0.05,region_plot=TRUE,mht_plot=TRUE,verbose=TRUE)
 }
 \arguments{
   \item{data}{A data frame with colname name "chr","start",
    "end","p" and "probe", indicating chromosome (1,2,3,...,X,Y), chromosome 
    start and end position, P value and probe names}
-  \item{include.all.sig.sites}{Whether to use CpG singletons in calculate of FDR}
+  \item{include.all.sig.sites}{Whether to use CpG singletons in calculation of FDR}
   \item{dist.cutoff}{Maximum distance in base pair to combine adjacent DMRs, and 
          the maximum distance between CpGs where auto-correlation will be calculated}
   \item{bin.size}{bin size for autocorrelation calculation}
-  \item{seed}{FDR significance threshold for initial selection of DMR regions}
-  \item{region_plot}{Whether to draw regional plot}
-  \item{mht_plot}{Whether to draw mahattan plot}
+  \item{seed}{FDR threshold for initial selection of DMR regions}
+  \item{region_plot}{If TRUE, regional plots will be produced for each DMR}
+  \item{mht_plot}{If TRUE, a p-value mahattan plot with marked DMRs will be produced}
   \item{verbose}{Whether to output detailed information}
 }
 \details{

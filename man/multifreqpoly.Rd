@@ -1,7 +1,7 @@
 \name{multifreqpoly}
 \alias{multifreqpoly}
 \title{
-Frequency polygon plot
+Multiple frequency polygon plot
 }
 \description{
 Produce Frequency polygon plot for each column of a numeric data matrix. 
@@ -25,7 +25,7 @@ multifreqpoly(mat, nbreaks=100, col=1:ncol(mat), xlab="",
   \item{...}{Further arguments that get passed to the function "plot"}
 }
 \value{
-Frequency polygon plot.
+Frequency polygon plots. 
 }
 \references{
 Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor,
@@ -37,10 +37,14 @@ Zongli Xu
 }
 
 \examples{
-if(FALSE){
+\dontrun{
 if (require(minfiData)) {
 mdat <- preprocessRaw(RGsetEx)
 beta=getBeta(mdat, "Illumina")
-multifreqpoly(beta,col=rep("black",ncol(beta)))
-}}
+multifreqpoly(beta,col=1:ncol(beta))
+}
+
+x=matrix(rnorm(10000),nrow=2000,ncol=5)
+multifreqpoly(x,nbreaks=15,legend=list(x="topright",fill=1:ncol(x),legend=paste("V",1:5,sep="")))
+}
 }

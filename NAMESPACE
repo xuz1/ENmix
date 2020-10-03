@@ -33,8 +33,8 @@ importFrom(irr,icc)
 exportClasses(rgDataSet,methDataSet)
 
 export(preprocessENmix,
-    nmode.mc,normalize.quantile.450k,norm.quantile,plotCtrl,
-    QCinfo,QCfilter,pcrplot,freqpoly,multifreqpoly,
+    nmode,norm.quantile,plotCtrl,
+    QCinfo,pcrplot,freqpoly,multifreqpoly,
     rm.outlier,rcp,oxBS.MLE,ctrlsva,relic,mpreprocess,
     getB,B2M,M2B,rgDataSet,methDataSet,dupicc,
     calcdetP,getCGinfo,getmeth,readidat,

@@ -18,15 +18,15 @@ modified comb-p method
   \item{dist.cutoff}{Maximum distance in base pair to combine adjacent DMRs}
   \item{bin.size}{bin size for autocorrelation calculation}
   \item{seed}{FDR significance threshold for initial selection of DMR region}
-  \item{region_plot}{Whether to draw regional plot}
-  \item{mht_plot}{Whether to draw mahattan plot}
-  \item{nCores}{Number of computer cores used in calculation}
-  \item{verbose}{Whether to output detailed information}
+  \item{region_plot}{If TRUE, regional plots will be generated}
+  \item{mht_plot}{If TRUE, mahattan plot will be generated}
+  \item{nCores}{Number of computer cores will be used in calculation}
+  \item{verbose}{If TRUE, detailed running information will be printed}
 }
 \details{
 The input should be a data frame with column names "chr","start", "end","p",
-and "probe", indicating chromosome,start position, end position, 
-P value and probe name. The function will use 
+and "probe", indicating chromosome number, start position, end position, 
+P value and probe name. The function use 
 a modified comb-p method to identify differentially methylated regions. DMR 
 results will be stored in a file with name resu_combp.csv. If plot options 
 were selected, two figure files will be generated: mht.jpg and region_plot.pdf.

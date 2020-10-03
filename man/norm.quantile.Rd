@@ -11,7 +11,7 @@ Infinium HumanMethylation 450 and MethylationEPIC BeadChip.
 norm.quantile(mdat, method = "quantile1")
 }
 \arguments{
-  \item{mdat}{An object of class \code{MethylSet}.}
+  \item{mdat}{An object of class \code{methDataSet} or \code{MethylSet}.}
   \item{method}{Quantile normalization method: "quantile1", "quantile2", or "quantile3".}
 }
 \details{
@@ -22,7 +22,7 @@ quantile normalize combined Methylated or Unmethylated intensities for
  Methylated or Unmethylated intensities for Infinium I and II probes together.
 }
 \value{
-An object of class \code{MethylSet}.
+The output is an an object of class \code{methDataSet} or \code{MethylSet}.
 }
 \references{
 Pidsley, R., CC, Y.W., Volta, M., Lunnon, K., Mill, J. and Schalkwyk, L.C.
@@ -35,10 +35,18 @@ Zongli Xu
 }
 
 \examples{
-if(FALSE){
+\dontrun{
+#for methDataSet
+path <- file.path(find.package("minfiData"),"extdata")
+rgSet <- readidat(path = path,recursive = TRUE)
+mdat<-preprocessENmix(rgSet, bgParaEst="oob",nCores=6)
+mdatq<-norm.quantile(mdat, method="quantile1")
+
+#for MethySet
 if (require(minfiData)) {
 mdat=preprocessENmix(RGsetEx,bgParaEst="oob",nCores=6)
-mdatq1=norm.quantile(mdat,method="quantile1")
-}}
+mdatq=norm.quantile(mdat,method="quantile1")
+}
+}
 }
 

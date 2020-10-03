@@ -1,12 +1,12 @@
 \name{dupicc}
 \alias{dupicc}
 \title{
-Evaluations of methylation duplicates
+Evaluation of measurement reliability using duplicate samples
 }
 \description{
-To calcuate ICC (consistency and twoway) and Pearson's correlation coefficient for
- each CpG probes, and to calculate centered/un-centered Pearson's correlation 
-coefficient and methylation differences between duplicate samples.  
+The function can be used to calculate ICC for each CpG probe, 
+and/or centered/un-centered Pearson's correlation coefficient 
+between duplicate samples.  
 }
 \usage{
 dupicc(dat,dupid,mvalue=FALSE,center=FALSE,nCores=2,qcflag=FALSE,qc=NULL,
@@ -14,26 +14,30 @@ dupicc(dat,dupid,mvalue=FALSE,center=FALSE,nCores=2,qcflag=FALSE,qc=NULL,
 }
 \arguments{
   \item{dat}{Methylation beta value matrix}
-  \item{dupid}{A data frame with two variables, id1 and id2, for corresponding
-               duplicates ids in methylation matrix}
-  \item{mvalue}{Whether to convert to M value for calculation of ICC}
-  \item{center}{Whether methylation beta values will be centered for calculation
-                of correlation between duplicate samples}
-  \item{nCores}{Number of core will be used for calculation of ICC}
+  \item{dupid}{A data frame with two variables, id1 and id2. The two ids 
+              in each row indicate a duplicate pair. These ids should be
+              the same with column names of the input methylation matrix}
+  \item{mvalue}{If TRUE, the beta value will be converted to M value for 
+             calculation of ICC}
+  \item{center}{If TRUE, the methylation beta values will be centered 
+             for each CpG before calculation of ICC or correlation}
+  \item{nCores}{Number of cores will be used for calculation of ICC}
   \item{qcflag}{Whether to perform QC before calculation of ICC}
-  \item{qc}{QC object from ENmix package}
-  \item{detPthre}{Detection P value threshold to identify low quality data point}
-  \item{nbthre}{Number of bead threshold to identify low quality data point}
+  \item{qc}{QC object from function QCinfo}
+  \item{detPthre}{If qcflag=TRUE, the methylation values with detection P value
+       higher than the threshold will be removed before calculation}
+  \item{nbthre}{If qcflag=TRUE, the methylation values with number of bead smaller 
+       than the threshold will be removed}
   \item{skipicc}{If TRUE, ICC calculation will be skipped}
-  \item{corfig}{If TRUE, a figure will be generated to summarize correlations 
-         for duplicates and non-duplicates}
-  \item{...}{Any further arguments for function "icc" in "irr" R package}
+  \item{corfig}{If TRUE, a figure will be generated to demonstrate correlations 
+         within duplicates or within non-duplicates}
+  \item{...}{Any further arguments for function "icc" in R package "irr"} 
 }
 \value{
-icc:  a data frame containing ICC and P values for each probes
+icc:  a data frame containing ICC and P values for each probe
 
-dupcor: a data frame containing Pearson's correlation and averaged absolute 
- difference between duplicates. 
+dupcor: a data frame containing Pearson's correlation and 
+        averaged absolute difference between duplicates. 
 
 }
 \references{
@@ -46,16 +50,16 @@ Zongli Xu
 }
 
 \examples{
-if(FALSE){
-if (require(minfiData)) {
-sheet <- read.metharray.sheet(file.path(find.package("minfiData"),"extdata"),
-         pattern = "csv$")
-rgSet <- read.metharray.exp(targets = sheet,extended = TRUE)
-mdat=preprocessRaw(rgSet)
-beta=getBeta(mdat,"Illumina")
+\dontrun{
+if (require(minfiData)){
+path <- file.path(find.package("minfiData"),"extdata")
+rgSet <- readidat(path = path,recursive = TRUE)
+mdat=getmeth(rgSet)
+beta=getB(mdat,"Illumina")
 dupidx=data.frame(id1=c("5723646052_R02C02","5723646052_R04C01","5723646052_R05C02"),
 id2=c("5723646053_R04C02","5723646053_R05C02","5723646053_R06C02"))
 iccresu<-dupicc(dat=beta,dupid=dupidx)
 }}
 }
+
 

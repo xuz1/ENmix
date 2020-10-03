@@ -29,8 +29,11 @@ p.qqplot<-function(pvalues,outf="qq",outfmt="jpg",draw.conf=TRUE,
         }
     }
 
-    xlab=expression(Expected~~-log[10](italic(P))~~"under NULL hypothesis")
-    ylab=expression(Observed~~-log[10](italic(P)))
+#    xlab=expression(Expected~~-log[10](italic(P))~~"under NULL hypothesis")
+#    ylab=expression(Observed~~-log[10](italic(P)))
+
+     xlab=bquote('Expected  '*'-log'['10']*'(P)'*'  under NULL hypothesis')
+     ylab=bquote('Observed  '*'-log'['10']*'(P)')
 
 if(outfmt == "jpg"){
 jpeg(paste(outf,".",outfmt,sep=""),height=600,width=600,quality=100)
@@ -56,11 +59,9 @@ reducesize=reducesize-1
 exp.x=dat$ex
 pvalues=dat$p
 }
-
-}else if(outfmt == "eps"){
 }else{stop("Outfmt should be jpg or eps\n")}
 
-    plot(NULL, xlim=c(0,max(exp.x)), ylim=c(0,max(pvalues)), xlab=xlab,ylab=ylab,cex.lab=1.3)
+    plot(c(0,0),type="n",xlim=c(0,max(exp.x)), ylim=c(0,max(pvalues)), xlab=xlab,ylab=ylab,cex.lab=1.3)
     if(draw.conf){polygon(x=cpts[,1],y=cpts[,2], col="lightgray", lty=0)}
     points(exp.x,pvalues,pch=pch,col=col)
     abline(0,1,lty=2)

@@ -17,8 +17,8 @@ An object of class \code{methDataSet}
 }
 
 \details{
-CpG annotation information is incorporated in the output object, and can 
-be extracted using command \code{rowData}
+CpG annotation information is incorporated in the output methDataSet 
+object, and can be extracted using command \code{rowData().}
 }
 \author{
 Zongli Xu
@@ -30,5 +30,7 @@ path <- file.path(find.package("minfiData"),"extdata")
 #based on rgDataset
 rgSet <- readidat(path = path,recursive = TRUE)
 meth=getmeth(rgSet)
+meth
+cginfo=rowData(meth)
 }}
 

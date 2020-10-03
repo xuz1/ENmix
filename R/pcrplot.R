@@ -48,7 +48,7 @@ pcrplot<-function(beta,cov,npc=50)
     {stop("number of columns in beta is not equal to number of rows in cov")}
     cat("Analysis is running, please wait...!","\n")
     npc <- min(ncol(beta),npc)
-    svd <- prcomp(t(beta),center=TRUE,scale=TRUE,retx=TRUE,na.action="na.omit")
+    svd <- prcomp(t(beta),center=TRUE,scale=TRUE,retx=TRUE)
     jpeg(filename="svdscreeplot.jpg",width=1000,height=500,quality = 100)
     screeplot(svd,npc,type="barplot")
     dev.off()

@@ -1,4 +1,4 @@
-nmode_est <-
+nm_est <-
 function(x,minN=3,modedist=0.2)
 {
     x <- x[!is.na(x)]
@@ -19,13 +19,13 @@ function(x,minN=3,modedist=0.2)
     nn <- array();
     for(i in 1:(length(v1)-1)){nn[i] <- length(x[x>=v1[i] & x<v1[i+1]])}
     ix=ix[nn>=minN]
-    nmode <- max(1,length(ix))
-    }else{nmode=1}
-    }else{nmode=1}
-#nmode <- min(5,max(1,length(ix)))
-    if(nmode>=2){
+    nm <- max(1,length(ix))
+    }else{nm=1}
+    }else{nm=1}
+#nm <- min(5,max(1,length(ix)))
+    if(nm>=2){
     flag <- 1;
-    xx <- sort(y$x[ix][order(y$y[ix],decreasing=TRUE)[1:nmode]])
+    xx <- sort(y$x[ix][order(y$y[ix],decreasing=TRUE)[1:nm]])
     }else{flag <- 0}
 #distance between peaks must greater than modedist
     while(flag)
@@ -49,13 +49,13 @@ function(x,minN=3,modedist=0.2)
     id_rm <- which.min(nn)
     xx <- xx[-id_rm]
     }else{flag <- 0}
-    nmode <- length(xx)
-    if(nmode==1){flag <- 0}
+    nm <- length(xx)
+    if(nm==1){flag <- 0}
     }
-    nmode
+    nm
 }
 
-nmode.mc <-function(x,minN=3,modedist=0.2,nCores=1)
+nmode <-function(x,minN=3,modedist=0.2,nCores=1)
 {
     if(nCores>detectCores()){
     nCores <- detectCores();
@@ -70,7 +70,7 @@ nmode.mc <-function(x,minN=3,modedist=0.2,nCores=1)
     registerDoParallel(c1)
     }
 
-    nmode=NULL
+    nm=NULL
     N=ceiling(nrow(x)/(nCores*1200))
     parts=rep(1:N,each = ceiling(nrow(x)/N))[1:nrow(x)]
     for(i in 1:N){
@@ -78,20 +78,20 @@ nmode.mc <-function(x,minN=3,modedist=0.2,nCores=1)
     x.1=x[id,]
 
     if(.Platform$OS.type == "unix"){
-    nmode_est1 <-function(id,beta,minN,modedist)
-    {nmode_est(beta[id,],minN=minN,modedist=modedist)}
-    nmode.1=mclapply(1:nrow(x.1),nmode_est1,beta=x.1,minN=minN,modedist=modedist,
+    nm_est1 <-function(id,beta,minN,modedist)
+    {nm_est(beta[id,],minN=minN,modedist=modedist)}
+    nm.1=mclapply(1:nrow(x.1),nm_est1,beta=x.1,minN=minN,modedist=modedist,
     mc.cores=nCores)
-    nmode.1=unlist(nmode.1)
+    nm.1=unlist(nm.1)
     }else{
 
-    nmode.1 <- foreach(i = 1:nrow(x.1),.combine=c,.export=c("nmode_est")) %dopar% {
-     i=i; nmode_est(x.1[i,], minN=minN,modedist=modedist)}
+    nm.1 <- foreach(i = 1:nrow(x.1),.combine=c,.export=c("nm_est")) %dopar% {
+     i=i; nm_est(x.1[i,], minN=minN,modedist=modedist)}
     }
-    nmode=c(nmode,nmode.1)
+    nm=c(nm,nm.1)
     }
     if(!(.Platform$OS.type == "unix")){stopCluster(c1)}
-    names(nmode) <- CpG
-    nmode
+    names(nm) <- CpG
+    nm
 }
 

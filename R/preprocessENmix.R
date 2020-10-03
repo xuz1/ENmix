@@ -205,7 +205,7 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
     }
     mdat=rgSet; bgParaEst="est"; 
     if(!(dyeCorr=="none")){cat("Warning: Input data need to be a rgDataSet or 
-        RGChannelSet for dye bias correction\n");
+        RGChannelSet to perform dye-bias correction\n");
        cat("Warning: dye-bias correction will not be performed\n")}
     dyeCorr="none"
     }else{stop("Error: object needs to be of class 'RGChannelSet' or 

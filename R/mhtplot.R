@@ -63,7 +63,8 @@ reducesize=reducesize-1
 
 plot(dat$pos,-log10(dat$p),col=dat$col,pch=20,lwd=1,xaxt="n",
     xlab="Chromosome location",
-    ylab=expression(paste(-log[10],"(", italic(P), " value)")),
+#    ylab=expression(paste(-log[10],"(", italic(P), " value)")),
+    ylab=bquote('-log'['10']*'(P) value'),
     main="",cex.lab=1.5)
 
 axis(1,at=c(0,chrlen$cumx),las=1,lwd=1,labels=FALSE,cex=0.5,font=2)
