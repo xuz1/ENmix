@@ -20,14 +20,14 @@ options(width=70)
 
 \title{The \Rpackage{ENmix} User's Guide}
 
-\date{Modified: April 27 2020.  Compiled: \today}
+\date{Modified: October 3 2020.  Compiled: \today}
 \begin{document}
 \maketitle
 
 \section{Introduction}
 
 The \Rpackage{ENmix} package provides a set of quality control and data 
-pre-processing tools for Illumina  
+analysis tools for Illumina  
 HumanMethylation450 and MethylationEPIC Beadchips. It includes ENmix background 
  correction, RELIC dye bias correction, RCP probe-type bias adjustment, 
  along with a number of additional tools.
@@ -40,7 +40,7 @@ dye-bias adjustment, inter-array normalization and probe-type bias correction) o
 to use individual functions sequentially to perform data pre-processing in a more 
 customized manner. In addition the \Rpackage{ENmix} package has selectable 
 complementary functions for efficient data visualization (such as data 
-distribution plots); quality control (identifing and filtering 
+distribution plot, manhattan plot and Q-Q plot); quality control (identifing and filtering 
 low quality data points, samples, probes, and outliers, along with 
 imputation of missing values); identification of probes with multimodal 
 distributions due to SNPs or other factors; exploration of data variance
@@ -52,7 +52,7 @@ statistical analysis; an efficient algorithm oxBS-MLE to estimate
 proporitons; methlation age calculation and differentially methylated
 region (DMR) analysis.
 
-The \Rpackage{ENmix} package can also support the data structure used by 
+Most \Rpackage{ENmix} package can also support the data structure used by 
 several other related R packages, such as \Rpackage{minfi},
 \Rpackage{wateRmelon} and \Rpackage{ChAMP},
 providing straightforward integration of 
@@ -86,7 +86,7 @@ Bioinformatics. 2016
 
 Xu Z, Xie C, Taylor JA, Niu L. 
 ipDMR: Identification of differentially methylated regions with interval P values
-in review, 2020
+Bioinformatics, 2020
 
 \section{List of functions}
 
@@ -99,16 +99,16 @@ readidat  &  Read idat files into R \\
 readmanifest   &  Read array manifest file into R  \\
 \midrule
 \textbf{Quality control}  &    \\
-QCinfo     & Extract QC info and identify outlier samples  \\
+QCinfo     & Extract and visualize QC information  \\
 plotCtrl   & Generate internal control plots   \\
 getCGinfo  & Extract CpG probe annotation information \\
-calcdetP   & Estimate detection P values   \\
-Qcfilter   & Filter out low quality CpGs or samples   \\
+calcdetP   & Compute detection P values   \\
 rm.outlier & Remove low quality values, samples or CpGs; \\
-           & remove outlier samples and do imputation  \\
+           & remove outlier samples and perform imputation  \\
 nmode   & Identify gap probes   \\
 dupicc     & Calculate ICC based on duplicates  \\
-multifreqpoly & Frequency polygon plot   \\
+freqpoly & Frequency polygon plot for single variable   \\
+multifreqpoly & Frequency polygon plot for multiple variables  \\
 \midrule
 \textbf{Preprocessing}  &      \\
 mpreprocess      & Preprocessing pipeline   \\
@@ -124,10 +124,11 @@ combp   & Combp differentially methylated region analysis  \\
 \textbf{Other functions}  &     \\
 oxBS.MLE   &  MLE estimates of 5-methylcytosine (5mC) and  \\
            &  5-hydroxymethylcytosine (5hmC)    \\
-estimateCellProp  &  Cell type proportion Estimation  \\
-methyAge   &  Methylation age estimates    \\
-predSex    &  Sample sex estimation  \\
-ctrlsva    &  Estimates of non-negative control surrogate variables  \\
+estimateCellProp  &  Estimate cell type proportions  \\
+methyAge   &  Calculate methylation age    \\
+predSex    &  Estimate sample sex  \\
+ctrlsva    &  Derive surrogate variables to control for experimental \\ 
+           &  confoundings using non-negative control probes \\
 pcrplot    &  Principal component regression plot  \\
 mhtplot    &  P value manhattan plot  \\
 p.qqplot  &  P value Q-Q plot with optional confidence interval   \\
@@ -189,7 +190,7 @@ beta <- rm.outlier(beta,qcscore=qc,impute=TRUE,rmcr=TRUE)
 @
 
 
-\subsection{Example 3: A more elaborated example}
+\subsection{Example 3: A more comprehensive example}
 
 This example is to demonstrate the flexibility of the package functions. 
 Getting detailed information about data quality, SNP-like probes, excluding 
