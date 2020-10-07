@@ -22,7 +22,9 @@ A data frame
 Zongli Xu
 }
 \examples{
+\donttest{
+
 simubed(nprobe=1000)
-}
+}}
 
 

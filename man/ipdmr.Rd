@@ -39,10 +39,10 @@ Liang Niu, Zongli Xu
 }
 
 \examples{
-\dontrun{
+\donttest{
 dat=simubed()
 names(dat)
 ipdmr(data=dat,seed=0.1)
-}}
-
+}
+}
 

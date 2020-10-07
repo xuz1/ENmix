@@ -53,7 +53,8 @@ BMC Genomics. 2017
 Zongli Xu and Liang Niu
 }
 \examples{
-\dontrun{
+\donttest{
+
 if (require(minfiData)) {
 #rgDataSet as input
 path <- file.path(find.package("minfiData"),"extdata")
@@ -71,4 +72,3 @@ mdat=preprocessENmix(rgSet,QCinfo=qc,exSample=ex_id,exCpG=ex_cg,nCores=6)
 mdat=preprocessENmix(RGsetEx,nCores=6)
 }}
 }
-

@@ -47,6 +47,8 @@ treated DNA}, Bioinformatics. 2016
 Liang Niu and Zongli Xu
 }
 \examples{
+\donttest{
+
 # load example data
 load(system.file("oxBS.MLE.RData",package="ENmix"))
 # run oxBS.MLE
@@ -54,4 +56,4 @@ resu<-oxBS.MLE(beta.BS,beta.oxBS,N.BS,N.oxBS)
 dim(resu[["5mC"]])
 dim(resu[["5hmC"]])
 }
-
+}

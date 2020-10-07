@@ -14,7 +14,7 @@ plotCtrl(rgSet,IDorder=NULL)
 }
 \arguments{
   \item{rgSet}{An object of class \code{rgDataSet} or \code{RGChannelSet}.}
-  \item{IDorder}{A list of sample ids in the order user specified. The list can
+  \item{IDorder}{A list of sample ids in the order specified by user. The list can
  be a subset of sample ids in input dataset. If an id list is provided, all
  plots will be produced in the order of the list.}
 }
@@ -31,7 +31,8 @@ Zongli Xu
 }
 
 \examples{
-\dontrun{
+\donttest{
+
 if (require(minfiData)) {
 #rgDataSet as input
 path <- file.path(find.package("minfiData"),"extdata")
@@ -44,4 +45,3 @@ IDorder=rownames(pinfo)[order(pinfo$Slide,pinfo$Array)]
 plotCtrl(RGsetEx,IDorder)
 }}
 }
-

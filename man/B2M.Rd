@@ -26,7 +26,7 @@ Zongli Xu
 }
 
 \examples{
-\dontrun{
+\donttest{
 if (require(minfiData)){
 path <- file.path(find.package("minfiData"),"extdata")
 rgSet <- readidat(path = path,recursive = TRUE)
@@ -35,4 +35,3 @@ beta=getB(mdat,"Illumina")
 m=B2M(beta)
 }}
 }
-

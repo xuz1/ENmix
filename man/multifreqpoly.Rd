@@ -37,14 +37,18 @@ Zongli Xu
 }
 
 \examples{
-\dontrun{
-if (require(minfiData)) {
-mdat <- preprocessRaw(RGsetEx)
-beta=getBeta(mdat, "Illumina")
-multifreqpoly(beta,col=1:ncol(beta))
-}
+\donttest{
 
 x=matrix(rnorm(10000),nrow=2000,ncol=5)
 multifreqpoly(x,nbreaks=15,legend=list(x="topright",fill=1:ncol(x),legend=paste("V",1:5,sep="")))
+
+if (require(minfiData)) {
+path <- file.path(find.package("minfiData"),"extdata")
+rgSet <- readidat(path = path,recursive = TRUE)
+mraw <- getmeth(rgSet)
+beta<-getB(mraw)
+jpeg("dist_raw.jpg")
+multifreqpoly(beta,col=1:ncol(beta))
+dev.off()
 }
-}
+}}

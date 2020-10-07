@@ -32,12 +32,13 @@ Zongli Xu
 }
 
 \examples{
-\dontrun{
+\donttest{
+
 dat=simubed()
 thre1=0.0001
 thre2=0.00001
 mprobe=dat$probe[dat$p<=thre1]
 mhtplot(probe=dat$probe,chr=dat$chr,pos=dat$start,p=dat$p,sigthre=thre1,sigthre2=thre2,
         markprobe=mprobe,outf="mht_try",outfmt="jpg")
-}}
-
+}
+}

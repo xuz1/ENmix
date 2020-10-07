@@ -35,7 +35,8 @@ Zongli Xu
 }
 
 \examples{
-\dontrun{
+\donttest{
+
 #for methDataSet
 path <- file.path(find.package("minfiData"),"extdata")
 rgSet <- readidat(path = path,recursive = TRUE)
@@ -49,4 +50,3 @@ mdatq=norm.quantile(mdat,method="quantile1")
 }
 }
 }
-

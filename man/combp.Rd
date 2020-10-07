@@ -44,11 +44,11 @@ Liang Niu, Zongli Xu
 }
 
 \examples{
-\dontrun{
+\donttest{
 dat=simubed()
 names(dat)
 combp(data=dat,seed=0.1)
-}}
-
+}
+}
 
 

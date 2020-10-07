@@ -26,11 +26,10 @@ SeSAMe: reducing artifactual detection of DNA  methylation by Infinium BeadChips
 Zongli Xu
 }
 \examples{
-\dontrun{
+\donttest{
 path <- file.path(find.package("minfiData"),"extdata")
 rgSet <- readidat(path = path,recursive = TRUE)
 detp=calcdetP(rgSet,detPtype = "negative")
 detp2=calcdetP(rgSet,detPtype = "oob")
 }
 }
-

@@ -24,13 +24,14 @@ object, and can be extracted using command \code{rowData().}
 Zongli Xu
 }
 \examples{
-\dontrun{
-require(minfidata)
+\donttest{
+
+require(minfiData)
 path <- file.path(find.package("minfiData"),"extdata")
 #based on rgDataset
 rgSet <- readidat(path = path,recursive = TRUE)
 meth=getmeth(rgSet)
 meth
 cginfo=rowData(meth)
-}}
-
+}
+}

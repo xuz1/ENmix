@@ -84,8 +84,8 @@ Zongli Xu
 }
 
 \examples{
-\dontrun{
-require(minfidata)
+\donttest{
+require(minfiData)
 path <- file.path(find.package("minfiData"),"extdata")
 #based on rgDataset
 rgSet <- readidat(path = path,recursive = TRUE)
@@ -104,4 +104,3 @@ celltype=estimateCellProp(userdata=beta,refdata="FlowSorted.Blood.450k",
          nonnegative = TRUE)
 }
 }
-

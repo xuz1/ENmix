@@ -41,16 +41,15 @@ dupcor: a data frame containing Pearson's correlation and
 
 }
 \references{
-Zongli Xu, Liang Niu, Leping Li and Jack A. Taylor,
-\emph{ENmix: a novel background correction method for Illumina HumanMethylation450
- BeadChip}. Nucleic Acids Research 2015.
+Zongli Xu, Jack A Taylor. \emph{Reliability of DNA methylation measures using 
+Illumina methylation BeadChip}. Epigenetics 2020
 }
 \author{
 Zongli Xu
 }
 
 \examples{
-\dontrun{
+\donttest{
 if (require(minfiData)){
 path <- file.path(find.package("minfiData"),"extdata")
 rgSet <- readidat(path = path,recursive = TRUE)
@@ -61,5 +60,4 @@ id2=c("5723646053_R04C02","5723646053_R05C02","5723646053_R06C02"))
 iccresu<-dupicc(dat=beta,dupid=dupidx)
 }}
 }
-
 

@@ -19,7 +19,7 @@ An object of dataframe caintaining probe annotation information
 Zongli Xu
 }
 \examples{
-\dontrun{
+\donttest{
 
 #for MethylationEPIC v1.0 B5
 system("wget http://webdata.illumina.com.s3-website-us-east-1.amazonaws.com/downloads/productfiles/methylationEPIC/infinium-methylationepic-v-1-0-b5-manifest-file-csv.zip")
@@ -38,5 +38,5 @@ system("wget ftp://webdata2:webdata2@ussd-ftp.illumina.com/downloads/ProductFile
 mf="HumanMethylation450_15017482_v1-2.csv"
 manifest=readmanifest(mf)
 
-}}
-
+}
+}

@@ -66,7 +66,8 @@ Zongli Xu
 and \code{\linkS4class{MethylSet}}
 }
 \examples{
-\dontrun{
+\donttest{
+
 if (require(minfiData)) {
 #rgDataSet as input
 path <- file.path(find.package("minfiData"),"extdata")
@@ -92,6 +93,5 @@ beta=mpreprocess(mdat,nCores=6)
 
 }}
 }
-
 
 

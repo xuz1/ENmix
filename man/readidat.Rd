@@ -26,7 +26,8 @@ Probe annotation info can be extracted using command \code{rowData}
 Zongli Xu
 }
 \examples{
-\dontrun{
+\donttest{
+
 #Illumina methylation array manifestfile
 #for MethylationEPIC v1.0 B5
 system("wget http://webdata.illumina.com.s3-website-us-east-1.amazonaws.com/downloads/productfiles/methylationEPIC/infinium-methylationepic-v-1-0-b5-manifest-file-csv.zip")
@@ -47,7 +48,6 @@ rgSet <- readidat(path = path,manifestfile=mf,recursive = TRUE)
 
 #without providing manifest file, corresponding R manifestfile package will be used
 rgSet <- readidat(path = path,recursive = TRUE)
-}
 }}
-
+}
 

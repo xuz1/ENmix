@@ -40,8 +40,9 @@ Zongli Xu
 }
 
 \examples{
-\dontrun{
-require(minfidata)
+\donttest{
+
+require(minfiData)
 path <- file.path(find.package("minfiData"),"extdata")
 #based on rgDataset
 rgSet <- readidat(path = path,recursive = TRUE)
@@ -50,4 +51,3 @@ beta=getB(meth)
 mage=methyAge(beta)
 }
 }
-

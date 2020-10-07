@@ -41,7 +41,8 @@ BeadChip, Bioinformatics 2016}
 Liang Niu, Zongli Xu
 }
 \examples{
-\dontrun{
+\donttest{
+
 if (require(minfiData)) {
 #methDataSet as input
 path <- file.path(find.package("minfiData"),"extdata")
@@ -61,4 +62,3 @@ mdat=norm.quantile(mdat,method="quantile1")
 beta=rcp(mdat)
 }}
 }
-

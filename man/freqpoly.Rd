@@ -34,7 +34,7 @@ Zongli Xu
 }
 
 \examples{
-\dontrun{
+\donttest{
 freqpoly(rnorm(1000))
 }}
 

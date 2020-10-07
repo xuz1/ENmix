@@ -38,7 +38,8 @@ BeadChip}. Nucleic Acids Research 2015
 Zongli Xu
 }
 \examples{
-\dontrun{
+\donttest{
+
 if (require(minfiData)) {
 mdat <- preprocessRaw(RGsetEx)
 beta=getBeta(mdat, "Illumina")
@@ -48,4 +49,3 @@ cov=data.frame(group,slide)
 pcrplot(beta,cov,npc=6)
 }}
 }
-

@@ -49,7 +49,8 @@ Zongli Xu
 }
 
 \examples{
-\dontrun{
+\donttest{
+
 if (require(minfiData)) {
 path <- file.path(find.package("minfiData"),"extdata")
 rgSet <- readidat(path = path,recursive = TRUE)
@@ -67,5 +68,4 @@ b3=rm.outlier(beta,qcscore=qc,rmcr=TRUE)
 #filter out low quality and outlier values, remove rows and columns with
 # too many missing values, and then do imputation
 b3=rm.outlier(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
-}}
-}
+}}}

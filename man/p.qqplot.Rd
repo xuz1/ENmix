@@ -29,8 +29,9 @@ Zongli Xu
 }
 
 \examples{
-\dontrun{
+\donttest{
+
 dat=simubed()
 p.qqplot(pvalues=dat$p,draw.conf=TRUE,outf="qq_try",outfmt="jpg")
-}}
-
+}
+}

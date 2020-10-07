@@ -38,7 +38,7 @@ Methylation BeadChip, BMC Genomics. 2017}
   Package \code{preprocessENmix}
 }
 \examples{
-\dontrun{
+\donttest{
 if (require(minfiData)) {
 
 ##background correction and dye bias correction
@@ -55,11 +55,12 @@ mdat=preprocessENmix(RGsetEx,bgParaEst="oob",nCores=6,dyeCorr ="RELIC")
 path <- file.path(find.package("minfiData"),"extdata")
 rgSet <- readidat(path = path,recursive = TRUE)
 ctrls <- getCGinfo(rgSet,type="ctrl")
-ctrls <- ctrls[ctrls$Address %in% rownames(rgSet),]
+ctrls <- ctrls[ctrls$Address \%in\% rownames(rgSet),]
+
 ctrl_r <- assays(rgSet)$Red[ctrls$Address,]
 ctrl_g <- assays(rgSet)$Green[ctrls$Address,]
-CG.controls <- ctrls$Type %in% c("NORM_C", "NORM_G")
-AT.controls <- ctrls$Type %in% c("NORM_A", "NORM_T")
+CG.controls <- ctrls$Type \%in\% c("NORM_C", "NORM_G")
+AT.controls <- ctrls$Type \%in\% c("NORM_A", "NORM_T")
 cg_grn=ctrl_g[CG.controls,]
 at_red=ctrl_r[AT.controls,]
 rownames(cg_grn) = ctrls$ExtendedType[CG.controls]
@@ -69,11 +70,11 @@ mdat <- relic(mdat,at_red,cg_grn)
 
 #MethylSet as input
 ctrls <- getProbeInfo(RGsetEx,type="Control")
-ctrls <- ctrls[ctrls$Address %in% featureNames(RGsetEx),]
+ctrls <- ctrls[ctrls$Address \%in\% featureNames(RGsetEx),]
 ctrl_r <- getRed(RGsetEx)[ctrls$Address,]
 ctrl_g <- getGreen(RGsetEx)[ctrls$Address,]
-CG.controls <- ctrls$Type %in% c("NORM_C","NORM_G")
-AT.controls <- ctrls$Type %in% c("NORM_A","NORM_T")
+CG.controls <- ctrls$Type \%in\% c("NORM_C","NORM_G")
+AT.controls <- ctrls$Type \%in\% c("NORM_A","NORM_T")
 cg_grn <- ctrl_g[CG.controls,]
 at_red <- ctrl_r[AT.controls,]
 rownames(cg_grn) = ctrls$ExtendedType[CG.controls]

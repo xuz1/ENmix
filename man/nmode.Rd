@@ -39,7 +39,8 @@ HumanMethylation450 BeadChip}. Nucleic Acids Research 2015
 Zongli Xu
 }
 \examples{
-\dontrun{
+\donttest{
+
 if (require(minfiData)) {
 mdat <- preprocessRaw(RGsetEx)
 beta=getBeta(mdat, "Illumina")
@@ -50,5 +51,4 @@ rgSet <- readidat(path = path,recursive = TRUE)
 mdat <- getmeth(rgSet)
 beta=getB(mdat)
 nmode=nmode(beta, minN = 3,modedist=0.2, nCores = 5)
-}}
-}
+}}}

@@ -56,6 +56,18 @@ c(bibentry(bibtype = "Article",
            header = "RELIC dye-bias correction"),
 
   bibentry(bibtype = "Article",
+           key = "dupicc",
+           author = c(
+           person("Zongli", "Xu"),
+           person("Jack,A.", "Taylor")
+                ),
+           title = "Reliability of DNA methylation measures using Illumina methylation BeadChip",
+           journal = "Epigenetics",
+           year = "2020",
+           pubmed = "32749174",
+           header = "Intraclass correlation"),
+
+  bibentry(bibtype = "Article",
            key = "ipDMR",
            author = c(
            person("Zongli", "Xu"),

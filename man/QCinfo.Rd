@@ -67,7 +67,8 @@ Zongli Xu
 }
 
 \examples{
-\dontrun{
+\donttest{
+
 if (require(minfiData)) {
 #rgDataSet as input
 path <- file.path(find.package("minfiData"),"extdata")
@@ -81,4 +82,3 @@ rgSet <- read.metharray.exp(targets = sheet,extended = TRUE)
 qc<-QCinfo(rgSet)
 }}
 }
-
