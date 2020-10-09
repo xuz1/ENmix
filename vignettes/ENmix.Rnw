@@ -20,7 +20,7 @@ options(width=70)
 
 \title{The \Rpackage{ENmix} User's Guide}
 
-\date{Modified: October 3 2020.  Compiled: \today}
+\date{Modified: October 9 2020.  Compiled: \today}
 \begin{document}
 \maketitle
 

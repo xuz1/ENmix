@@ -116,4 +116,9 @@
   \itemize{
     \item add function: combp,ipdmr,mhtplot,p.qqplot 
 }}
+\section{Version 1.25.9}{
+  \itemize{
+    \item bugfix, updated user manual
+}}
+
 

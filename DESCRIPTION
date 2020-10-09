@@ -1,12 +1,12 @@
 Package: ENmix
-Version: 1.25.8
-Date: 2020-10-02
+Version: 1.25.9
+Date: 2020-10-09
 Title: Quality control and analysis tools for Illumina DNA methylation BeadChip
 Type: Package
 Authors@R: c(person("Zongli","Xu",role=c("cre","aut"),email="xuz@niehs.nih.gov"),
     person("Liang","Niu",role=c("aut"),email="niulg@ucmail.uc.edu"),
     person("Jack","Taylor",role=c("ctb"),email="taylor@niehs.nih.gov"))
-Description: Comprehensive tool kits for quanlity control, analysis and visulization
+Description: Tool kits for quanlity control, analysis and visulization
     of Illumina DNA methylation arrays. 
 Depends: parallel,doParallel,foreach,SummarizedExperiment,stats
 Imports: grDevices,graphics,preprocessCore,matrixStats,methods,utils,irr,
