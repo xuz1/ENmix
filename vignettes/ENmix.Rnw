@@ -35,19 +35,20 @@ These functions can be used to remove unwanted experimental noise and thus to
 improve accuracy and reproducibility of methylation measures. 
 \Rpackage{ENmix} functions 
 are flexible and transparent. Users have option to choose a single pipeline 
-command to finish all data pre-processing steps (including background correction, 
+command to finish all data pre-processing steps (including quality control, 
+background correction, 
 dye-bias adjustment, inter-array normalization and probe-type bias correction) or 
 to use individual functions sequentially to perform data pre-processing in a more 
 customized manner. In addition the \Rpackage{ENmix} package has selectable 
-complementary functions for efficient data visualization (such as data 
-distribution plot, manhattan plot and Q-Q plot); quality control (identifing and filtering 
+complementary functions for efficient data visualization (such as QC plots, data 
+distribution plot, manhattan plot and Q-Q plot), quality control (identifing and filtering 
 low quality data points, samples, probes, and outliers, along with 
-imputation of missing values); identification of probes with multimodal 
-distributions due to SNPs or other factors; exploration of data variance
- structure using principal component regression analysis plot; preparation
+imputation of missing values), identification of probes with multimodal 
+distributions due to SNPs or other factors, exploration of data variance
+ structure using principal component regression analysis plot, preparation
 of experimental factors related surrogate control variables 
 to be adjusted in downstream 
-statistical analysis; an efficient algorithm oxBS-MLE to estimate
+statistical analysis, an efficient algorithm oxBS-MLE to estimate
 5-methylcytosine and 5-hydroxymethylcytosine level; estimation of celltype
 proporitons; methlation age calculation and differentially methylated
 region (DMR) analysis.
@@ -109,7 +110,7 @@ calcdetP   & Compute detection P values   \\
 rm.outlier & Remove low quality values, samples or CpGs; \\
            & remove outlier samples and perform imputation  \\
 nmode   & Identify gap probes   \\
-dupicc     & Calculate ICC based on duplicates  \\
+dupicc     & Calculate ICC with data for duplicates  \\
 freqpoly & Frequency polygon plot for single variable   \\
 multifreqpoly & Frequency polygon plot for multiple variables  \\
 \midrule
@@ -176,16 +177,17 @@ rgSet <- readidat(path = path,recursive = TRUE)
 #QC info
 qc<-QCinfo(rgSet)
 #background correction and dye bias correction
-#if qc info object is provided, the low quality or outlier samples and probes 
-#will be excluded before background correction
+#if qc info object is provided, the low quality or outlier samples
+# and probes will be excluded before background correction
 mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr="RELIC", 
                      QCinfo=qc, nCores=6)
-#low quality samples and probes can also be excluded after 
 #inter-array normalization
 mdat<-norm.quantile(mdat, method="quantile1")
 #probe-type bias adjustment
 beta<-rcp(mdat,qcscore=qc)
-beta <- rm.outlier(beta,qcscore=qc,impute=TRUE,rmcr=TRUE)
+#assign missing to low quality and outlier data points, remove samples
+# and probes with too many missing data, and do imputation
+beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
 @
 
 
@@ -214,8 +216,8 @@ colData(rgSet)=as(sheet[colnames(rgSet),],"DataFrame")
 plotCtrl(rgSet)
 
 #generate quality control (QC) information and plots, 
-#identify outlier samples
-#if set detPtype="negative", recommand to set depPthre to at least 10E-6
+#identify outlier samples in data distribution
+#if set detPtype="negative", recommand to set depPthre to <= 10E-6
 #if set detPtype="oob", depPthre of 0.01 or 0.05 may be sufficient
 #see Heiss et al. PMID: 30678737 for details
 qc<-QCinfo(rgSet,detPtype="negative",detPthre=0.000001)
@@ -238,7 +240,8 @@ nmode<-nmode(beta, minN = 3, modedist=0.2, nCores = 6)
 #filter out poor quality and outlier data points for each probe;
 #rows and columns with too many missing values can be removed
 #Imputation will be performed to fill missing data if specify.
-beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
+beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE, rthre=0.05,
+                   cthre=0.05,impute=TRUE)
 
 ##Principal component regression analysis plot
 #phenotypes to be studied in the plot
@@ -247,8 +250,8 @@ cov<-data.frame(group=colData(mdat)$Sample_Group,
 #missing data is not allowed in the analysis!
 pcrplot(beta, cov, npc=6)
 
-#Non-negative control surrogate variables, which can be used in downstream 
-#association analysis to control for batch effects. 
+#Non-negative control surrogate variables, which can be used in
+# downstream association analysis to control for batch effects. 
 csva<-ctrlsva(rgSet)
 
 #estimate cell type proportions
@@ -264,7 +267,8 @@ sex=predSex(mdat)
 #Methylation age calculation
 mage=methyAge(beta)
 
-#ICC analysis can be performed to study measurement reliability if have duplicates, see manual
+#ICC analysis can be performed to study measurement reliability if
+# have duplicates, see manual
 #dupicc()
 
 #After association analysis, the P values can be used for DMR analysis
@@ -287,7 +291,8 @@ use minfi package to read in idat files and create
 
 <<UnevaluatedCode, eval=FALSE>>=
 library(ENmix)
-rgSet <- readidat(path = "directory path for idat files", recursive = TRUE)
+rgSet <- readidat(path = "directory path for idat files", 
+                 recursive = TRUE)
 @
 
 When methylation IDAT raw data files are not available, such as in many
@@ -444,10 +449,11 @@ multifreqpoly plots (panels on right)}
 \label{fig:dist}
 \end{figure}
 
-\subsection{QC information, filtering of low quality samples and probes}
-Data quality measures, including detection P values, number of 
-beads for each methylation read and average intensities for bisulfite
-conversion probes can be extracted or generated using the 
+\subsection{QC information, flag outlier samples, low quality samples and probes}
+Data quality measures, including detection P values, average intensities for 
+bisulfite conversion probes and number of 
+beads for each methylation read 
+can be extracted or estimated using the 
 function \Rfunction{QCinfo} from an object of \Robject{rgDataSet} or
  \Robject{RGChannelSetExtended}. Based on default or user specified 
 quality score thresholds, the \Rfunction{QCinfo} will identify 
@@ -467,11 +473,11 @@ qc<-QCinfo(rgSet)
 mdat<-preprocessENmix(rgSet, QCinfo=qc, nCores=6)
 @
 
-\subsection{Filtering out outliers and low quality data values}
+\subsection{Filtering out outliers and low quality data points}
 After excluding low quality samples and probes, as well as outlier samples.
 we can still have many low quality and outlier data points for many CpGs.
-These small percentage of data points can have a large impact on association
-statistical tests for individual CpGs. 
+These small percentage of data points can have big impact on downstream 
+association statistical tests for individual CpGs. 
 Function \Rfunction{rm.outlier} can be used to filter out these
 data points and replace them as missing values. Outliers are defined as 
 values smaller than 3 times IQR from the lower quartile or larger than 
@@ -488,8 +494,10 @@ b2=rm.outlier(beta,qcscore=qc)
 #and columns with too many missing values
 b3=rm.outlier(beta,qcscore=qc,rmcr=TRUE)
 #filter out low quality and outlier values, remove rows and
-# columns with too many missing values, and then do imputation
-b3=rm.outlier(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
+#columns with too many (rthre=0.05,cthre=0.05, 5% in default) missing values,
+# and then do imputation
+b3=rm.outlier(beta,qcscore=qc,rmcr=TRUE,rthre=0.05,
+              cthre=0.05,impute=TRUE)
 @
 
 \section{Background correction and dye-bias correction}
@@ -567,7 +575,7 @@ linear regression with each specified variables, such as batch or phnotype
 variables. Regression P values will be 
 plotted to explore methylation data variance structure and to identify possible
  confounding variables to guide association statistical analysis. Principal 
-components were ordered according to the percentage of variace they explained, 
+components were ordered according to the percentage of variace they explained 
 from large to small. 
 
 <<pcrplot, eval=FALSE>>=
@@ -641,12 +649,15 @@ require(minfidata)
 path <- file.path(find.package("minfiData"),"extdata")
 #based on rgDataset
 rgSet <- readidat(path = path,recursive = TRUE)
-celltype=estimateCellProp(userdata=rgSet,refdata="FlowSorted.Blood.450k",
+       celltype=estimateCellProp(userdata=rgSet,
+         refdata="FlowSorted.Blood.450k",
          nonnegative = TRUE,normalize=TRUE)
 @
 
 The input data can be in one of the follow format: \Rfunction{rgDataSet},
-\Rfunction{methDataSet},\Rfunction{MethylSet},\Rfunction{RGChannelSet} 
+\Rfunction{methDataSet}, \Rfunction{MethylSet}, 
+
+\Rfunction{RGChannelSet} 
 or methylation beta value matrix.
 
 
@@ -696,8 +707,11 @@ path <- file.path(find.package("minfiData"),"extdata")
 rgSet <- readidat(path = path,recursive = TRUE)
 mdat=getmeth(rgSet)
 beta=getB(mdat,"Illumina")
-dupidx=data.frame(id1=c("5723646052_R02C02","5723646052_R04C01","5723646052_R05C02"),
-id2=c("5723646053_R04C02","5723646053_R05C02","5723646053_R06C02"))
+#assuming list in id1 are corresponding duplicates of id2
+dupidx=data.frame(id1=c("5723646052_R02C02","5723646052_R04C01",
+                       "5723646052_R05C02"),
+                  id2=c("5723646053_R04C02","5723646053_R05C02",
+                       "5723646053_R06C02"))
 iccresu<-dupicc(dat=beta,dupid=dupidx)
 @
 
@@ -710,7 +724,7 @@ paired DNA samples (bisulfite and oxidative bisulfite conversion) are needed for
 separate estimation. Bisulfite converted DNA can be used to estimate the proportion 
 of 5mC+5hmC and oxidative bisulfite (oxBS) converted DNA can be used to estimate
  the proportion of 5mC. Function \Rfunction{oxBS.MLE} can be used to generate the 
-maximum Likelihood Estimate (MLE) of 5mC and 5hmC using sequencing/array data from
+maximum Likelihood Estimate (MLE) of 5mC and 5hmC using sequencing or array data from
  paired experiments.
 
 <<nmode, eval=FALSE>>=
@@ -724,7 +738,7 @@ dim(resu[["5hmC"]])
 \section{Compatibility with other related R packages}
 
 Most functions in the \Rpackage{ENmix} support the data structure provided 
-by \Rpackage{minfi} packages.
+by \Rpackage{minfi} package.
 The same data structures were also used by several other R packages,
  such as \Rpackage{ChAMP} and \Rpackage{wateRmelon}, so the output from ENmix
  functions can be easily utilized in 
