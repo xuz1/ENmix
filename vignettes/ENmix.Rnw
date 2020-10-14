@@ -684,7 +684,15 @@ EWAS is usually done probe by probe. However, in the human genome, nearby
 CpGs often have similar methylation status, so combined statistics from nearby 
 CpGs can potentially increase association signal. Function \Rfunction{ipdmr} and 
 \Rfunction{combp} can utilize P values from EWAS to identify 
-differentialy methylated regions (DMR). 
+differentialy methylated regions (DMR). Argument "seed" in these two functions
+indicate the FDR threshold for initial selection of DMR regions, but we want to
+note that same value of seed do not appear to have the same effect in these 
+two functions. It is often more stringent in ipdmr than combp. We found in 
+450K data simulations, ipdmr with seed of 0.05 and combp with seed of 0.01 
+resulted in similar true positive rate and false discovery rate. There is 
+no true DMR in the following example data, we set high seed threshold is only 
+for demostration purpose to show what the output looks like when DMRs were
+detected.
 
 <<nmode, eval=FALSE>>=
 dat=simubed()
