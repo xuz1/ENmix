@@ -28,12 +28,14 @@ importFrom(genefilter,rowFtests,rowttests)
 importFrom(gplots,heatmap.2)
 importFrom(quadprog,solve.QP)
 importFrom(irr,icc)
+importFrom(wateRmelon,BMIQ)
+importFrom(sva,ComBat)
 
 exportClasses(rgDataSet,methDataSet)
 
 export(preprocessENmix,
     nmode,norm.quantile,plotCtrl,bmiq.mc,ComBat.mc,
-    QCinfo,pcrplot,freqpoly,multifreqpoly,
+    QCinfo,QCfilter,pcrplot,freqpoly,multifreqpoly,
     rm.outlier,rcp,oxBS.MLE,ctrlsva,relic,mpreprocess,
     getB,B2M,M2B,rgDataSet,methDataSet,dupicc,
     calcdetP,getCGinfo,getmeth,readidat,
