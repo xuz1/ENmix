@@ -65,6 +65,7 @@ ipdmr<-function(data,include.all.sig.sites=TRUE,dist.cutoff=1000,bin.size=50,
   data=as.data.frame(data)
   data$start=as.numeric(as.vector(data$start))
   data$end=as.numeric(as.vector(data$end))
+  data=data[!is.na(data$start) & !is.na(data$end),]
   data$p=as.numeric(as.vector(data$p))
 
   acf<-get.acf(data,dist.cutoff,bin.size)
@@ -172,6 +173,7 @@ combp<-function(data,dist.cutoff=1000,bin.size=310,seed=0.01,
   data=as.data.frame(data)
   data$start=as.numeric(as.vector(data$start))
   data$end=as.numeric(as.vector(data$end))
+  data=data[!is.na(data$start) & !is.na(data$end),]
   data$p=as.numeric(as.vector(data$p))
 
   acf<-get.acf(data,dist.cutoff,bin.size)
