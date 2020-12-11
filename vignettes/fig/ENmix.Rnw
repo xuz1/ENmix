@@ -19,12 +19,10 @@ options(width=70)
 \newcommand{\Robject}[1]{{\texttt{#1}}}
 
 \title{The \Rpackage{ENmix} User's Guide}
-\author{Zongli Xu, Liang Niu and Jack A Taylor}
 
 \date{Modified: October 9 2020.  Compiled: \today}
 \begin{document}
 \maketitle
-
 
 \tableofcontents
 \newpage
@@ -42,7 +40,7 @@ improve accuracy and reproducibility of methylation measures.
 are flexible and transparent. Users have option to choose a single pipeline 
 command to finish all data pre-processing steps (including quality control, 
 background correction, 
-dye-bias adjustment, between-array normalization and probe-type bias correction) or 
+dye-bias adjustment, inter-array normalization and probe-type bias correction) or 
 to use individual functions sequentially to perform data pre-processing in a more 
 customized manner. In addition the \Rpackage{ENmix} package has selectable 
 complementary functions for efficient data visualization (such as QC plots, data 
@@ -118,7 +116,6 @@ getCGinfo  & Extract CpG probe annotation information \\
 calcdetP   & Compute detection P values   \\
 rm.outlier & Remove low quality values, samples or CpGs; \\
            & remove outlier samples and perform imputation  \\
-QCfilter   & Sample, CpG, low quality data filter  \\
 nmode   & Identify gap probes   \\
 dupicc     & Calculate ICC with data for duplicates  \\
 freqpoly & Frequency polygon plot for single variable   \\
@@ -154,48 +151,11 @@ M2B        &  Convert M value to Beta value  \\
 
 \section{Example Analysis}
 
-ENmix functions are easy to run. The following examples demonstrate how to 
-perform a typical QC and data-preprocessing, as well as in depth methylation
-analyses. 
-
-
 \subsection{Example 1: using pipeline}
 
-The pipeline function \Rfunction{mpreprocess} can be used to perform quality 
-control and data preprocessing in just two sentences. 
-
-<<example0, eval=FALSE>>=
-rgSet <- readidat(datapath)
-beta=mpreprocess(rgSet)
-@
-
-These two sentences can achieve the following tasks:
-
-\begin{itemize}
-  \item  Read in raw idat files
-  \item  Data preprocessing
-\begin{itemize}
-  \item background correction
-  \item dye-bias correction
-  \item between-array normalization
-  \item probe-type bias adjustment
-\end{itemize}
-  \item Quality control
-\begin{itemize}
-  \item Identify and exclude low quality probes
-  \item Identify and exclude low quality samples
-  \item Identify and exclude outlier samples
-  \item Remove low quality and outlier data points
-  \item Imputation of missing values
-\end{itemize}
-  \item Visualization
-\begin{itemize}
-  \item Data distribution plots before and after low quality sample removal
-  \item Plots of quality controls measures (detp, bisulfite) to guide selection of thresholds
-\end{itemize}
-\end{itemize}
-
-The following is an executable example.
+Pipeline function \Rfunction{mpreprocess} can be used to perform background 
+correction, dye-bias adjustment, inter-array normalization, probe-type bias 
+correction and quanlity control in a single step. 
 
 <<example1, eval=FALSE>>=
 library(ENmix)
@@ -228,7 +188,7 @@ qc<-QCinfo(rgSet)
 # and probes will be excluded before background correction
 mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr="RELIC", 
                      QCinfo=qc, nCores=6)
-#between-array normalization
+#inter-array normalization
 mdat<-norm.quantile(mdat, method="quantile1")
 #probe-type bias adjustment
 beta<-rcp(mdat,qcscore=qc)
@@ -273,7 +233,7 @@ qc<-QCinfo(rgSet,detPtype="negative",detPthre=0.000001)
 #background correction and dye bias correction
 mdat<-preprocessENmix(rgSet, bgParaEst="oob", dyeCorr="RELIC",
                       QCinfo=qc, nCores=6)
-#between-array normalization
+#inter-array normalization
 mdat<-norm.quantile(mdat, method="quantile1")
 #attach phenotype data for later use
 colData(mdat)=as(sheet[colnames(mdat),],"DataFrame")
@@ -289,9 +249,6 @@ nmode<-nmode(beta, minN = 3, modedist=0.2, nCores = 6)
 #Imputation will be performed to fill missing data if specify.
 beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE, rthre=0.05,
                    cthre=0.05,impute=TRUE)
-
-#If for epigenetic mutation analysis, use QCfilter instead
-beta<-QCfilter(beta,qcinfo=qc,rmlowq=TRUE)
 
 ##Principal component regression analysis plot
 #phenotypes to be studied in the plot
@@ -523,7 +480,7 @@ qc<-QCinfo(rgSet)
 mdat<-preprocessENmix(rgSet, QCinfo=qc, nCores=6)
 @
 
-\subsection{Filtering outliers, low quality data points, missing values and imputation}
+\subsection{Filtering outliers & low quality data points, missing values and imputation}
 After excluding low quality samples and probes, as well as outlier samples.
 we can still have many low quality and outlier data points for many CpGs.
 These small percentage of data points can have big impact on downstream 

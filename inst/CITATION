@@ -79,7 +79,19 @@ c(bibentry(bibtype = "Article",
            journal = "Bioinformatics",
            year = "2020",
            pubmed = "32805005",
-           header = "DMR analysis")
+           header = "DMR analysis"),
 
+  bibentry(bibtype = "Article",
+           key = "ENmix Package",
+           author = c(
+           person("Zongli", "Xu"),
+           person("Liang", "Niu"),
+           person("Jack,A.", "Taylor")
+                ),
+           title = "ENmix: a comprehensive R package for the analysis of Illumina DNA methylation arrays.",
+           journal = "In review",
+           year = "2020",
+           pubmed = "---",
+           header = "ENmix package")
 )
 

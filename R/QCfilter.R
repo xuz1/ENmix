@@ -1,11 +1,11 @@
 QCfilter <-function(mdat,qcinfo=NULL,detPthre=0.000001,nbthre=3,
-    samplethre=0.05,CpGthre=0.05,
-    bisulthre=NULL,outlier=FALSE,outid=NULL, outCpG=NULL,plot=FALSE)
+    samplethre=0.05,CpGthre=0.05,bisulthre=NULL,outlier=FALSE,
+    outid=NULL, outCpG=NULL,plot=FALSE,rmlowq=FALSE)
 {    
-    if(!is(mdat,"methDataSet") & !is(mdat, "MethylSet") & !is(mdat,"matrix")){
-     stop("The input needs to be a methDataSet, MethylSet or a beta value matrix\n")}
+    if(!is(mdat,"methDataSet") & !is(mdat,"matrix")){
+     stop("The input needs to be a methDataSet or a beta value matrix\n")}
 
-    if(is.null(qcinfo)){stop("ERROR: Please provide QC information
+    if(is.null(qcinfo)){stop("ERROR: Please provide QC information object
      from function QCinfo'")}
     if(outlier & is.null(qcinfo$outlier_sample)){
        stop("ERROR: No outlier sample information, please set
@@ -18,6 +18,10 @@ QCfilter <-function(mdat,qcinfo=NULL,detPthre=0.000001,nbthre=3,
       some samples do not have QC information")}
     if(sum(!(rownames(mdat) %in% rownames(detP)))>0){stop("ERROR:
       some CpGs do not have QC information")}
+
+    if(rmlowq & !is(mdat,"matrix"))
+    {cat("Warning, input needs to be a data matrix to exclude low quality data points\n")
+     cat("Reset rmlowq=FALSE\n"); rmlowq=FALSE}
 
     if(!identical(colnames(mdat),colnames(detP))){
     detP=detP[,colnames(mdat)]
@@ -105,7 +109,7 @@ QCfilter <-function(mdat,qcinfo=NULL,detPthre=0.000001,nbthre=3,
     cat("Done\n")
 
     ##distribution plot before and after filtering
-    if(is(mdat, "methDataSet") | is(mdat, "MethylSet")){
+    if(is(mdat, "methDataSet")){
        beta=getB(mdat, type="Illumina")
     }else{beta=mdat} 
 
@@ -133,7 +137,21 @@ QCfilter <-function(mdat,qcinfo=NULL,detPthre=0.000001,nbthre=3,
     }
 
     mdat=mdat[!(rownames(mdat) %in% badCpG),]
-    mdat[,!(colnames(mdat) %in% badsample)]
+    mdat=mdat[,!(colnames(mdat) %in% badsample)]
+
+    ## remove low quality data points
+    if(rmlowq)
+    {
+        detP=detP[,colnames(mdat)]
+        nbead=nbead[,colnames(mdat)]
+        detP=detP[rownames(mdat),]
+        nbead=nbead[rownames(mdat),]
+
+        qcmat <- nbead<nbthre | detP>detPthre
+        mdat[qcmat]=NA
+        cat(sum(qcmat), "low quality data points were removed\n")
+    }
+    mdat
 }
 
 
