@@ -10,28 +10,28 @@ QCfilter <-function(mdat,qcinfo=NULL,detPthre=0.000001,nbthre=3,
     if(outlier & is.null(qcinfo$outlier_sample)){
        stop("ERROR: No outlier sample information, please set
        outlier=FALSE\n")}
-    detP=qcinfo$detP
-    nbead=qcinfo$nbead
+    qcmat<- qcinfo$nbead<nbthre | qcinfo$detP>detPthre
     bisul=qcinfo$bisul
     outlier_sample=qcinfo$outlier_sample
-    if(sum(!(colnames(mdat) %in% colnames(detP)))>0){stop("ERROR:
+
+    rm(qcinfo)
+
+    if(sum(!(colnames(mdat) %in% colnames(qcmat)))>0){stop("ERROR:
       some samples do not have QC information")}
-    if(sum(!(rownames(mdat) %in% rownames(detP)))>0){stop("ERROR:
+    if(sum(!(rownames(mdat) %in% rownames(qcmat)))>0){stop("ERROR:
       some CpGs do not have QC information")}
 
     if(rmlowq & !is(mdat,"matrix"))
     {cat("Warning, input needs to be a data matrix to exclude low quality data points\n")
      cat("Reset rmlowq=FALSE\n"); rmlowq=FALSE}
 
-    if(!identical(colnames(mdat),colnames(detP))){
-    detP=detP[,colnames(mdat)]
-    nbead=nbead[,colnames(mdat)]
+    if(!identical(colnames(mdat),colnames(qcmat))){
+    qcmat=qcmat[,colnames(mdat)]
     bisul=bisul[colnames(mdat)]
     outlier_sample=outlier_sample[outlier_sample %in% colnames(mdat)]
      }
-    if(!identical(rownames(mdat),rownames(detP))){
-    detP=detP[rownames(mdat),]
-    nbead=nbead[rownames(mdat),]
+    if(!identical(rownames(mdat),rownames(qcmat))){
+    qcmat=qcmat[rownames(mdat),]
      }
 
     #threshold of bisulfite conversion control intensity
@@ -39,7 +39,6 @@ QCfilter <-function(mdat,qcinfo=NULL,detPthre=0.000001,nbthre=3,
     na.rm=TRUE)}
 
     ##low quality samples
-    qcmat <- nbead<nbthre | detP>detPthre
     badValuePerSample <- apply(qcmat,2,sum)/nrow(qcmat)
     flag <- badValuePerSample > samplethre | bisul < bisulthre
     cat(sum(flag)," samples with percentage of low quality CpG value greater
@@ -110,26 +109,26 @@ QCfilter <-function(mdat,qcinfo=NULL,detPthre=0.000001,nbthre=3,
 
     ##distribution plot before and after filtering
     if(is(mdat, "methDataSet")){
-       beta=getB(mdat, type="Illumina")
-    }else{beta=mdat} 
+       mdat=getB(mdat, type="Illumina")
+    }
 
     cat("Ploting freqpolygon_beta_beforeQC.jpg ...")
     jpeg(filename="freqpolygon_beta_beforeQC.jpg",width=1000,
      height=500,quality = 100)
-    color=rep("black",ncol(beta))
-    color[colnames(beta) %in% badsample]="red"
-    multifreqpoly(beta,cex.lab=1.4,cex.axis=1.5, col=color, legend="",
+    color=rep("black",ncol(mdat))
+    color[colnames(mdat) %in% badsample]="red"
+    multifreqpoly(mdat,cex.lab=1.4,cex.axis=1.5, col=color, legend="",
     cex.main=1.5,main="Beta value distribution",
     xlab="Methylation beta value")
     dev.off()
     cat("Done\n")
 
-    beta=beta[!(rownames(beta) %in% badCpG),]
-    beta=beta[,!(colnames(beta) %in% badsample)]
+    mdat=mdat[!(rownames(mdat) %in% badCpG),]
+    mdat=mdat[,!(colnames(mdat) %in% badsample)]
     cat("Ploting freqpolygon_beta_afterQC.jpg ...")
     jpeg(filename="freqpolygon_beta_afterQC.jpg",width=1000,
      height=500,quality = 100)
-    multifreqpoly(beta,cex.lab=1.4,cex.axis=1.5, col="black",legend="",
+    multifreqpoly(mdat,cex.lab=1.4,cex.axis=1.5, col="black",legend="",
     cex.main=1.5,main="Beta value distribution",
     xlab="Methylation beta value")
     dev.off()
@@ -142,12 +141,9 @@ QCfilter <-function(mdat,qcinfo=NULL,detPthre=0.000001,nbthre=3,
     ## remove low quality data points
     if(rmlowq)
     {
-        detP=detP[,colnames(mdat)]
-        nbead=nbead[,colnames(mdat)]
-        detP=detP[rownames(mdat),]
-        nbead=nbead[rownames(mdat),]
+        qcmat=qcmat[,colnames(mdat)]
+        qcmat=qcmat[rownames(mdat),]
 
-        qcmat <- nbead<nbthre | detP>detPthre
         mdat[qcmat]=NA
         cat(sum(qcmat), "low quality data points were removed\n")
     }

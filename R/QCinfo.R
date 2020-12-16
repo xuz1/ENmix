@@ -105,14 +105,16 @@ QCinfo <- function(rgSet,detPthre=0.000001,detPtype="negative",nbthre=3,sampleth
     dev.off()
     cat("Done\n")
 
+
+    if(outlier | distplot){
+    if(is(rgSet, "rgDataSet")){mdat=getmeth(rgSet)
+    }else if(is(rgSet, "RGChannelSetExtended")){mdat=preprocessRaw(rgSet)}
+    rm(rgSet)}
+
     #Identifying outlier samples
     if(outlier)
     {
     cat("Identifying ourlier samples based on beta or total intensity values...\n")
-
-    if(is(rgSet, "rgDataSet")){mdat=getmeth(rgSet)
-    }else if(is(rgSet, "RGChannelSetExtended")){mdat=preprocessRaw(rgSet)}
-
     mdat=mdat[rownames(qcmat),]
     mdat=mdat[,colnames(qcmat)]
     #outliers based on total intensity values
@@ -124,7 +126,8 @@ QCinfo <- function(rgSet,detPthre=0.000001,detPtype="negative",nbthre=3,sampleth
     flag1=  mumean < low
     cat("After excluding low quality samples and CpGs\n")
     cat(sum(flag1)," samples are outliers based on averaged total intensity value","\n")
-
+rm(mu)
+rm(mumean)
     #outliers in beta value distribution
     beta=getB(mdat, type="Illumina")
     qq=apply(beta,2,function(x) quantile(x, probs=c(0.25,0.5,0.75), na.rm=TRUE))
@@ -147,12 +150,7 @@ QCinfo <- function(rgSet,detPthre=0.000001,detPtype="negative",nbthre=3,sampleth
 
     if(distplot)
     {
-
-    if(is(rgSet, "rgDataSet")){mdat=getmeth(rgSet)
-    }else if(is(rgSet, "RGChannelSetExtended")){mdat=preprocessRaw(rgSet)}
-
-    beta=getB(mdat, type="Illumina")
-
+    if(!outlier){beta=getB(mdat, type="Illumina")}
     cat("Ploting freqpolygon_beta_beforeQC.jpg ...")
     jpeg(filename="freqpolygon_beta_beforeQC.jpg",width=1000,
      height=500,quality = 100)
@@ -175,6 +173,7 @@ QCinfo <- function(rgSet,detPthre=0.000001,detPtype="negative",nbthre=3,sampleth
     dev.off()
     cat("Done\n")
     }
+rm(mdat)
 
     if(outlier)
     {list(detP=detP,nbead=nbead,bisul=bisul,badsample=badsample,badCpG=badCpG,
