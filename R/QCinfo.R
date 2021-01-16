@@ -49,13 +49,16 @@ QCinfo <- function(rgSet,detPthre=0.000001,detPtype="negative",nbthre=3,sampleth
     ctrls=ctrls[ctrls$Address %in% rownames(rgSet),]
     ctrl_r <- assays(rgSet)$Red[ctrls$Address,]
     ctrl_g <- assays(rgSet)$Green[ctrls$Address,]
-    cc=ctrls[(ctrls$Type %in% c("BISULFITE CONVERSION I")) & (ctrls$ExtendedType 
-       %in% c("BS Conversion I C1","BS Conversion I-C2","BS Conversion I-C3")),]
+    cc=ctrls[(ctrls$Type %in% c("BISULFITE CONVERSION I")) & ((ctrls$Color %in% 
+       c("Green","Lime","LimeGreen")) | (ctrls$ExtendedType %in% 
+       c("ctl-BISULFITE-CONVERSION-I-140M_MUS","ctl-BISULFITE-CONVERSION-I-303M_MUS"))),]
     I_green=colMeans(ctrl_g[cc$Address,])
-    cc=ctrls[(ctrls$Type %in% c("BISULFITE CONVERSION I")) & (ctrls$ExtendedType
-       %in% c("BS Conversion I-C4","BS Conversion I-C5","BS Conversion I-C6")),]
+    cc=ctrls[(ctrls$Type %in% c("BISULFITE CONVERSION I")) & ((ctrls$Color %in%
+     c("Purple","Red","Tomato")) | (ctrls$ExtendedType %in% 
+      c("ctl-BISULFITE-CONVERSION-I-318M_MUS","ctl-BISULFITE-CONVERSION-I-330U_MUS"))),]
     I_red=colMeans(ctrl_r[cc$Address,])
-    cc=ctrls[ctrls$Type %in% c("BISULFITE CONVERSION II"),]
+    cc=ctrls[ctrls$Type %in% c("BISULFITE CONVERSION II") & ctrls$Color %in% c("Crimson",
+     "DarkMagenta","Red","Orange","Purple","Tomato"),]
     II_red=colMeans(ctrl_r[cc$Address,])
     bisul=(I_green+I_red+II_red)/3
 

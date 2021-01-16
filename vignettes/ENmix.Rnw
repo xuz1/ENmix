@@ -291,7 +291,7 @@ beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE, rthre=0.05,
                    cthre=0.05,impute=TRUE)
 
 #If for epigenetic mutation analysis, use QCfilter instead
-beta<-QCfilter(beta,qcinfo=qc,rmlowq=TRUE)
+#beta<-QCfilter(beta,qcinfo=qc,rmlowq=TRUE)
 
 ##Principal component regression analysis plot
 #phenotypes to be studied in the plot
@@ -339,10 +339,21 @@ use minfi package to read in idat files and create
 \Robject{RGChannelSetExtended}. Most functions in ENmix support 
 \Robject{RGChannelSetExtended} and \Robject{RGChannelSet}.
 
+Some array types and corresponding manifestfiles can be guessed by the program based on
+the number of probes per array. However, we recommand to provide correct manifest file
+directly, which can be easily downloaded from Illumina website, see below for some examples.
+This option also allows the function to read in data from newer array, such as mouse array. 
+
 <<readdata, eval=FALSE>>=
 library(ENmix)
 rgSet <- readidat(path = "directory path for idat files", 
                  recursive = TRUE)
+
+#Download manifestfile for HumanMethylation450 beadchip
+system("wget ftp://webdata2:webdata2@ussd-ftp.illumina.com/downloads/ProductFiles
+/HumanMethylation450/HumanMethylation450_15017482_v1-2.csv")
+mf="HumanMethylation450_15017482_v1-2.csv"
+rgSet <- readidat(path = "path to idat files",manifestfile=mf,recursive = TRUE)
 @
 
 When methylation IDAT raw data files are not available, such as in many

@@ -13,6 +13,7 @@ probeI=merge(probeIA,probeIB,by="Name")
 var1=c("Name","AddressA","AddressB","Infinium_Design_Type","Color_Channel","chr","pos","Relation_to_Island")
 var2=names(probeinfo)[!(names(probeinfo) %in% c(var1,"Address"))]
 var=c(var1,var2)
+var=var[var %in% names(probeI)]
 probeI=probeI[,var]
 
 probesnpIA=probeinfo[probeinfo$Infinium_Design_Type %in% c("snpIA"),]

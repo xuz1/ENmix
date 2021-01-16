@@ -20,6 +20,10 @@ readidat(path = NULL,manifestfile=NULL,recursive = FALSE, verbose = FALSE)
 An object of class \code{rgDataSet}, 
 }
 \details{
+Some array types and corresponding manifestfiles can be guessed by the program based on 
+the number of probes per array. However, we recommand to provide correct manifest file
+directly, which can be easily downloaded from Illumina website, see below for some examples.
+
 Probe annotation info can be extracted using command \code{rowData}
 }
 \author{
@@ -29,6 +33,13 @@ Zongli Xu
 \donttest{
 
 #Illumina methylation array manifestfile
+
+#Infinium Mouse Methylation Manifest File (CSV)
+system("wget https://support.illumina.com/content/dam/illumina-support/documents/
+downloads/productfiles/mouse-methylation/
+Infinium\%20Mouse\%20Methylation\%20v1.0\%20A1\%20GS\%20Manifest\%20File.csv")
+mf="infinium-methylationepic-v-1-0-b5-manifest-file.csv"
+
 #for MethylationEPIC v1.0 B5
 system("wget http://webdata.illumina.com.s3-website-us-east-1.amazonaws.com/downloads
 /productfiles/methylationEPIC/infinium-methylationepic-v-1-0-b5-manifest-file-csv.zip")

@@ -17,6 +17,7 @@ tmp[tmp %in% "Y"]="24"
 dat$chr=as.numeric(tmp)
 dat$pos=as.numeric(as.vector(dat$pos))
 dat=dat[order(dat$chr,dat$pos),]
+dat=dat[!is.na(dat$chr),]
 
 chrlen=aggregate(dat$pos,by=list(dat$chr),FUN=max)
 chrlen$cumx=cumsum(chrlen$x)

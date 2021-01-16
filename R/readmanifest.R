@@ -19,6 +19,9 @@ readmanifest <- function(file) {
 
     manifest$AddressA_ID <- gsub("^0*", "", manifest$AddressA_ID)
     manifest$AddressB_ID <- gsub("^0*", "", manifest$AddressB_ID)
+
+if(sum(table(manifest$Name)>1)>0){manifest$Name=paste0(manifest$Name,"_",manifest$AddressA_ID)}
+
 typeI=manifest[manifest$Infinium_Design_Type=="I",]
 typeI$Infinium_Design_Type[grep("^rs",typeI$Name)]="snpI"
 typeII=manifest[manifest$Infinium_Design_Type=="II",]
@@ -34,6 +37,7 @@ typeIB$Infinium_Design_Type=paste(typeIB$Infinium_Design_Type,"B",sep="")
 var1=c("Name","Address","Infinium_Design_Type","Color_Channel","CHR","MAPINFO","Relation_to_UCSC_CpG_Island")
 var2=names(manifest)[!(names(manifest) %in% c(var1,"AddressB_ID","AddressA_ID","IlmnID"))]
 var12=c(var1,var2)
+var12=var12[var12 %in% names(typeIA)]
 typeIA=typeIA[,var12]
 typeIB=typeIB[,var12]
 typeII=typeII[,var12]
@@ -57,6 +61,11 @@ flag=(assay.anno$Address=="") | is.na(assay.anno$Address)
 if(sum(flag)>0){assay.anno=assay.anno[!flag,]}
 flag=(ictrl.anno$Address=="") | is.na(ictrl.anno$Address)
 if(sum(flag)>0){ictrl.anno=ictrl.anno[!flag,]}
+
+#check duplicate entries
+assay.anno=assay.anno[!duplicated(assay.anno$Address),]
+ictrl.anno=ictrl.anno[!duplicated(ictrl.anno$Address),]
+assay.anno=assay.anno[!(assay.anno$Address %in% ictrl.anno$Address),]
 
 return(list(assay=assay.anno,ictrl=ictrl.anno))
 }
@@ -87,11 +96,12 @@ typeIB$Address=typeIB$AddressB
 typeII$Address=typeII$AddressA
 
 var=names(typeII)[!(names(typeII) %in% c("AddressB","AddressA","Color","Type","Name"))]
+var=var[var %in% names(typeIA)]
+
 typeIA=typeIA[,var]
 typeIB=typeIB[,var]
 typeII=typeII[,var]
 anno=rbind(typeIA,typeIB,typeII)
-
 
 #manifest
 typeI=manifest@data$TypeI
@@ -126,6 +136,11 @@ assay.anno=merge(assay.anno,anno,by="Address",all.x=TRUE)
 var1=c("Name","Address","Infinium_Design_Type","Color_Channel","chr","pos","Relation_to_Island")
 var2=names(assay.anno)[!(names(assay.anno) %in% c(var1))]
 assay.anno=assay.anno[,c(var1,var2)]
+
+#check duplicate entries
+assay.anno=assay.anno[!duplicated(assay.anno$Address),]
+ictrl.anno=ictrl.anno[!duplicated(ictrl.anno$Address),]
+assay.anno=assay.anno[!(assay.anno$Address %in% ictrl.anno$Address),]
 
 return(list(assay=assay.anno,ictrl=ictrl.anno))
 }

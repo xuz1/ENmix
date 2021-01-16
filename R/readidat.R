@@ -139,6 +139,14 @@ readidat <- function(path = NULL,manifestfile=NULL,recursive = FALSE, verbose = 
 
     rownames(ictrl.anno)=ictrl.anno$Address
 
+#check
+    flag=!(assay.anno$Infinium_Design_Type %in% c("IA","IB","snpIA","snpIB") & 
+                     !(assay.anno$Color_Channel %in% c("Red","Grn")))
+    RedMean=RedMean[flag,]
+    GrnMean=GrnMean[flag,]
+    NBeads=NBeads[flag,]
+    assay.anno=assay.anno[flag,]
+    
     rgSet <- rgDataSet(
         Red = RedMean,
         Green = GrnMean,

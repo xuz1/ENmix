@@ -35,8 +35,13 @@ Zongli Xu
 \donttest{
 
 dat=simubed()
-thre1=0.0001
-thre2=0.00001
+
+thre1=1E-100
+dat$fdr=p.adjust(mrgd$P, method="BH")
+if(sum(dat$fdr<0.05)>0){thre1=max(dat$p[dat$fdr<0.05])}
+
+thre2=1E-7
+
 mprobe=dat$probe[dat$p<=thre1]
 mhtplot(probe=dat$probe,chr=dat$chr,pos=dat$start,p=dat$p,sigthre=thre1,sigthre2=thre2,
         markprobe=mprobe,outf="mht_try",outfmt="jpg")
