@@ -1,7 +1,7 @@
-rm.outlier <-function(mat,byrow=TRUE,qcscore=NULL,detPthre=0.000001,nbthre=3,
+qcfilter <-function(mat,qcscore=NULL,rmoutlier=TRUE,byrow=TRUE,detPthre=0.000001,nbthre=3,
      rmcr=FALSE,rthre=0.05,cthre=0.05,impute=FALSE,imputebyrow=TRUE,...)
 {
-#    if(impute){if(!require("impute")){stop("Can not load impute package")}}
+    if(impute){requireNamespace("impute")}
     if(!(is.numeric(mat) & is.matrix(mat))){stop("Input data must be a
      numeric matrix")}
 
@@ -16,6 +16,7 @@ rm.outlier <-function(mat,byrow=TRUE,qcscore=NULL,detPthre=0.000001,nbthre=3,
     mat[temp]=NA
     }
     #remove outliers
+    if(rmoutlier){
     if(!byrow){mat=t(mat)}
     q2575 <- apply(mat,1,function(x) quantile(x, probs=c(0.25,0.75),
     na.rm=TRUE))
@@ -23,7 +24,7 @@ rm.outlier <-function(mat,byrow=TRUE,qcscore=NULL,detPthre=0.000001,nbthre=3,
     flag=mat < (q2575["25%",] - 3*qr) | mat > (q2575["75%",] + 3*qr)
     mat[flag] <- NA
     if(!byrow){mat=t(mat)}
-
+    }
     #remove rows and columns that have too many missing values
     if(rmcr){
     if(nrow(mat)>ncol(mat)){

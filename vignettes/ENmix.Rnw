@@ -116,7 +116,7 @@ QCinfo     & Extract and visualize QC information  \\
 plotCtrl   & Generate internal control plots   \\
 getCGinfo  & Extract CpG probe annotation information \\
 calcdetP   & Compute detection P values   \\
-rm.outlier & Remove low quality values, samples or CpGs; \\
+qcfilter & Remove low quality values, samples or CpGs; \\
            & remove outlier samples and perform imputation  \\
 QCfilter   & Sample, CpG, low quality data filter  \\
 nmode   & Identify gap probes   \\
@@ -207,7 +207,7 @@ rgSet <- readidat(path = path,recursive = TRUE)
 #data pre-processing
 beta=mpreprocess(rgSet,nCores=6)
 #quality control, data pre-processing and imputation
-beta=mpreprocess(rgSet,nCores=6,qc=TRUE,foutlier=TRUE,
+beta=mpreprocess(rgSet,nCores=6,qc=TRUE,fqcfilter=TRUE,
      rmcr=TRUE,impute=TRUE)
 @
 
@@ -234,7 +234,7 @@ mdat<-norm.quantile(mdat, method="quantile1")
 beta<-rcp(mdat,qcscore=qc)
 #assign missing to low quality and outlier data points, remove samples
 # and probes with too many missing data, and do imputation
-beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
+beta <- qcfilter(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
 @
 
 
@@ -281,17 +281,18 @@ colData(mdat)=as(sheet[colnames(mdat),],"DataFrame")
 beta<-rcp(mdat,qcscore=qc)
 
 #Search for multimodal CpGs, so called gap probes
-#beta matrix before rm.outlier() step should be used for this purpose
+#beta matrix before qcfilter() step should be used for this purpose
 nmode<-nmode(beta, minN = 3, modedist=0.2, nCores = 6)
 
 #filter out poor quality and outlier data points for each probe;
 #rows and columns with too many missing values can be removed
 #Imputation will be performed to fill missing data if specify.
-beta <- rm.outlier(beta,qcscore=qc,rmcr=TRUE, rthre=0.05,
+beta <- qcfilter(beta,qcscore=qc,rmcr=TRUE, rthre=0.05,
                    cthre=0.05,impute=TRUE)
 
-#If for epigenetic mutation analysis, use QCfilter instead
-#beta<-QCfilter(beta,qcinfo=qc,rmlowq=TRUE)
+#If for epigenetic mutation analysis, use 
+#beta <- qcfilter(beta,qcscore=qc,rmoutlier=FALSE,rmcr=TRUE, rthre=0.05,
+#                   cthre=0.05,impute=FALSE)
 
 ##Principal component regression analysis plot
 #phenotypes to be studied in the plot
@@ -539,8 +540,8 @@ After excluding low quality samples and probes, as well as outlier samples.
 we can still have many low quality and outlier data points for many CpGs.
 These small percentage of data points can have big impact on downstream 
 association statistical tests for individual CpGs. 
-Function \Rfunction{rm.outlier} can be used to filter out these
-data points and replace them as missing values. Outliers are defined as 
+Function \Rfunction{qcfilter} can be used to filter out these
+data points and replace them with missing value NA. Outliers are defined as 
 values smaller than 3 times IQR from the lower quartile or larger than 
 3 times IQR from the upper quartile. Some statistical methods do not allow 
 missing values,(e.g. principal component analysis), so 
@@ -549,16 +550,16 @@ specified to impute missing data using k-nearest neighbors method.
 
 <<rmoutlier, eval=FALSE>>=
 #filter out outliers only
-b1=rm.outlier(beta)
+b1=qcfilter(beta)
 #filter out low quality and outlier values
-b2=rm.outlier(beta,qcscore=qc)
+b2=qcfilter(beta,qcscore=qc)
 #filter out low quality and outlier values, remove rows 
 #and columns with too many missing values
-b3=rm.outlier(beta,qcscore=qc,rmcr=TRUE)
+b3=qcfilter(beta,qcscore=qc,rmcr=TRUE)
 #filter out low quality and outlier values, remove rows and
 #columns with too many (rthre=0.05,cthre=0.05, 5% in default) missing values,
 # and then do imputation
-b3=rm.outlier(beta,qcscore=qc,rmcr=TRUE,rthre=0.05,
+b3=qcfilter(beta,qcscore=qc,rmcr=TRUE,rthre=0.05,
               cthre=0.05,impute=TRUE)
 @
 

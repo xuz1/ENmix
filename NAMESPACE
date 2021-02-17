@@ -33,8 +33,8 @@ exportClasses(rgDataSet,methDataSet)
 
 export(preprocessENmix,
     nmode,norm.quantile,plotCtrl,
-    QCinfo,QCfilter,pcrplot,freqpoly,multifreqpoly,
-    rm.outlier,rcp,oxBS.MLE,ctrlsva,relic,mpreprocess,
+    QCinfo,pcrplot,freqpoly,multifreqpoly,
+    qcfilter,rcp,oxBS.MLE,ctrlsva,relic,mpreprocess,
     getB,B2M,M2B,rgDataSet,methDataSet,dupicc,
     calcdetP,getCGinfo,getmeth,readidat,
     readmanifest,estimateCellProp,predSex,methyAge,
