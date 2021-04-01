@@ -38,6 +38,7 @@ Zongli Xu
 system("wget https://support.illumina.com/content/dam/illumina-support/documents/
 downloads/productfiles/mouse-methylation/
 Infinium\%20Mouse\%20Methylation\%20v1.0\%20A1\%20GS\%20Manifest\%20File.csv")
+#make sure to remove all space from annotation file name after downloading
 mf="infinium-methylationepic-v-1-0-b5-manifest-file.csv"
 
 #for MethylationEPIC v1.0 B5

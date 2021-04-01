@@ -1,8 +1,13 @@
 readmanifest <- function(file) {
-    control.line <- system(sprintf("grep -n \\\\[Controls\\\\] %s", file), intern = TRUE)
+    control.line <- try(system(sprintf("grep -n \\\\[Controls\\\\] %s", file), intern = TRUE),silent=TRUE)
+    if(class(control.line)[1]=="try-error"){control.line <- system(sprintf("findstr -n \\[Controls\\] %s", file), intern = TRUE)}
+
     control.line <- as.integer(sub(":.*", "", control.line))
     stopifnot(length(control.line) == 1 && is.integer(control.line) && !is.na(control.line))
-    assay.line <- system(sprintf("grep -n \\\\[Assay\\\\] %s", file), intern = TRUE)
+
+    assay.line <- try(system(sprintf("grep -n \\\\[Assay\\\\] %s", file), intern = TRUE),silent=TRUE)
+    if(class(assay.line)[1]=="try-error"){assay.line <- system(sprintf("findstr -n \\[Assay\\] %s", file), intern = TRUE)}
+
     assay.line <- as.integer(sub(":.*", "", assay.line))
     stopifnot(length(assay.line) == 1 && is.integer(assay.line) && !is.na(assay.line))
     colNames <- readLines(file, n = assay.line + 1L)[assay.line + 1L]

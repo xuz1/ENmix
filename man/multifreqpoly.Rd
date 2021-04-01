@@ -12,7 +12,7 @@ but with much faster speed.
 multifreqpoly(mat, nbreaks=100, col=1:ncol(mat), xlab="", 
               ylab="Frequency",legend = list(x = "top", fill=col,
               legend = if(is.null(colnames(mat))) paste(1:ncol(mat)) 
-              else colnames(mat)),...)
+              else colnames(mat)),append=FALSE,...)
 }
 \arguments{
   \item{mat}{A numeric matrix}
@@ -22,6 +22,7 @@ multifreqpoly(mat, nbreaks=100, col=1:ncol(mat), xlab="",
   \item{xlab}{x-axis lable}
   \item{ylab}{y-axis lable}
   \item{legend}{A list of arguments that get passed to the function "legend"}
+  \item{append}{TRUE or FALSE, whether to create a new figure or append to the current figure.}
   \item{...}{Further arguments that get passed to the function "plot"}
 }
 \value{
