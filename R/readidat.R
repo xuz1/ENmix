@@ -70,13 +70,13 @@ readidat <- function(path = NULL,manifestfile=NULL,recursive = FALSE, verbose = 
     if (verbose) {message("[readidat] Loading array manifestfile...")}
     if(!is.null(manifestfile))
     {
-      manifestfilepath=manifestfile 
-      manifestfile=base::strsplit(manifestfilepath,split="/")[[1]]
-      if(length(manifestfile)>1){
-         manifestfile=manifestfile[length(manifestfile)]
-         if (file.exists(manifestfile))file.remove(manifestfile)
-         system(paste("wget ",manifestfilepath,sep=""))
-      }
+#      manifestfilepath=manifestfile 
+#      manifestfile=base::strsplit(manifestfilepath,split="/")[[1]]
+#      if(length(manifestfile)>1){
+#         manifestfile=manifestfile[length(manifestfile)]
+#         if (file.exists(manifestfile))file.remove(manifestfile)
+#         system(paste("wget ",manifestfilepath,sep=""))
+#      }
       manifest = readmanifest(manifestfile)
     }else{
       manifestpkg=paste(arraytype,"manifest",sep="")

@@ -27,8 +27,9 @@ cat(length(missing_hannum), "CpG missed methy age calculation using Hannum metho
 if(length(missing_phenoage)>0){missing=TRUE
 cat(length(missing_phenoage), "CpG missed methy age calculation using phenoage method: ",missing_phenoage)}
 
+tmp=NULL
 if(missing){
-cat("Warning: Methylation values for missing CpGs will be imputed with reference values, but the results will be less acurated")
+cat("Warning: Methylation values for missing CpGs will be imputed with reference values, but the results will be less acurate")
 clockcg=unique(c(as.vector(hovath$cg)[-1],as.vector(hannum$cg),as.vector(phenoage$cg)[-1]))
 missedcg=clockcg[!(clockcg %in%  rownames(beta))]
 if(length(missedcg)>0){
@@ -36,9 +37,11 @@ if(length(missedcg)>0){
   tmp=matrix(rep(reference$goldstandard,ncol(beta)),nrow=length(missedcg))
   rownames(tmp)=as.vector(reference$cg)
   colnames(tmp)=colnames(beta)
-  beta=rbind(beta,tmp)
+# beta=rbind(beta,tmp)
 }
 }
+
+tmp=t(tmp)
 
 refmeth=refmeth[as.vector(refmeth$cg) %in% rownames(beta),]
 beta=beta[as.vector(refmeth$cg),]
@@ -79,6 +82,7 @@ bbb<-function(s,parts,dat)
 resu <- mclapply(1:nCores,bbb,parts=parts,dat=beta, mc.cores=nCores)
 beta=as.matrix(do.call(rbind, resu))
 }
+beta=cbind(beta,tmp)
 
 methyAge=data.frame(SampleID=rownames(beta))
 if(type %in% c("all","hovath")){

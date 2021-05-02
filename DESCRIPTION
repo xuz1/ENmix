@@ -1,5 +1,5 @@
 Package: ENmix
-Version: 1.27.10
+Version: 1.27.11
 Date: 2021-04-01
 Title: Quality control and analysis tools for Illumina DNA methylation BeadChip
 Type: Package
@@ -10,7 +10,7 @@ Description: Tool kits for quanlity control, analysis and visulization
     of Illumina DNA methylation arrays. 
 Depends: parallel,doParallel,foreach,SummarizedExperiment,stats
 Imports: grDevices,graphics,preprocessCore,matrixStats,methods,utils,irr,
-    geneplotter,impute,minfi,RPMM,illuminaio,dynamicTreeCut,IRanges,
+    geneplotter,impute,minfi,RPMM,illuminaio,dynamicTreeCut,IRanges,gtools,
     Biobase,ExperimentHub,AnnotationHub,genefilter,gplots,quadprog,S4Vectors
 Suggests: minfiData, RUnit, BiocGenerics
 biocViews: DNAMethylation, Preprocessing, QualityControl, TwoChannel, Microarray,

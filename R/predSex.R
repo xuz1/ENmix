@@ -3,8 +3,8 @@ predSex <-function(mdat,cutoff=2){
     stop("[predSex] The input must be a rgDataSet or methDataSet")}
 
   if(is(mdat, "rgDataSet")){mdat=getmeth(mdat)}
-  xmdat=mdat[rowData(mdat)$chr %in% "chrX",]
-  ymdat=mdat[rowData(mdat)$chr %in% "chrY",]
+  xmdat=mdat[rowData(mdat)$chr %in% c("chrX","X")]
+  ymdat=mdat[rowData(mdat)$chr %in% c("chrY","Y"),]
   xCN <- log2(assays(xmdat)$Meth + assays(xmdat)$Unmeth)
   yCN <- log2(assays(ymdat)$Meth + assays(ymdat)$Unmeth)
   xMed=apply(xCN,2,median,na.rm=TRUE)    

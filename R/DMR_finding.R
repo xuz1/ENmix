@@ -51,7 +51,7 @@ regplot<-function(ref,sig,extend=2000,outf="region_plot.pdf"){
     ylab=bquote('-log'['10']*'(P) value')
 
     plot(subset$start,-log10(subset$p),col=subset$cor,pch=20,xlim=c(pos1-extend,
-          pos2+extend),xlab="Chromosome position",ylab=ylab)
+          pos2+extend),xlab="Chromosome position",ylab=ylab,main=paste0(chr,":",pos1,"-",pos2))
   }
   dev.off()
 }
@@ -67,6 +67,9 @@ ipdmr<-function(data,include.all.sig.sites=TRUE,dist.cutoff=1000,bin.size=50,
   data$end=as.numeric(as.vector(data$end))
   data=data[!is.na(data$start) & !is.na(data$end),]
   data$p=as.numeric(as.vector(data$p))
+
+  tmp=as.vector(data$chr); tmp=toupper(tmp)
+  tmp=sub("CHR","",tmp);data$chr=tmp
 
   acf<-get.acf(data,dist.cutoff,bin.size)
   if(verbose){

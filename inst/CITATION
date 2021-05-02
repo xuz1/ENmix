@@ -13,6 +13,20 @@ c(bibentry(bibtype = "Article",
 	   header = "ENmix R pacakge"),
 
   bibentry(bibtype = "Article",
+           key = "methylation pipeline evaluation",
+           author = c(
+           person("Zongli", "Xu"),
+           person("Liang", "Niu"),
+           person("Dale,P.", "Sandler"),
+           person("Jack,A.", "Taylor")
+                ),
+           title = "Comprehensive evaluation of DNA methylation analysis pipelines for Illumina BeadChip",
+           journal = "In review",
+           year = "2021",
+           pubmed = "---",
+           header = "methylation pipeline evaluation"),
+
+  bibentry(bibtype = "Article",
            key = "RCP",
            author = c(
            person("Liang", "Niu"),
@@ -79,19 +93,7 @@ c(bibentry(bibtype = "Article",
            journal = "Bioinformatics",
            year = "2020",
            pubmed = "32805005",
-           header = "DMR analysis"),
+           header = "DMR analysis")
 
-  bibentry(bibtype = "Article",
-           key = "ENmix Package",
-           author = c(
-           person("Zongli", "Xu"),
-           person("Liang", "Niu"),
-           person("Jack,A.", "Taylor")
-                ),
-           title = "ENmix: a comprehensive R package for the analysis of Illumina DNA methylation arrays.",
-           journal = "In review",
-           year = "2020",
-           pubmed = "---",
-           header = "ENmix package")
 )
 

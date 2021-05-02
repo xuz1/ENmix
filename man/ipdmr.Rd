@@ -42,7 +42,8 @@ Liang Niu, Zongli Xu
 \donttest{
 dat=simubed()
 names(dat)
-ipdmr(data=dat,seed=0.1)
+#seed=0.1 is only for demonstration purpose, it should be smaller than 0.05 or 0.01 in actual study.
+ipdmr(data=dat,seed=0.1) #seed=0.1
 }
 }
 

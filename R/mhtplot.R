@@ -11,13 +11,24 @@ flag=!is.na(probe) & !is.na(chr) & !is.na(pos) & !is.na(p)
 
 dat=data.frame(probe=probe,chr=chr,pos=pos,p=p)
 dat=dat[flag,]
-tmp=toupper(as.vector(dat$chr))
-tmp[tmp %in% "X"]="23"
-tmp[tmp %in% "Y"]="24"
-dat$chr=as.numeric(tmp)
+dat=dat[!is.na(dat$chr),]
+
+tmp=as.vector(dat$chr); tmp=toupper(tmp)
+tmp=sub("CHR","",tmp)
+
+chridx1=mixedsort(names(table(tmp)))
+tmp=factor(tmp,levels=chridx1)
+tmp=as.numeric(tmp)
+dat$chr=tmp
+
+#tmp=toupper(as.vector(dat$chr))
+#tmp[tmp %in% "X"]="23"
+#tmp[tmp %in% "Y"]="24"
+#dat$chr=as.numeric(tmp)
+
 dat$pos=as.numeric(as.vector(dat$pos))
 dat=dat[order(dat$chr,dat$pos),]
-dat=dat[!is.na(dat$chr),]
+#dat=dat[!is.na(dat$chr),]
 
 chrlen=aggregate(dat$pos,by=list(dat$chr),FUN=max)
 chrlen$cumx=cumsum(chrlen$x)
@@ -32,8 +43,9 @@ dat$col="gray"
 dat$col[dat$chr %in% chrlen$Group.1[(1:nrow(chrlen) %% 2)==0]]="black"
 }else{dat$col=color}
 
-chrlen$Group.1[chrlen$Group.1 == 23]="X"
-chrlen$Group.1[chrlen$Group.1 == 24]="Y"
+if(sum(chrlen$Group.1==1:nrow(chrlen))==nrow(chrlen)){chrlen$Group.1=chridx1}
+#chrlen$Group.1[chrlen$Group.1 == 23]="X"
+#chrlen$Group.1[chrlen$Group.1 == 24]="Y"
 
 dsig=dat[dat$probe %in% markprobe,]
 

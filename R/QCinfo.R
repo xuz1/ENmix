@@ -114,6 +114,7 @@ QCinfo <- function(rgSet,detPthre=0.000001,detPtype="negative",nbthre=3,sampleth
     }else if(is(rgSet, "RGChannelSetExtended")){mdat=preprocessRaw(rgSet)}
     rm(rgSet)}
 
+    beta0=getB(mdat, type="Illumina")
     #Identifying outlier samples
     if(outlier)
     {
@@ -131,8 +132,12 @@ QCinfo <- function(rgSet,detPthre=0.000001,detPtype="negative",nbthre=3,sampleth
     cat(sum(flag1)," samples are outliers based on averaged total intensity value","\n")
 rm(mu)
 rm(mumean)
+rm(mdat)
     #outliers in beta value distribution
-    beta=getB(mdat, type="Illumina")
+#    beta=getB(mdat, type="Illumina")
+    beta=beta0[rownames(qcmat),]
+    beta=beta[,colnames(qcmat)]
+
     qq=apply(beta,2,function(x) quantile(x, probs=c(0.25,0.5,0.75), na.rm=TRUE))
     q2575 <- apply(qq,1,function(x) quantile(x, probs=c(0.25,0.75), na.rm=TRUE))
     qr <- q2575["75%",]-q2575["25%",]
@@ -149,34 +154,35 @@ rm(mumean)
     cat("WARNING: Sample size may be too small to correctly identify outlier samples!\n")
     cat("RECOMMAND: set outlier=FALSE or double check total intensity and beta value 
      distribution plots to confirm\n")}
+    rm(beta)
     }
 
     if(distplot)
     {
-    if(!outlier){beta=getB(mdat, type="Illumina")}
+#    if(!outlier){beta=getB(mdat, type="Illumina")}
     cat("Ploting freqpolygon_beta_beforeQC.jpg ...")
     jpeg(filename="freqpolygon_beta_beforeQC.jpg",width=1000,
      height=500,quality = 100)
-    color=rep("black",ncol(beta))
-    color[colnames(beta) %in% badsample]="red"
-    multifreqpoly(beta,cex.lab=1.4,cex.axis=1.5, col=color, legend="",
+    color=rep("black",ncol(beta0))
+    color[colnames(beta0) %in% badsample]="red"
+    multifreqpoly(beta0,cex.lab=1.4,cex.axis=1.5, col=color, legend="",
     cex.main=1.5,main="Beta value distribution",
     xlab="Methylation beta value")
     dev.off()
     cat("Done\n")
 
-    beta=beta[!(rownames(beta) %in% badCpG),]
-    beta=beta[,!(colnames(beta) %in% badsample)]
+    beta0=beta0[!(rownames(beta0) %in% badCpG),]
+    beta0=beta0[,!(colnames(beta0) %in% badsample)]
     cat("Ploting freqpolygon_beta_afterQC.jpg ...")
     jpeg(filename="freqpolygon_beta_afterQC.jpg",width=1000,
      height=500,quality = 100)
-    multifreqpoly(beta,cex.lab=1.4,cex.axis=1.5, col="black",legend="",
+    multifreqpoly(beta0,cex.lab=1.4,cex.axis=1.5, col="black",legend="",
     cex.main=1.5,main="Beta value distribution",
     xlab="Methylation beta value")
     dev.off()
     cat("Done\n")
     }
-rm(mdat)
+#rm(mdat)
 
     if(outlier)
     {list(detP=detP,nbead=nbead,bisul=bisul,badsample=badsample,badCpG=badCpG,

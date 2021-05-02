@@ -47,6 +47,7 @@ Liang Niu, Zongli Xu
 \donttest{
 dat=simubed()
 names(dat)
+#seed=0.1 is only for demonstration purpose, it should be smaller than 0.05 or 0.01 in actual study.
 combp(data=dat,seed=0.1)
 }
 }
