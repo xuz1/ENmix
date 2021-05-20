@@ -72,6 +72,10 @@ The software is designed to support large scale data analysis, and provides
 The following publications can be refered to learn more about the methods 
 implemented in this package. 
 
+Xu Z, Niu L, Taylor JA.
+Comprehensive evaluation of DNA methylation analysis pipelines for Illumina BeadChip.
+In review, 2021
+
 Xu Z, Niu L, Li L, Taylor JA.
 ENmix: a novel background correction method for Illumina
 HumanMethylation450 BeadChip, Nucleic Acids Research, 2015
@@ -98,7 +102,7 @@ ipDMR: Identification of differentially methylated regions with interval P value
 Bioinformatics, 2020
 
 Xu Z, Niu L, Taylor JA.
-ENmix: a comprehensive R package for the analysis of Illumina DNA methylation arrays.
+Comprehensive evaluation of DNA methylation analysis pipelines for Illumina BeadChip
 in review
 
 \section{List of functions}
