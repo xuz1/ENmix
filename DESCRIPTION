@@ -1,6 +1,6 @@
 Package: ENmix
-Version: 1.29.01
-Date: 2021-05-20
+Version: 1.29.02
+Date: 2021-05-21
 Title: Quality control and analysis tools for Illumina DNA methylation BeadChip
 Type: Package
 Authors@R: c(person("Zongli","Xu",role=c("cre","aut"),email="xuz@niehs.nih.gov"),

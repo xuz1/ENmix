@@ -12,8 +12,8 @@ systematic experimental bias,It also perform quality controls, identifing and
 and performing imputation.
 }
 \usage{
-    mpreprocess(rgSet,nCores=1,bgParaEst="oob",dyeCorr="RELIC",
-                qc=FALSE,qnorm=FALSE,qmethod="quantile1",
+    mpreprocess(rgSet,nCores=2,bgParaEst="oob",dyeCorr="RELIC",
+                qc=FALSE,qnorm=TRUE,qmethod="quantile1",
                 fqcfilter=TRUE,rmcr=FALSE,impute=FALSE)
 }
 \arguments{

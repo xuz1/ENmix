@@ -1,5 +1,5 @@
-mpreprocess <-function(rgSet,nCores=1,bgParaEst="oob",dyeCorr="RELIC", 
-        qc=FALSE,qnorm=FALSE,qmethod="quantile1",
+mpreprocess <-function(rgSet,nCores=2,bgParaEst="oob",dyeCorr="RELIC", 
+        qc=FALSE,qnorm=TRUE,qmethod="quantile1",
         fqcfilter=TRUE,rmcr=FALSE,impute=FALSE)
 {
     if(!is(rgSet, "RGChannelSet") & !is(rgSet, "MethylSet") & !is(rgSet, "rgDataSet")
