@@ -1,5 +1,5 @@
 qcfilter <-function(mat,qcscore=NULL,rmoutlier=TRUE,byrow=TRUE,detPthre=0.000001,nbthre=3,
-     rmcr=FALSE,rthre=0.05,cthre=0.05,impute=FALSE,imputebyrow=TRUE,...)
+     rmcr=FALSE,rthre=0.05,cthre=0.05,impute=FALSE,imputebyrow=TRUE,fastimpute=FALSE,...)
 {
     if(impute){requireNamespace("impute")}
     if(!(is.numeric(mat) & is.matrix(mat))){stop("Input data must be a
@@ -66,18 +66,28 @@ qcfilter <-function(mat,qcscore=NULL,rmoutlier=TRUE,byrow=TRUE,detPthre=0.000001
     if(impute)
     {
     if(imputebyrow){mat=t(mat)}
-    resu=impute::impute.knn(mat,...)
 
-    #error checking and imperfect fix
-    rg=apply(mat,2,function(x) range(x,na.rm=TRUE))
-    tmat=t(resu$data);gc()
-    idx=which(t(tmat<rg[1,] | tmat>rg[2,]),arr.ind = TRUE)
-    rm(tmat)
-    if(nrow(idx)>0){
-       m=apply(mat,2,function(x) mean(x,na.rm=TRUE))
-       for(i in 1:nrow(idx)){resu$data[idx[i,1],idx[i,2]]=m[idx[i,2]]}
+if(fastimpute){
+    mm=apply(mat,2,function(x)median(x,na.rm=TRUE))
+    idx=which(is.na(mat),arr.ind = TRUE)
+    for(i in 1:nrow(idx)){mat[idx[i,1],idx[i,2]]=mm[idx[i,2]]}
+}else{
+psize=100000
+if(ncol(mat)>psize){
+    npart=floor(ncol(mat)/psize)
+    for(i in 1:npart){
+       n1=psize*(i-1)+1
+       n2=psize*i
+       if(i==npart){n2=ncol(mat)}
+       mat1=mat[,n1:n2]
+       resu=impute::impute.knn(mat1,...)
+       mat[,n1:n2]=resu$data
     }
-    mat=resu$data
+}else{
+      resu=impute::impute.knn(mat,...)
+      mat=resu$data
+}}
+
     if(imputebyrow){mat=t(mat)}
     }
     mat

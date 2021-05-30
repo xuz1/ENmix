@@ -40,13 +40,19 @@ plotp<-function(jpgfile,p,yaxis,xmax,title)
     dev.off()
 }
 
-pcrplot<-function(beta,cov,npc=50)
+pcrplot<-function(beta,cov,npc=50,subset=TRUE,subsetsize=50000)
 {
     if(!is.matrix(beta)){stop("beta is not a data matirx")}
     if(!is.data.frame(cov)){stop("cov is not a data frame")}
     if(ncol(beta)!=nrow(cov))
     {stop("number of columns in beta is not equal to number of rows in cov")}
     cat("Analysis is running, please wait...!","\n")
+
+    if(nrow(beta)<subsetsize){subset=FALSE}
+    if(subset){
+      beta=beta[sample(1:nrow(beta),subsetsize),]
+    }
+
     npc <- min(ncol(beta),npc)
     svd <- prcomp(t(beta),center=TRUE,scale=TRUE,retx=TRUE)
     jpeg(filename="svdscreeplot.jpg",width=1000,height=500,quality = 100)

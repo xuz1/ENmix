@@ -14,7 +14,7 @@ missing values.
 }
 \usage{
 qcfilter(mat,qcscore=NULL,rmoutlier=TRUE,byrow=TRUE,detPthre=0.000001,nbthre=3,
-     rmcr=FALSE,rthre=0.05,cthre=0.05,impute=FALSE,imputebyrow=TRUE,...)
+     rmcr=FALSE,rthre=0.05,cthre=0.05,impute=FALSE,imputebyrow=TRUE,fastimpute=FALSE,...)
 }
 \arguments{
   \item{mat}{An numeric matirx containing methylation beta values}
@@ -34,6 +34,7 @@ defined by rthre and cthre. FALSE is in default}
   \item{impute}{If TRUE, k-nearest neighbors methods will used for imputation.}
   \item{imputebyrow}{TRUE: impute missing values using similar values in row, 
 or FALSE: in column}
+  \item{fastimpute}{If TRUE, probe median will be used for fast imputation.}
   \item{...}{Arguments to be passed to the function impute.knn in R package "impute"}
 }
 \value{
