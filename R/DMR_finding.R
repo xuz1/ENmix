@@ -68,6 +68,14 @@ ipdmr<-function(data,include.all.sig.sites=TRUE,dist.cutoff=1000,bin.size=50,
   data=data[!is.na(data$start) & !is.na(data$end),]
   data$p=as.numeric(as.vector(data$p))
 
+  if(sum(data$p<=0 | data$p>=1)>0){
+    cat("P values <=0 were re-assigned with a value of 1E-300\n
+P values >=1 were re-assigned with a value of 0.99999\n")
+    data$p[data$p<=0]=1E-300
+    data$p[data$p>=1]=0.99999
+  }
+
+
   tmp=as.vector(data$chr); tmp=toupper(tmp)
   tmp=sub("CHR","",tmp);data$chr=tmp
 
@@ -178,6 +186,13 @@ combp<-function(data,dist.cutoff=1000,bin.size=310,seed=0.01,
   data$end=as.numeric(as.vector(data$end))
   data=data[!is.na(data$start) & !is.na(data$end),]
   data$p=as.numeric(as.vector(data$p))
+
+  if(sum(data$p<=0 | data$p>=1)>0){
+    cat("P values <=0 were re-assigned with a value of 1E-300\n
+P values >=1 were re-assigned with a value of 0.99999\n")
+    data$p[data$p<=0]=1E-300
+    data$p[data$p>=1]=0.99999
+  }
 
   acf<-get.acf(data,dist.cutoff,bin.size)
   if(verbose){
