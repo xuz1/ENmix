@@ -7,7 +7,7 @@ Parsing IDAT files for Illumina methylation arrays .
 Read in IDAT files and create a rgDataSet with probe annotation
 }
 \usage{
-readidat(path = NULL,manifestfile=NULL,recursive = FALSE, verbose = FALSE)
+readidat(path = NULL,manifestfile=NULL,recursive = TRUE, verbose = FALSE, force=FALSE)
 }
 \arguments{
   \item{path}{Directory where idat files are located}
@@ -15,6 +15,7 @@ readidat(path = NULL,manifestfile=NULL,recursive = FALSE, verbose = FALSE)
     from Illumina website. Bioconductor manifest package will be used if not provided}
   \item{recursive}{if TRUE, idat files in the subdirectories will also be read in}
   \item{verbose}{if TRUE, detailed running info will be printed on screen}
+  \item{force}{if TRUE, arrays with different sizes will be merged together}
 }
 \value{
 An object of class \code{rgDataSet}, 

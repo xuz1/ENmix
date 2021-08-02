@@ -1,13 +1,13 @@
 .guessArrayTypes <- function(nProbes) {
-    if (nProbes >= 622000 && nProbes <= 623000) {
+    if (nProbes >= 620000 && nProbes <= 625000) {
         arrayAnnotation <- c(
             array = "IlluminaHumanMethylation450k",
             annotation = "ilmn12.hg19")
-    } else if (nProbes >= 1032000 && nProbes <= 1053000) {
+    } else if (nProbes >= 1030000 && nProbes <= 1055000) {
         arrayAnnotation <- c(
             array = "IlluminaHumanMethylationEPIC",
             annotation = "ilm10b2.hg19")
-    } else if (nProbes >= 54000 && nProbes <= 56000) {
+    } else if (nProbes >= 53000 && nProbes <= 57000) {
         arrayAnnotation <- c(
             array = "IlluminaHumanMethylation27k",
             annotation = "ilmn12.hg19")
@@ -17,7 +17,7 @@
     arrayAnnotation
 }
 
-readidat <- function(path = NULL,manifestfile=NULL,recursive = FALSE, verbose = FALSE) {
+readidat <- function(path = NULL,manifestfile=NULL,recursive = TRUE, verbose = FALSE, force=FALSE) {
 #    if(!require("illuminaio")){stop("Can not load in illuminaio package")}
     Grn.files <- list.files(path = path, pattern = "_Grn.idat$", recursive = recursive,
         ignore.case = FALSE, full.names = TRUE)
@@ -51,14 +51,17 @@ readidat <- function(path = NULL,manifestfile=NULL,recursive = FALSE, verbose = 
                         size = allNProbes)
     sameLength <- (length(unique(allNProbes)) == 1)
     sameArray <- (length(unique(arrayTypes[, "array"])) == 1)
-    if (!sameLength){
-        message(allNProbes)
-        stop("[readidat] Array size are different.\n")
-    }
     if(!sameArray){
-        message(arrayTypes)
+        print(arrayTypes)
         stop("[readidat] Samples are from different array")
-     }else{arraytype=as.character(arrayTypes[,"array"][1])
+     }else{
+      if (!sameLength){
+          print(allNProbes)
+        if(!force){
+          stop("[readidat] Array size are different.  \n Set force=TRUE to force data merging\n")
+        }else{message("Arrays with different sizes are forced to merge together\n")}
+    }
+           arraytype=as.character(arrayTypes[,"array"][1])
            annotation=as.character(arrayTypes[,"annotation"][1])
     }
 
@@ -85,8 +88,8 @@ readidat <- function(path = NULL,manifestfile=NULL,recursive = FALSE, verbose = 
     }
     tmp=c(manifest$assay[,"Address"],manifest$ictrl[,"Address"])
     diff=setdiff(tmp,commonAddresses)
-    if(length(diff)>5000){stop("IDAT file and manifest file are differed
-      by more than 5000 probes")}else{
+    if(length(diff)>8000){stop("IDAT file and manifest file are differed
+      by more than 8000 probes")}else{
     commonAddresses=commonAddresses[commonAddresses %in% tmp]}
 
     if (verbose) {message("[readidat] Creating data matrices at green channel...")}
@@ -107,8 +110,8 @@ readidat <- function(path = NULL,manifestfile=NULL,recursive = FALSE, verbose = 
 
     tmp=c(manifest$assay[,"Address"],manifest$ictrl[,"Address"])
     diff=setdiff(tmp,commonAddresses)
-    if(length(diff)>5000){stop("IDAT file and manifest file are differed
-      by more than 5000 probes")}else{
+    if(length(diff)>8000){stop("IDAT file and manifest file are differed
+      by more than 8000 probes")}else{
     commonAddresses=commonAddresses[commonAddresses %in% tmp]}
 
     if(!identical(rownames(GrnMean),commonAddresses)){
