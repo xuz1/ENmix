@@ -38,10 +38,10 @@ if(length(missedcg)>0){
   rownames(tmp)=as.vector(reference$cg)
   colnames(tmp)=colnames(beta)
 # beta=rbind(beta,tmp)
+tmp=t(tmp)
 }
 }
 
-tmp=t(tmp)
 
 refmeth=refmeth[as.vector(refmeth$cg) %in% rownames(beta),]
 beta=beta[as.vector(refmeth$cg),]
@@ -73,8 +73,7 @@ nCores=min(floor(nrow(beta)/2),nCores)
 if(nCores>detectCores()){nCores <- detectCores()}
 N=ceiling(nrow(beta)/(nCores))
 parts=rep(1:nCores,each = N)[1:nrow(beta)]
-bbb<-function(s,parts,dat)
-{
+bbb<-function(s,parts,dat){
   id=which(parts==s)
   dat1=dat[id,]
   BMIQcalibration(datM=dat1,goldstandard.beta= refmeth$goldstandard,plots=FALSE)
