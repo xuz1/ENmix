@@ -91,11 +91,13 @@ P values >=1 were re-assigned with a value of 0.99999\n")
     y=data[as.vector(data$chr)==chr,]; y=y[order(y$end),]
     pos=y$end; p=qnorm(y$p)
     index=which(diff(pos)<dist.cutoff)
-    int<-findInterval(diff(pos)[index],seq(bin.size,dist.cutoff,bin.size))
-    sd<-sqrt(acf[int+1]*2+2)
-    int.p<-pnorm(p[index]+p[index+1],mean=0,sd=sd)
-    start=pos[index]; end=pos[index+1];
-    result=rbind(result,data.frame(chr,start,end,int.p))
+    if(length(index)>0){ 
+      int<-findInterval(diff(pos)[index],seq(bin.size,dist.cutoff,bin.size))
+      sd<-sqrt(acf[int+1]*2+2)
+      int.p<-pnorm(p[index]+p[index+1],mean=0,sd=sd)
+      start=pos[index]; end=pos[index+1];
+      result=rbind(result,data.frame(chr,start,end,int.p))
+    }
   }
 
   if (include.all.sig.sites){
