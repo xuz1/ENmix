@@ -143,7 +143,7 @@ P values >=1 were re-assigned with a value of 0.99999\n")
     result.fdr<-result.fdr[order(result.fdr$p),]
 
     ##### use 0-coordinate
-    result.fdr$start=(result.fdr$start-1)
+#    result.fdr$start=(result.fdr$start-1)
   }
 
   if(is.null(result.fdr)){cat("Number of identified DMR:  0\n")}else{
@@ -163,7 +163,7 @@ P values >=1 were re-assigned with a value of 0.99999\n")
       set2=NULL
       for(i in 1:ndmr){
         set2=c(set2,as.vector(data$probe[as.vector(data$chr)==as.vector(result.fdr$chr[i]) 
-              & data$start>=result.fdr$start[i] & data$start<=result.fdr$end[i]]))
+              & data$end>=result.fdr$start[i] & data$start<=result.fdr$end[i]]))
       }
       mhtplot(probe=as.vector(data$probe),chr=as.vector(data$chr),pos=data$start,p=data$p,color="gray",markprobe=set2)
   }
@@ -171,9 +171,10 @@ P values >=1 were re-assigned with a value of 0.99999\n")
   result.fdr$nprobe=NA
   for(i in 1:nrow(result.fdr)){
 result.fdr$nprobe[i]=nrow(data[as.vector(data$chr)==as.vector(result.fdr$chr[i]) 
-& data$start>=result.fdr$start[i] & data$end<=result.fdr$end[i],])
+& data$end>=result.fdr$start[i] & data$end<=result.fdr$end[i],])
   }
-
+#assume start is 1 base less than end
+  result.fdr$start=(result.fdr$start-1)
   write.table(result.fdr,"resu_ipdmr.csv",row.names=FALSE,sep=",")
   } 
 }
@@ -256,7 +257,7 @@ P values >=1 were re-assigned with a value of 0.99999\n")
     result.fdr<-result.fdr[order(result.fdr$p),]
 
     ##### use 0-coordinate
-    result.fdr$start=(result.fdr$start-1)
+#    result.fdr$start=(result.fdr$start-1)
   }
 
   if(is.null(result.fdr)){cat("Number of identified DMR:  0\n")}else{
@@ -276,7 +277,7 @@ P values >=1 were re-assigned with a value of 0.99999\n")
     set2=NULL
     for(i in 1:ndmr){
         set2=c(set2,as.vector(data$probe[as.vector(data$chr)==as.vector(result.fdr$chr[i])
-           & data$start>=result.fdr$start[i] & data$start<=result.fdr$end[i]]))
+           & data$end>=result.fdr$start[i] & data$end<=result.fdr$end[i]]))
     }
   mhtplot(probe=data$probe,chr=as.vector(data$chr),pos=data$start,p=data$p,color="gray",markprobe=set2)
   }
@@ -285,9 +286,10 @@ P values >=1 were re-assigned with a value of 0.99999\n")
   result.fdr$nprobe=NA
   for(i in 1:nrow(result.fdr)){
 result.fdr$nprobe[i]=nrow(data[as.vector(data$chr)==as.vector(result.fdr$chr[i])
-& data$start>=result.fdr$start[i] & data$end<=result.fdr$end[i],])
+& data$end>=result.fdr$start[i] & data$end<=result.fdr$end[i],])
 }
-
+#assume start is 1 base less than end
+    result.fdr$start=(result.fdr$start-1)
   write.table(result.fdr,"resu_combp.csv",row.names=FALSE,sep=",")
   }
 }
