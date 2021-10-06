@@ -44,14 +44,14 @@ regplot<-function(ref,sig,extend=2000,outf="region_plot.pdf"){
     chr=as.vector(sig$chr[i])
     pos1=sig$start[i]
     pos2=sig$end[i]
-    subset=ref[as.vector(ref$chr)==chr & ref$start>=(pos1-extend) & ref$start<=(pos2+extend),]
-    subset$cor="black"
-    subset$cor[subset$start>=pos1 &subset$start<=pos2]="red"
+    subset=ref[as.vector(ref$chr)==chr & ref$end>=(pos1-extend) & ref$end<=(pos2+extend),]
+    subset$col="black"
+    subset$col[subset$end>=pos1 & subset$end<=pos2]="red"
 
     ylab=bquote('-log'['10']*'(P) value')
-
-    plot(subset$start,-log10(subset$p),col=subset$cor,pch=20,xlim=c(pos1-extend,
-          pos2+extend),xlab="Chromosome position",ylab=ylab,main=paste0(chr,":",pos1,"-",pos2))
+    pos1=pos1-1
+    plot(subset$start,-log10(subset$p),col=subset$col,pch=20,xlim=c(pos1-extend,
+          pos2+extend),xlab="Chromosome position",ylab=ylab,main=paste0("Chromosome ",chr,": ",pos1,"-",pos2))
   }
   dev.off()
 }
@@ -163,7 +163,7 @@ P values >=1 were re-assigned with a value of 0.99999\n")
       set2=NULL
       for(i in 1:ndmr){
         set2=c(set2,as.vector(data$probe[as.vector(data$chr)==as.vector(result.fdr$chr[i]) 
-              & data$end>=result.fdr$start[i] & data$start<=result.fdr$end[i]]))
+              & data$end>=result.fdr$start[i] & data$end<=result.fdr$end[i]]))
       }
       mhtplot(probe=as.vector(data$probe),chr=as.vector(data$chr),pos=data$start,p=data$p,color="gray",markprobe=set2)
   }
