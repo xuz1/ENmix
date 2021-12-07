@@ -4,13 +4,14 @@
 Evaluation of measurement reliability using duplicate samples
 }
 \description{
-The function can be used to calculate ICC for each CpG probe, 
-and/or centered/un-centered Pearson's correlation coefficient 
-between duplicate samples.  
+The function can be used to evaluate duplicate samples by calculating: 
+1) centered/un-centered Pearson's correlation coefficient between duplicates; 
+2) abosolute difference between duplicates;
+3) ICC for each CpG probes using oneway or twoway model.  
 }
 \usage{
-dupicc(dat,dupid,mvalue=FALSE,center=FALSE,nCores=2,qcflag=FALSE,qc=NULL,
-       detPthre=0.05,nbthre=3,skipicc=FALSE,corfig=FALSE,...)
+dupicc(dat,dupid,mvalue=FALSE,center=TRUE,nCores=2,qcflag=FALSE,qc=NULL,
+       detPthre=0.05,nbthre=3,skipicc=FALSE,corfig=FALSE,model="oneway")
 }
 \arguments{
   \item{dat}{Methylation beta value matrix}
@@ -31,7 +32,7 @@ dupicc(dat,dupid,mvalue=FALSE,center=FALSE,nCores=2,qcflag=FALSE,qc=NULL,
   \item{skipicc}{If TRUE, ICC calculation will be skipped}
   \item{corfig}{If TRUE, a figure will be generated to demonstrate correlations 
          within duplicates or within non-duplicates}
-  \item{...}{Any further arguments for function "icc" in R package "irr"} 
+  \item{model}{Using "oneway" or "twoway" model to calculate ICC} 
 }
 \value{
 icc:  a data frame containing ICC and P values for each probe

@@ -909,8 +909,8 @@ data by detection p values and its impact on downstream analyses.
 Clinical Epigenetics, 2019
 
 Xu Z, Niu L, Taylor JA.
-ENmix: a comprehensive R package for the analysis of Illumina DNA methylation arrays.
-in review
+The ENmix DNA methylation analysis pipeline for Illumina BeadChip and comparisons to 7 other preprocessing pipelines.
+Clinical Epigenetics, 2022
 
 \end{document}
 

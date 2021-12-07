@@ -33,9 +33,9 @@ c(bibentry(bibentry(bibtype = "Article",
            person("Dale,P.", "Sandler"),
            person("Jack,A.", "Taylor")
                 ),
-           title = "Comprehensive evaluation of DNA methylation analysis pipelines for Illumina BeadChip",
-           journal = "In review",
-           year = "2021",
+           title = "The ENmix DNA methylation analysis pipeline for Illumina BeadChip and comparisons to 7 other preprocessing pipelines",
+           journal = "Clinical Epigenetics",
+           year = "2022",
            pubmed = "---",
            header = "methylation pipeline evaluation"),
 
