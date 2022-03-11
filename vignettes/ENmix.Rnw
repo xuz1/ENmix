@@ -736,7 +736,7 @@ or methylation beta value matrix.
 Methylation age can reflect a person's biological age, which may be more
 related to the person's health status than chronological age. Three 
 different types of methylation age can be estimated using 
-\Rfunction{methyAge}: Horvath, Hannum and PhenoAge. 
+\Rfunction{methyAge}: Horvath, Hannum, PhenoAge and DunedinPACE. 
 
 <<mage, eval=FALSE>>=
 require(minfidata)
@@ -909,8 +909,12 @@ data by detection p values and its impact on downstream analyses.
 Clinical Epigenetics, 2019
 
 Xu Z, Niu L, Taylor JA.
-The ENmix DNA methylation analysis pipeline for Illumina BeadChip and comparisons to 7 other preprocessing pipelines.
+The ENmix DNA methylation analysis pipeline for Illumina BeadChip and 
+comparisons to 7 other preprocessing pipelines.
 Clinical Epigenetics, 2022
+
+Daniel W Belsky, Avshalom Caspi, David L Corcoran,et al. DunedinPACE, 
+a DNA methylation biomarker of the pace of aging, eLIfe, 2022
 
 \end{document}
 

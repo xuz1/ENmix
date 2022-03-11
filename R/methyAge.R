@@ -1,4 +1,4 @@
-methyAge<-function(beta,type="all",fastImputation=FALSE,normalize=TRUE,nCores=2)
+methyAge<-function(beta,fastImputation=FALSE,normalize=TRUE,nCores=2)
 {
 #source("mage_norm_function.R")
 #require(sqldf)
@@ -15,6 +15,8 @@ hannum=data.frame()
 phenoage=data.frame()
 
 load(system.file("mage_ref.RData",package="ENmix"))
+#load(system.file("mPOA_Models.RData",package="ENmix"))
+PACE=DunedinPACE(betas=beta, proportionOfProbesRequired = 0.8)
 
 missing_hovath=as.vector(hovath$cg[-1])[!(as.vector(hovath$cg[-1]) %in% rownames(beta))]
 missing_hannum=as.vector(hannum$cg)[!(as.vector(hannum$cg) %in% rownames(beta))]
@@ -84,26 +86,22 @@ beta=as.matrix(do.call(rbind, resu))
 beta=cbind(beta,tmp)
 
 methyAge=data.frame(SampleID=rownames(beta))
-if(type %in% c("all","hovath")){
 datMethClock=beta[,as.character(hovath$cg[-1])]
 #Age transformation and probe annotation functions
 trafo= function(x,adult.age=20) { x=(x+1)/(1+adult.age); y=ifelse(x<=1, log( x),x-1);y }
 anti.trafo= function(x,adult.age=20) { ifelse(x<0, (1+adult.age)*exp(x)-1, (1+adult.age)*x+adult.age) }
 mAge=anti.trafo(hovath$coef[1]+as.matrix(datMethClock)%*% as.numeric(hovath$coef[-1]))
 methyAge$mAge_Hovath=mAge
-}
 
-if(type %in% c("all","hannum")){
 datMethClock=beta[,as.character(hannum$cg)]
 mAge=as.matrix(datMethClock) %*% as.numeric(hannum$coef)
 methyAge$mAge_Hannum=mAge
-}
 
-if(type %in% c("all","phenoAge")){
 datMethClock=beta[,as.character(phenoage$cg[-1])]
 mAge=phenoage$coef[1]+as.matrix(datMethClock)%*% phenoage$coef[-1]
 methyAge$PhenoAge=mAge
-}
+
+methyAge$PACE=PACE[as.vector(methyAge$SampleID)]
 
 return(methyAge)
 }

@@ -4,16 +4,15 @@
 Methylation Age estimator
 }
 \description{
-To calculate Methylation Age using Hovath, Hannum or PhenoAge methods
+To calculate Methylation Age using Hovath, Hannum or PhenoAge methods and 
+pace of aging DunedinPACE.
 }
 \usage{
-methyAge(beta,type="all",fastImputation=FALSE,normalize=TRUE,nCores=2)
+methyAge(beta,fastImputation=FALSE,normalize=TRUE,nCores=2)
 }
 \arguments{
   \item{beta}{Methylation beta value matrix with CpG names(row names) and
        sample ids(column names).}
-  \item{type}{Which method will be used for methylation age calculation:
-        "hovath", "hannum", "phenoAge" or "all"}
   \item{fastImputation}{If "TRUE" reference methylation values will used
       for imputation, if "FALSE", KNN nearest neighbor method will be used.}
   \item{normalize}{TRUE or FALSE, if TRUE, Hovath modified BMIQ method will
@@ -33,6 +32,8 @@ Hannum G, Guinney J, Zhao L, Zhang L, Hughes G, Sadda S, et al.
 Levine ME, Lu AT, Quach A, Chen BH, Assimes TL, Bandinelli S, et al. 
        \emph{An epigenetic biomarker of aging for lifespan and healthspan}.
        Aging (Albany NY) 2018 10:573-591.
+Daniel W Belsky, Avshalom Caspi, David L Corcoran,et al. \emph{DunedinPACE,
+a DNA methylation biomarker of the pace of aging}. eLife, 2022
 }
 
 \author{
