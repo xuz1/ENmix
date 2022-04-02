@@ -1,6 +1,6 @@
 mpreprocess <-function(rgSet,nCores=2,bgParaEst="oob",dyeCorr="RELIC", 
-        qc=FALSE,qnorm=TRUE,qmethod="quantile1",
-        fqcfilter=TRUE,rmcr=FALSE,impute=FALSE)
+        qc=TRUE,qnorm=TRUE,qmethod="quantile1",
+        fqcfilter=FALSE,rmcr=FALSE,impute=FALSE)
 {
     if(!is(rgSet, "RGChannelSet") & !is(rgSet, "MethylSet") & !is(rgSet, "rgDataSet")
       & !is(rgSet, "methDataSet")){
@@ -20,6 +20,7 @@ mpreprocess <-function(rgSet,nCores=2,bgParaEst="oob",dyeCorr="RELIC",
         dyeCorr=dyeCorr,nCores=nCores)
     if(qnorm){mdat=norm.quantile(mdat,method=qmethod)}
     beta=rcp(mdat,qcscore=qc)
+    if(rmcr|impute){fqcfilter=TRUE}
     if(fqcfilter){beta <- qcfilter(beta,qcscore=qc,impute=impute,rmcr=rmcr)}
     beta
 }

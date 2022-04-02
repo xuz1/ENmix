@@ -13,8 +13,8 @@ and performing imputation.
 }
 \usage{
     mpreprocess(rgSet,nCores=2,bgParaEst="oob",dyeCorr="RELIC",
-                qc=FALSE,qnorm=TRUE,qmethod="quantile1",
-                fqcfilter=TRUE,rmcr=FALSE,impute=FALSE)
+                qc=TRUE,qnorm=TRUE,qmethod="quantile1",
+                fqcfilter=FALSE,rmcr=FALSE,impute=FALSE)
 }
 \arguments{
   \item{rgSet}{An object of class \code{rgDataSet},\code{methDataSet}, 
