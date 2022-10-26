@@ -175,6 +175,13 @@ result.fdr$nprobe[i]=nrow(data[as.vector(data$chr)==as.vector(result.fdr$chr[i])
   }
 #assume start is 1 base less than end
   result.fdr$start=(result.fdr$start-1)
+
+#probes in significant DMR
+  result.fdr$probe=NA
+  for(i in 1:nrow(result.fdr)){
+  tmp=data[data$chr==as.vector(result.fdr$chr[i]) & data$start >= result.fdr$start[i] & data$end <= result.fdr$end[i],]
+  result.fdr$probe[i]=paste0(tmp$probe,collapse=";")}
+
   write.table(result.fdr,"resu_ipdmr.csv",row.names=FALSE,sep=",")
   } 
 }
@@ -290,6 +297,12 @@ result.fdr$nprobe[i]=nrow(data[as.vector(data$chr)==as.vector(result.fdr$chr[i])
 }
 #assume start is 1 base less than end
     result.fdr$start=(result.fdr$start-1)
+#probes in significant DMR
+  result.fdr$probe=NA
+  for(i in 1:nrow(result.fdr)){
+  tmp=data[data$chr==as.vector(result.fdr$chr[i]) & data$start >= result.fdr$start[i] & data$end <= result.fdr$end[i],]
+  result.fdr$probe[i]=paste0(tmp$probe,collapse=";")}
+
   write.table(result.fdr,"resu_combp.csv",row.names=FALSE,sep=",")
   }
 }
