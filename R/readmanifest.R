@@ -22,6 +22,13 @@ readmanifest <- function(file) {
                            skip = assay.line + 1L, colClasses = colClasses,
                            nrows = control.line - assay.line - 2L)
 
+
+    if("IlmnID" %in% names(manifest)){
+        if("Name"  %in% names(manifest)){names(manifest)[which(names(manifest)=="Name")]="Name1"}
+        names(manifest)[which(names(manifest)=="IlmnID")]="Name"
+    }
+    if(!("Name"  %in% names(manifest))){stop("No IlmnID or Name in manifest file")}
+
     manifest$AddressA_ID <- gsub("^0*", "", manifest$AddressA_ID)
     manifest$AddressB_ID <- gsub("^0*", "", manifest$AddressB_ID)
 
@@ -92,6 +99,14 @@ if(!require(annopak,character.only = TRUE)){
 anno=get(annopak)
 anno <- do.call(cbind, lapply(anno@defaults, get))
 
+idname="Name"
+    if("IlmnID" %in% names(anno)){
+        idname="IlmnID"
+        if("Name"  %in% names(anno)){names(anno)[which(names(anno)=="Name")]="Name1"}
+        names(anno)[which(names(anno)=="IlmnID")]="Name"
+    }
+    if(!("Name"  %in% names(anno))){stop("No IlmnID or Name in manifest file")}
+
 typeI=anno[anno$Type=="I",]
 typeII=anno[anno$Type=="II",]
 typeIA=typeI
@@ -122,11 +137,11 @@ typeIIsnp$Infinium_Design_Type="snpII"
 typeI=rbind(typeI,typeIsnp)
 typeII=rbind(typeII,typeIIsnp)
 
-typeIA=typeI[,c("Name","AddressA","Infinium_Design_Type","Color")]
+typeIA=typeI[,c(idname,"AddressA","Infinium_Design_Type","Color")]
 typeIA$Infinium_Design_Type=paste(typeIA$Infinium_Design_Type,"A",sep="")
-typeIB=typeI[,c("Name","AddressB","Infinium_Design_Type","Color")]
+typeIB=typeI[,c(idname,"AddressB","Infinium_Design_Type","Color")]
 typeIB$Infinium_Design_Type=paste(typeIB$Infinium_Design_Type,"B",sep="")
-typeII=typeII[,c("Name","AddressA","Infinium_Design_Type")]
+typeII=typeII[,c(idname,"AddressA","Infinium_Design_Type")]
 typeII$Color_Channel=""
 names(typeIA)=c("IlmnID","Address","Infinium_Design_Type","Color_Channel")
 names(typeIB)=c("IlmnID","Address","Infinium_Design_Type","Color_Channel")
