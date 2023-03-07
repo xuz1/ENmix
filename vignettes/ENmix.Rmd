@@ -76,8 +76,8 @@ The software is designed to support large scale data analysis, and provides
 <li>`getCGinfo()`:   Extract CpG probe annotation information</li>
 <li>`calcdetP()`:    Compute detection P values</li>
 <li>`qcfilter()`:  Remove low quality values, samples or CpGs; remove outlier samples and perform imputation</li>
-<li>`nmode()`:   Identify gap probes</li>
-<li>`dupicc()`:     Calculate ICC with data for duplicates</li>
+<li>`nmode()`:   Identify "gap" probes, i.e. those with multimodal distribution from underlying caused by underlying SNPs</li>
+<li>`dupicc()`:     Calculate Introclass correlation coefficient (ICC) using data for duplicates</li>
 <li>`freqpoly()`:  Frequency polygon plot for single variable</li>
 <li>`multifreqpoly()`:  Frequency polygon plot for multiple variables</li>
 </ul>
@@ -92,7 +92,7 @@ The software is designed to support large scale data analysis, and provides
 <li>`rcp()`:              RCP probe design type bias correction</li>
 </ul>
 
-<b>Differential analysis</b>
+<b>Differential methylated region (DMR) analysis</b>
 
 <ul>
 <li>`ipdmr()`:    ipDMR differentially methylated region analysis</li>
@@ -103,16 +103,27 @@ The software is designed to support large scale data analysis, and provides
 
 <ul>
 <li>`oxBS.MLE()`:  MLE estimates of 5-methylcytosine (5mC) and 5-hydroxymethylcytosine (5hmC)</li>
-<li>`estimateCellProp()`:    Estimate cell type proportions</li>
+<li>`estimateCellProp()`:    Estimate white blood cell type proportions</li>
 <li>`methyAge()`:     Calculate methylation age</li>
 <li>`predSex()`:      Estimate sample sex</li>
-<li>`ctrlsva()`:      Derive surrogate variables to control for experimental confoundings using non-negative control probes</li>
+<li>`ctrlsva()`:      Derive surrogate variables to control for experimental confounding using non-negative internal control probes</li>
 <li>`pcrplot()`:      Principal component regression plot </li>
 <li>`mhtplot()`:      P value manhattan plot </li>
 <li>`p.qqplot()`:    P value Q-Q plot  </li>
 <li>`B2M()`:          Convert Beta value to M value </li>
 <li>`M2B()`:          Convert M value to Beta value  </li>
 </ul>
+
+# ENmix classes
+
+ENmix organizes data with two different classes.
+
+`rgDataSet` contains raw data (including internal control probes) from IDAT file, CpG annotation from Illumina manifest file and/or sample inforamtion (plate, array, and phenotypes) provided by users. Array intensity data is organized by probe (not CpG locus) at red and green channel.  
+
+`methDataSet` contains methylated and unmethylated intensity values (organized by CpG), CpG annotation from Illumina manifest file and/or sample inforamtion (plate, array, and phenotypes) provided by users.
+
+![The ENmix class hierarchy](./fig/ENmix_class.png)
+
 
 # Example Analysis
 
@@ -223,7 +234,7 @@ plotCtrl(rgSet)
 
 #generate quality control (QC) information and plots, 
 #identify outlier samples in data distribution
-#if set detPtype="negative", recommand to set depPthre to <= 10E-6
+#if set detPtype="negative", recommend to set depPthre to <= 10E-6
 #if set detPtype="oob", depPthre of 0.01 or 0.05 may be sufficient
 #see Heiss et al. PMID: 30678737 for details
 qc<-QCinfo(rgSet,detPtype="negative",detPthre=0.000001)
@@ -295,14 +306,14 @@ combp(data=dat,seed=0.1)
 The first step is to import array raw data files (*.idat)
  to create an object of `rgDataSet`, which is similar to 
 `RGChannelSetExtended` in minfi package, but with probe annotation 
-integrated, and having smaller data size (about 1/3 smaller). Alternatively, User can also 
+integrated, and it has smaller data size (about 1/3 smaller). Alternatively, User can also 
 use minfi package to read in idat files and create 
 `RGChannelSetExtended`. Most functions in ENmix support 
 `RGChannelSetExtended` and `RGChannelSet`.
 
 Some array types and corresponding manifestfiles can be guessed by the program based on
-the number of probes per array. However, we recommand to provide correct manifest file (.csv format)
-directly, which can be easily downloaded from Illumina website, see below for some examples.
+the number of probes per array. However, we recommend users provide the correct manifest file (.csv format)
+directly for their types of array, which can be easily downloaded from Illumina website, see below for some examples.
 This option also allows the function to read in data from newer array, such as mouse array. 
 
 ```{r readdata, eval=FALSE}
@@ -337,7 +348,7 @@ phenoData=pheno)
 # Quality Control
 ## Internal control probes
 
-Both Illumina 450k and EPIC array incorporated 15 different types of internal control
+Both Illumina 450k and EPIC array incorporate 15 different types of internal control
 probes (total of 848 probes for 450K and 635 probes for EPIC). The control 
 plots from ENmix function `plotCtrl()` are similar to the control plots generated  
 by Illumina GenomeStudio software. See Illumina Infinium HD Methylation Assay for 
@@ -406,7 +417,7 @@ plotCtrl(rgSet,IDorder)
 
 Methylation intensity or beta value distribution plots are 
 very useful for data summary, visual inspection and identification of 
-outlier samples. Density plot is routinely generated using R function
+outlier samples. Density plots are routinely generated using R function
 `multidensity()`. However, the function is computationally intensive,
  and can take several hours to produce density plots for a large methylation 
 dataset. 
@@ -644,7 +655,7 @@ level and thus
 should be excluded from DNA methylation analysis. Researchers
  have often excluded CpGs based simply on SNP annotation information
 (e.g. reported SNPs in or near probe sequences). However,
-because SNP frequence and annotation always depends on population origin, we find
+because SNP frequency and annotation always depends on population origin, we find
  that this approach alone may exclude many well-distributed (unimodal)
  CpGs, while still failing to identify other problematic multi-modal CpGs. We developed
  an empirical approach to identify CpGs that are obviously not uni-modally
@@ -720,10 +731,12 @@ CpGs can potentially increase association signal. Functions `ipdmr()` and
 differentially methylated regions (DMRs). The argument "seed" in these two functions
 indicate the FDR threshold for initial selection of DMR regions, but we
 note that same value of seed do not appear to have the same effect in these 
-two functions. It is often more stringent in ipdmr than combp. 
+two functions. It is often more stringent in ipdmr than combp. For more information see:
+
+Xu Z, Xie C, Taylor JA, Niu L. ipDMR: identification of differentially methylated regions with interval P-values. Bioinformatics. 2021 May 5;37(5):711-713. doi: 10.1093/bioinformatics/btaa732. PMID: 32805005; PMC8248314.
 
 There is 
-no true DMR in the following example data, we set less strengent seed threshold is only 
+no true DMR in the following example data, we set less stringent seed threshold is only 
 for demostration purpose to show what the output looks like when DMRs were
 detected.
 
