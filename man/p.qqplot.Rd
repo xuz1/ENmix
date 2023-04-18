@@ -8,7 +8,7 @@ P value Q-Q plot with optional confidence interval
 }
 \usage{
        p.qqplot(pvalues,outf="qq",outfmt="jpg",draw.conf=TRUE,
-          conf.col="lightgray",conf.alpha=.95,pch=20,col="black",reducesize=0)
+          conf.col="lightgray",conf.alpha=.95,pch=20,col="black",reducesize=0,...)
 }
 \arguments{
   \item{pvalues}{An numeric vector of P values}
@@ -21,6 +21,7 @@ P value Q-Q plot with optional confidence interval
   \item{col}{Point color code}
   \item{reducesize}{A positive interger, larger the value, smaller the eps file size.
       Smaller file size is achieved by skipping some densely packed data points}
+  \item{...}{Arguments pass to plot}
 }
 \details{P value Q-Q plot with optional confidence interval
 }

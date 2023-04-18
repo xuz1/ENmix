@@ -179,6 +179,14 @@ beta=mpreprocess(rgSet,nCores=6)
 #quality control, data pre-processing and imputation
 beta=mpreprocess(rgSet,nCores=6,qc=TRUE,fqcfilter=TRUE,
      rmcr=TRUE,impute=TRUE)
+
+#CpG information (from Illumina manifest file) is self-contained in rgDataSet or methDataSet
+cginfo=getCGinfo(rgSet)
+#It has the same infomation if extracted from methDataSet
+meth=getmeth(rgSet)
+cginfo1=rowData(meth)
+#Probe information for internal controls
+ictrl=getCGinfo(rgSet,type="ctrl")
 ```
 
 ## Example 2: using individual function

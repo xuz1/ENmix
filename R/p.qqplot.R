@@ -1,6 +1,6 @@
 
 p.qqplot<-function(pvalues,outf="qq",outfmt="jpg",draw.conf=TRUE,
-        conf.col="lightgray",conf.alpha=.95,pch=20,col="black",reducesize=0)
+        conf.col="lightgray",conf.alpha=.95,pch=20,col="black",reducesize=0,...)
 {
 
     conf.alpha=1-conf.alpha
@@ -61,7 +61,7 @@ pvalues=dat$p
 }
 }else{stop("Outfmt should be jpg or eps\n")}
 
-    plot(c(0,0),type="n",xlim=c(0,max(exp.x)), ylim=c(0,max(pvalues)), xlab=xlab,ylab=ylab,cex.lab=1.3)
+    plot(c(0,0),type="n",xlim=c(0,max(exp.x)), ylim=c(0,max(pvalues)), xlab=xlab,ylab=ylab,cex.lab=1.3,...)
     if(draw.conf){polygon(x=cpts[,1],y=cpts[,2], col="lightgray", lty=0)}
     points(exp.x,pvalues,pch=pch,col=col)
     abline(0,1,lty=2)

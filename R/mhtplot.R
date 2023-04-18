@@ -1,7 +1,7 @@
 
 mhtplot <-function(probe=NULL,chr=NULL, pos=NULL, p=NULL, color="bg",sigthre=NULL,
       sigthre2=NULL,threlty=c(2,1),markprobe=NULL,markcolor="red", outf="mht",
-      outfmt="jpg",reducesize=0)
+      outfmt="jpg",reducesize=0,...)
 {
 if(is.null(probe)|is.null(chr)|is.null(pos)|is.null(p)){
     stop("Please provide probe,chr, pos and p\n")}
@@ -78,7 +78,7 @@ plot(dat$pos,-log10(dat$p),col=dat$col,pch=20,lwd=1,xaxt="n",
     xlab="Chromosome location",
 #    ylab=expression(paste(-log[10],"(", italic(P), " value)")),
     ylab=bquote('-log'['10']*'(P) value'),
-    main="",cex.lab=1.5)
+    cex.lab=1.5,...)
 
 axis(1,at=c(0,chrlen$cumx),las=1,lwd=1,labels=FALSE,cex=0.5,font=2)
 if(outfmt=="eps"){
