@@ -55,6 +55,10 @@ several other related R packages, such as `r Biocpkg("minfi")`,
 providing straightforward integration of 
 ENmix-corrected datasets for subsequent data analysis. 
 
+`r Biocpkg("ENmix")` readidat function does not depend on array annotation R packages.
+It can directly read in Illuminal manifest file, which makes it easier to work with
+newer array, such as MethylationEPICv2.0 and  mouse Beadchip.
+
 The software is designed to support large scale data analysis, and provides
  multi-processor parallel computing options for most functions. 
 
