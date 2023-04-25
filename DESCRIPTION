@@ -2,7 +2,7 @@ Package: ENmix
 Title: Quality control and analysis tools for Illumina DNA methylation BeadChip
 Description: Tools for quanlity control, analysis and visulization
              of Illumina DNA methylation array data. 
-Version: 1.36.0
+Version: 1.37.0
 Authors@R: c(person("Zongli","Xu",role=c("cre","aut"),email="xuz@niehs.nih.gov"),
     person("Liang","Niu",role=c("aut"),email="niulg@ucmail.uc.edu"),
     person("Jack","Taylor",role=c("ctb"),email="taylor@niehs.nih.gov"))
