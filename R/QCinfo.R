@@ -49,17 +49,26 @@ QCinfo <- function(rgSet,detPthre=0.000001,detPtype="negative",nbthre=3,sampleth
     ctrls=ctrls[ctrls$Address %in% rownames(rgSet),]
     ctrl_r <- assays(rgSet)$Red[ctrls$Address,]
     ctrl_g <- assays(rgSet)$Green[ctrls$Address,]
-    cc=ctrls[(ctrls$Type %in% c("BISULFITE CONVERSION I")) & ((ctrls$Color %in% 
-       c("Green","Lime","LimeGreen")) | (ctrls$ExtendedType %in% 
-       c("ctl-BISULFITE-CONVERSION-I-140M_MUS","ctl-BISULFITE-CONVERSION-I-303M_MUS"))),]
-    I_green=colMeans(ctrl_g[cc$Address,])
-    cc=ctrls[(ctrls$Type %in% c("BISULFITE CONVERSION I")) & ((ctrls$Color %in%
-     c("Purple","Red","Tomato")) | (ctrls$ExtendedType %in% 
-      c("ctl-BISULFITE-CONVERSION-I-318M_MUS","ctl-BISULFITE-CONVERSION-I-330U_MUS"))),]
-    I_red=colMeans(ctrl_r[cc$Address,])
+
+cIg=data.frame(ctrl_g[ctrls$Type %in% c("BISULFITE CONVERSION I"),])
+cIg[]=lapply(-cIg,rank,ties.method="average")
+cIg=sort(apply(cIg,1,sum))
+    cc=ctrls[(ctrls$Type %in% c("BISULFITE CONVERSION I")) & (ctrls$Color %in% c("Green","Lime","LimeGreen")),]
+    if(all(names(cIg)[1:2] %in% cc$Address)){cAddress=as.vector(cc$Address)}else{cAddress=names(cIg)[1:2]}
+    I_green=colMeans(ctrl_g[cAddress,])
+cIr=data.frame(ctrl_r[ctrls$Type %in% c("BISULFITE CONVERSION I"),])
+cIr[]=lapply(-cIr,rank,ties.method="average")
+cIr=sort(apply(cIr,1,sum))
+    cc=ctrls[(ctrls$Type %in% c("BISULFITE CONVERSION I")) & (ctrls$Color %in% c("Purple","Red","Tomato")),]
+    if(all(names(cIr)[1:2] %in% cc$Address)){cAddress=as.vector(cc$Address)}else{cAddress=names(cIr)[1:2]}
+    I_red=colMeans(ctrl_r[cAddress,])
+cIIr=data.frame(ctrl_r[ctrls$Type %in% c("BISULFITE CONVERSION II"),])
+cIIr[]=lapply(-cIIr,rank,ties.method="average")
+cIIr=sort(apply(cIIr,1,sum))
     cc=ctrls[ctrls$Type %in% c("BISULFITE CONVERSION II") & ctrls$Color %in% c("Crimson",
      "DarkMagenta","Red","Orange","Purple","Tomato"),]
-    II_red=colMeans(ctrl_r[cc$Address,])
+    if(all(names(cIIr)[1:2] %in% cc$Address)){cAddress=as.vector(cc$Address)}else{cAddress=names(cIIr)[1:2]}
+    II_red=colMeans(ctrl_r[cAddress,])
     bisul=(I_green+I_red+II_red)/3
 
     #threshold of bisulfite conversion control intensity

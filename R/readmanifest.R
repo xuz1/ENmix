@@ -34,6 +34,11 @@ readmanifest <- function(file) {
 
 if(sum(table(manifest$Name)>1)>0){manifest$Name=paste0(manifest$Name,"_",manifest$AddressA_ID)}
 
+#fix Illumina coding in mouse array manifest file
+manifest$Infinium_Design_Type=as.character(as.vector(manifest$Infinium_Design_Type))
+manifest$Infinium_Design_Type[manifest$Infinium_Design_Type=="1"] ="I"
+manifest$Infinium_Design_Type[manifest$Infinium_Design_Type=="2"] ="II"
+
 typeI=manifest[manifest$Infinium_Design_Type=="I",]
 typeI$Infinium_Design_Type[grep("^rs",typeI$Name)]="snpI"
 typeII=manifest[manifest$Infinium_Design_Type=="II",]
