@@ -218,6 +218,8 @@ beta<-rcp(mdat,qcscore=qc)
 #remove samples and probes with too many (eg. >5%) missing data
 #perform imputation to replace missing values
 beta <- qcfilter(beta,qcscore=qc,rmcr=TRUE,impute=TRUE)
+#remove suffix and combine duplicated CpGs with rm.cgsuffix(), for EPIC v2
+#beta2=rm.cgsuffix(beta)
 ```
 
 ## Example 3: A more comprehensive example
@@ -274,7 +276,10 @@ beta <- qcfilter(beta,qcscore=qc,rmcr=TRUE, rthre=0.05,
 
 #If for epigenetic mutation analysis, outliers should be kept 
 beta <- qcfilter(beta,qcscore=qc,rmoutlier=FALSE,rmcr=TRUE, rthre=0.05,
-#                   cthre=0.05,impute=FALSE)
+                   cthre=0.05,impute=FALSE)
+
+#remove suffix and combine duplicated CpGs with rm.cgsuffix(), for EPIC v2
+#beta2=rm.cgsuffix(beta)
 
 ##Principal component regression analysis plot to check data variance structure
 #phenotypes to be studied in the plot

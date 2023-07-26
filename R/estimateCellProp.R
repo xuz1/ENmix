@@ -96,6 +96,18 @@ if(refplot){
     dev.off()
 }
 
+#check whether probe names in userdata are standard CG name
+#if not, remove suffix and combined replicated CGs
+if(sum(rownames(refdata) %in% rownames(userdata))<50){
+if(is.matrix(userdata)){userdata=rm.cgsuffix(userdata)}else{
+    Meth=rm.cgsuffix(assays(userdata)$Meth)
+    Unmeth=rm.cgsuffix(assays(userdata)$Unmeth)
+    rowData=data.frame(Name=dimnames(Meth)[[1]])
+    rownames(rowData)=rowData[,1]
+    userdata <-methDataSet(Meth=Meth,Unmeth=Unmeth,rowData=as(rowData,"DataFrame"))
+}}
+
+
 commonprobe=intersect(rownames(userdata),rownames(refdata))
 userdata=userdata[commonprobe,]
 refdata=refdata[commonprobe,]
@@ -106,8 +118,8 @@ Meth=cbind(assays(refdata)$Meth,assays(userdata)$Meth)
 Unmeth=cbind(assays(refdata)$Unmeth,assays(userdata)$Unmeth)
 rname <- rownames(Meth)
 cname <- colnames(Meth)
-Meth  <-  preprocessCore::normalize.quantiles(Meth)
-Unmeth  <-  preprocessCore::normalize.quantiles(Unmeth)
+Meth  <-  normalize.quantiles2(Meth)
+Unmeth  <-  normalize.quantiles2(Unmeth)
 methy=Meth/(Meth+Unmeth+100)
 rownames(methy)=rname
 colnames(methy)=cname

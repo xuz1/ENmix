@@ -72,7 +72,7 @@ DunedinPACE <-function (betas, proportionOfProbesRequired = 0.8)
                       ncol(betas.mat))
                   }
                 }
-                betas.norm <- normalize.quantiles.use.target(betas.mat, 
+                betas.norm <- normalize.quantiles.use.target2(betas.mat, 
                   target = mPOA_Models$gold_standard_means)
                 rownames(betas.norm) <- rownames(betas.mat)
                 colnames(betas.norm) <- colnames(betas.mat)

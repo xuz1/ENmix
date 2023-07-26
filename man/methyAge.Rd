@@ -24,16 +24,13 @@ methyAge(beta,fastImputation=FALSE,normalize=TRUE,nCores=2)
 }
 
 \references{
-Horvath S. \emph{DNA methylation age of human tissues and cell types}. 
-       Genome biology 2013 14:R115.
-Hannum G, Guinney J, Zhao L, Zhang L, Hughes G, Sadda S, et al. 
-      \emph{Genome-wide methylation profiles reveal quantitative views
-       of human aging rates}. Molecular cell 2013 49:359-367.
-Levine ME, Lu AT, Quach A, Chen BH, Assimes TL, Bandinelli S, et al. 
-       \emph{An epigenetic biomarker of aging for lifespan and healthspan}.
-       Aging (Albany NY) 2018 10:573-591.
-Daniel W Belsky, Avshalom Caspi, David L Corcoran,et al. \emph{DunedinPACE,
-a DNA methylation biomarker of the pace of aging}. eLife, 2022
+Horvath S. \emph{DNA methylation age of human tissues and cell types}. Genome biology 2013 14:R115.
+
+Hannum G, Guinney J, Zhao L, Zhang L, Hughes G, Sadda S, et al. \emph{Genome-wide methylation profiles reveal quantitative views of human aging rates}. Molecular cell 2013 49:359-367.
+
+Levine ME, Lu AT, Quach A, Chen BH, Assimes TL, Bandinelli S, et al.  \emph{An epigenetic biomarker of aging for lifespan and healthspan}. Aging (Albany NY) 2018 10:573-591.
+
+Daniel W Belsky, Avshalom Caspi, David L Corcoran,et al. \emph{DunedinPACE, a DNA methylation biomarker of the pace of aging}. eLife, 2022
 }
 
 \author{

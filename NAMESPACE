@@ -6,14 +6,13 @@ import(SummarizedExperiment)
 importFrom(IRanges,IRanges,reduce,start,end,width)
 importFrom(S4Vectors,metadata,SimpleList)
 importFrom(illuminaio,readIDAT)
-importFrom(preprocessCore, normalize.quantiles,normalize.quantiles.use.target)
 importFrom(matrixStats, colMedians,colMads)
 importFrom(grDevices,dev.off,jpeg,colorRampPalette, pdf)
 importFrom("grDevices", "postscript")
 importFrom(graphics,abline,axis,boxplot,hist,legend,
     lines,par,plot,polygon,text,points,mtext)
 importFrom(methods, as, callNextMethod, is, new)
-importFrom(utils, read.table,write.table,head,tail)
+importFrom(utils, read.table,write.table,head,tail,write.csv)
 importFrom(geneplotter,multidensity)
 importFrom(impute,impute.knn)
 importFrom(RPMM,blc,betaObjf)
@@ -38,5 +37,5 @@ export(preprocessENmix,
     getB,B2M,M2B,rgDataSet,methDataSet,repicc,
     calcdetP,getCGinfo,getmeth,readidat,dupicc,
     readmanifest,estimateCellProp,predSex,methyAge,
-    combp,ipdmr,mhtplot,p.qqplot,simubed)
+    combp,ipdmr,mhtplot,p.qqplot,simubed,methscore,rm.cgsuffix,rcp2)
 

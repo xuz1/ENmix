@@ -1,15 +1,41 @@
+normalize.quantiles2 <-function(mat){
+    if(any(is.na(mat))){
+	    xm=is.na(mat)
+	    mat[is.na(mat)]=mean(mat,na.rm=TRUE)
+            ref=apply(apply(mat, 2, sort),1,mean)
+            mat=apply(mat,2,function(x)ref[rank(x)])
+            mat[xm]=NA
+            mat}else{
+            ref=apply(apply(mat, 2, sort),1,mean)
+            apply(mat,2,function(x)ref[rank(x)])
+    }
+}
+
+normalize.quantiles.use.target2 <-function(mat,target){
+    if(any(is.na(mat))){
+            xm=is.na(mat)
+            mat[is.na(mat)]=mean(mat,na.rm=TRUE)
+            ref=sort(target)
+            mat=apply(mat,2,function(x)ref[rank(x)])
+            mat[xm]=NA
+            mat}else{
+            ref=sort(target)
+            apply(mat,2,function(x)ref[rank(x)])
+    }
+}
+
+
 normalize.q <- function(x)
 {
     if(sum(is.na(x))>0)
     {stop("Multi-array quantile normalization does not allow missing value")}
     rname <- rownames(x)
     cname <- colnames(x)
-    x <- normalize.quantiles(x)
+    x <- normalize.quantiles2(x)
     rownames(x) <- rname
     colnames(x) <- cname
     x
 }
-
 
 norm.quantile <- function(mdat,method="quantile1")
 {
