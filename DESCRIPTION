@@ -1,7 +1,7 @@
 Package: ENmix
 Type: Package
 Title: Quality control and analysis tools for Illumina DNA methylation BeadChip
-Version: 1.37.04
+Version: 1.43.2
 Authors@R:
   c(person("Zongli","Xu",email="xuz@niehs.nih.gov",role=c("cre","aut")),
     person("Liang", "Niu", role="aut",email="niulg@ucmail.uc.edu"),
@@ -15,7 +15,7 @@ biocViews: DNAMethylation, Preprocessing, QualityControl, TwoChannel,
         PrincipalComponent,Epigenetics, MultiChannel,
         DifferentialMethylation, ImmunoOncology
 Depends: parallel,doParallel,foreach,SummarizedExperiment,stats,R (>= 3.5.0)
-Imports: grDevices,graphics,matrixStats,methods,utils,
+Imports: grDevices,graphics,matrixStats,methods,utils,irlba,
         geneplotter,impute,minfi,RPMM,illuminaio,dynamicTreeCut,IRanges,gtools,
         Biobase,ExperimentHub,AnnotationHub,genefilter,gplots,quadprog,S4Vectors
 Suggests: minfiData, RUnit, BiocGenerics, BiocStyle, knitr, rmarkdown
@@ -24,6 +24,4 @@ Encoding: UTF-8
 URL: https://github.com/Bioconductor/ENmix
 BugReports: https://github.com/Bioconductor/ENmix/issues
 git_url: https://git.bioconductor.org/packages/ENmix
-Date/Publication: 2023-03-01
 NeedsCompilation: no
-Packaged: 2023-06-13 17:58:04 UTC; xuz

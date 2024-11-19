@@ -11,7 +11,7 @@ Modified RCP method to normalize user's data to a list of reference values
 }
 \arguments{
   \item{datMeth}{A matrix with row for probes and column for samples}
-  \item{reference}{A data frame with two columns, "cg" for CpG names and "goldstandard" for reference values}
+  \item{reference}{A data frame with two columns, "cg" for CpG names and "meth_mean" for reference values}
   \item{quantile.grid}{Quantile grid used in linear regression}
 }
 \details{

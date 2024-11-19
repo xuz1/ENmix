@@ -44,7 +44,8 @@ path <- file.path(find.package("minfiData"),"extdata")
 rgSet <- readidat(path = path,recursive = TRUE)
 mdat=getmeth(rgSet)
 beta=getB(mdat,"Illumina")
-repid=data.frame(id=c("5723646052_R02C02","5723646052_R04C01","5723646052_R05C02","5723646053_R04C02","5723646053_R05C02","5723646053_R06C02"),idx=c(1,2,3,1,2,3))
+repid=data.frame(id=c("5723646052_R02C02","5723646052_R04C01","5723646052_R05C02",
+"5723646053_R04C02","5723646053_R05C02","5723646053_R06C02"),idx=c(1,1,2,2,2,2))
 iccresu<-repicc(dat=beta,repid=repid)
 }}
 }

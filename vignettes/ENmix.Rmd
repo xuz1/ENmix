@@ -109,6 +109,7 @@ The software is designed to support large scale data analysis, and provides
 <li>`oxBS.MLE()`:  MLE estimates of 5-methylcytosine (5mC) and 5-hydroxymethylcytosine (5hmC)</li>
 <li>`estimateCellProp()`:    Estimate white blood cell type proportions</li>
 <li>`methyAge()`:     Calculate methylation age</li>
+<li>`methscore()`:    calculate various methylation predictors, including DNA methylation age, exposures and plasma protein levels.</li>
 <li>`predSex()`:      Estimate sample sex</li>
 <li>`ctrlsva()`:      Derive surrogate variables to control for experimental confounding using non-negative internal control probes</li>
 <li>`pcrplot()`:      Principal component regression plot </li>
@@ -302,8 +303,9 @@ celltype=estimateCellProp(userdata=beta,
 sex=predSex(rgSet)
 sex=predSex(mdat)
 
-#Methylation age calculation
-mage=methyAge(beta)
+#Methylation predictors (>150), including methylation age calculation
+pheno=data.frame(SampleID=colnames(beta),Age=c(23,45,52,36,58,43),Female=c(1,0,1,1,0,1))
+mscore=methscore(datMeth=beta,datPheno=pheno)
 
 #ICC analysis can be performed to study measurement reliability if
 # have duplicates, see manual
@@ -722,12 +724,12 @@ The input data can be in one of the follow format: `rgDataSet`,
 or methylation beta value matrix.
 
 
-# Methylation age estimation
+# Methylation predictors
 
 Methylation age can reflect a person's biological age, which may be more
 related to the person's health status than chronological age. Several 
 types of methylation age can be estimated using 
-`methyAge()`.
+`methyAge()`. The more comprehensive function is `methsocre()`, which calculate more than 150 methylation predictors, including all predictors from `methyAge()`
 
 ```{r mage, eval=FALSE}
 require(minfidata)
@@ -737,6 +739,9 @@ rgSet <- readidat(path = path,recursive = TRUE)
 meth=getmeth(rgSet)
 beta=getB(meth)
 mage=methyAge(beta)
+
+pheno=data.frame(SampleID=colnames(beta),Age=c(23,45,52,36,58,43),Female=c(1,0,1,1,0,1))
+mscore=methscore(datMeth=beta,datPheno=pheno)
 ```
 
 # Differentially methylated regions (DMRs)

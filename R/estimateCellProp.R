@@ -16,7 +16,8 @@ if(refdata=="FlowSorted.Blood.450k"){
   refdata=get(refdata)
   refdata=preprocessRaw(refdata)
 #CellType: Bcell  CD4T  CD8T   Eos  Gran  Mono   Neu    NK  PBMC   WBC, 6 each
-  flag=refdata$CellType %in% c("PBMC","WBC","Eos","Neu")
+# flag=refdata$CellType %in% c("PBMC","WBC","Eos","Neu")
+  flag=refdata$CellType %in% c("PBMC","WBC","Gran")
   refdata=refdata[,!flag]
 }else if(refdata=="FlowSorted.DLPFC.450k"){
   library(refdata, character.only = TRUE)

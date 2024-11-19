@@ -10,7 +10,7 @@ if(!is.null(UserRef)){if(!all(c("cg","meth_mean") %in% colnames(UserRef)))stop("
 
 #if GrimAge Components were provided
 if(!is.null(GrimAgeComponent)){
-	component= c("DNAmADM", "DNAmB2M", "DNAmCystatinC", "DNAmGDF15", "DNAmLeptin", "DNAmPACKYRS", "DNAmPAI1", "DNAmTIMP1")
+	component= c("DNAmADM", "DNAmB2M", "DNAmCystatinC", "DNAmGDF15", "DNAmLeptin", "DNAmPACKYRS", "DNAmPAI1", "DNAmTIMP1","DNAmGrimAge")
 	component=component[!component %in% colnames(GrimAgeComponent)]
 	if(length(component)>0){
 		stop(paste0("Variables ",component," were not found in GrimAgeComponent"))
@@ -27,7 +27,8 @@ datMeth=datMeth[!rowSums(is.na(datMeth))==ncol(datMeth),]
 #if datMeth is a vector, convert it to a matrix
 if(is.vector(datMeth)){datMeth=as.matrix(datMeth)}
 
-if(!is.null(datPheno)){
+if(is.null(datPheno)){ stop("Error: datPheno is missing.")} else {
+  datPheno=as.data.frame(datPheno)
   if(!("Age" %in% colnames(datPheno))){
     stop("Error: datPheno must have a column named Age")
   }
@@ -46,7 +47,7 @@ if(!is.null(datPheno)){
 }
 
 #define a few global variables
-refmeth=mPOA_Models=episcore_model=pcc=refmeth2=NULL
+refmeth=mPOA_Models=episcore_model=pcc=refmeth2=DNAmFitnessModels=NULL
 cAge_CpG=bAge_CpG=EpiToc_CpGs=MiAgedat=methscore_dict=NULL
 #load in all model and reference data
 load(system.file("mage_ref.RData",package="ENmix"))
@@ -63,7 +64,7 @@ pcc=c(pcc1,pcc2,pcc3,pcc4)
 if(sum(as.vector(refmeth$cg) %in% rownames(datMeth))<50){datMeth=rm.cgsuffix(datMeth)}
 
 #combine reference CpG
-#normalize to Hovath refmeth before combine
+#normalize to Horvath refmeth before combine
 refcg=as.vector(refmeth$cg)
 refcg=unique(c(refcg,as.vector(mPOA_Models$gold_standard_probes)))
 refcg=unique(c(refcg,as.vector(episcore_model$CpG_Site)))
@@ -72,6 +73,8 @@ refcg=unique(c(refcg,names(pcc$pcCpGs)))
 refcg=unique(c(refcg,as.vector(refmeth2$cg)))
 refcg=unique(c(refcg,as.vector(cAge_CpG$means$cpg)))
 refcg=unique(c(refcg,as.vector(bAge_CpG$cpgs$CpG_Site)))
+refcg=unique(c(refcg,as.vector(DNAmFitnessModels$AllCpGs)))
+
 #remove unnecessary probes for estimation
 datMeth=datMeth[rownames(datMeth) %in% refcg,]
 
@@ -93,7 +96,7 @@ if(!fastImputation){
 missedcg=NULL
 cgcheck=data.frame(predictor=NA,nCpG_required=NA,nCpG_present=NA,nCpG_missing=NA)
 np=1
-cgcheck[np,1]="HovathAge";cgcheck[np,2]=nrow(hovath)-1;cgcheck[np,3]=sum(as.vector(hovath$cg) %in% rownames(datMeth))
+cgcheck[np,1]="HorvathAge";cgcheck[np,2]=nrow(horvath)-1;cgcheck[np,3]=sum(as.vector(horvath$cg) %in% rownames(datMeth))
 np=np+1
 cgcheck[np,1]="PhenoAge";cgcheck[np,2]=nrow(phenoage)-1;cgcheck[np,3]=sum(as.vector(phenoage$cg) %in% rownames(datMeth))
 np=np+1
@@ -127,9 +130,9 @@ cgcheck[np,1]="GARPC";cgcheck[np,2]=nrow(GARPC_CpGs);cgcheck[np,3]=sum(as.vector
 np=np+1
 cgcheck[np,1]="GARRPC";cgcheck[np,2]=nrow(GARRPC_CpGs);cgcheck[np,3]=sum(as.vector(GARRPC_CpGs$CpG) %in% rownames(datMeth))
 np=np+1
-cgcheck[np,1]="Bohlin";cgcheck[np,2]=nrow(Bohlin_CpGs);cgcheck[np,3]=sum(as.vector(Bohlin_CpGs$CpG) %in% rownames(datMeth))
+cgcheck[np,1]="BohlinGAge";cgcheck[np,2]=nrow(Bohlin_CpGs);cgcheck[np,3]=sum(as.vector(Bohlin_CpGs$CpG) %in% rownames(datMeth))
 np=np+1
-cgcheck[np,1]="Knight";cgcheck[np,2]=nrow(Knight_CpGs);cgcheck[np,3]=sum(as.vector(Knight_CpGs$CpG) %in% rownames(datMeth))
+cgcheck[np,1]="KnightGAge";cgcheck[np,2]=nrow(Knight_CpGs);cgcheck[np,3]=sum(as.vector(Knight_CpGs$CpG) %in% rownames(datMeth))
 #pcclock
 pcvar1 = c("PCHorvath1", "PCHorvath2", "PCHannum", "PCPhenoAge", 
                      "PCDNAmTL", "PCPACKYRS", "PCADM", "PCB2M", "PCCystatinC",
@@ -155,16 +158,24 @@ for(ms in unique(episcore_model$Predictor)){
     cgcheck[np,2]=nrow(tmp)
     cgcheck[np,3]=sum(as.vector(tmp$CpG_Site) %in% rownames(datMeth))
 }
+#DNAm Fit Age
+fa=c("DNAmGait_noAge","DNAmGrip_noAge","DNAmVO2max","DNAmGait_wAge","DNAmGrip_wAge","DNAmFEV1_wAge","DNAmFitAge")
+for(i in 1:length(fa)){
+  np=np+1
+  cgcheck[np,1]=fa[i];cgcheck[np,2]=length(DNAmFitnessModels$AllCpGs);cgcheck[np,3]=sum(as.vector(DNAmFitnessModels$AllCpGs) %in% rownames(datMeth))
+}
 
 message("Number of CpGs missing for estimates\n")
 cgcheck$nCpG_missing=cgcheck$nCpG_required-cgcheck$nCpG_present
 print(cgcheck)
 if(max(cgcheck$nCpG_missing)>0){message("Missing probes will be imputed with reference values\n")}
 message("See file summary_methscore_CpG.csv for the CpG count summary and citation for each predictor")
-cgcheck=merge(cgcheck,methscore_dict,by="predictor")
+cgcheck=merge(methscore_dict,cgcheck,by="predictor")
+rownames(cgcheck)=cgcheck$predictor
+cgcheck=cgcheck[as.vector(methscore_dict$predictor),]
 write.csv(cgcheck,file="summary_methscore_CpG.csv",row.names=FALSE)
 
-#function for normalization using Hovath modified BMIQ method,or modified RCP method, and imputing missing CpGs
+#function for normalization using a modified RCP method, and imputing missing CpGs
 norm_imputing <-function(dat,refdat,normalize,missedcg){
    if(normalize){dat=rcp2(dat,refdat)}
     #replace missing probes with reference values
@@ -189,7 +200,7 @@ anti.trafo= function(x,adult.age=20) { ifelse(x<0, (1+adult.age)*exp(x)-1, (1+ad
 message("Calculating methylation scores ...")
 mScore=data.frame(SampleID=colnames(datMeth))
 
-modelcg=unique(c(as.vector(hovath$cg[-1]),as.vector(phenoage$cg[-1]),as.vector(hannum$cg)))
+modelcg=unique(c(as.vector(horvath$cg[-1]),as.vector(phenoage$cg[-1]),as.vector(hannum$cg)))
 missedcg=modelcg[!(modelcg %in% rownames(datMeth))]
 refdat=refmeth;names(refdat)=c("cg","meth_mean")
 #If user provied reference data include all modelcg, then use UserRef
@@ -198,20 +209,20 @@ if(!is.null(UserRef) & ForceUserRef){
     if(length(tmp)==0){refdat=UserRef}else{
             message(paste0("The following model required CpGs are missing in UserRef:"))
             message(paste0(tmp,collaps=" "))
-            message("System reference were used for HovathAge,mAge_Hannum,PhenoAge")
+            message("System reference were used for HorvathAge,mAge_Hannum,PhenoAge")
     }
 }
 datMeth2=norm_imputing(datMeth,refdat=refdat,normalize,missedcg)
 
-#HovathAge
-intercept=hovath$coef[hovath$cg=="(Intercept)"]
-hovath=hovath[as.vector(hovath$cg) %in% rownames(datMeth2),]
-mAge=anti.trafo(colSums(as.numeric(hovath$coef) * datMeth2[as.vector(hovath$cg),],na.rm=T)+intercept)
-mScore$HovathAge=mAge[as.vector(mScore$SampleID)]
+#HorvathAge
+intercept=horvath$coef[horvath$cg=="(Intercept)"]
+horvath=horvath[as.vector(horvath$cg) %in% rownames(datMeth2),]
+mAge=anti.trafo(colSums(as.numeric(horvath$coef) * datMeth2[as.vector(horvath$cg),],na.rm=T)+intercept)
+mScore$HorvathAge=mAge[as.vector(mScore$SampleID)]
 #Hannum Age
 hannum=hannum[hannum$cg %in% rownames(datMeth2),]
 mAge=colSums(hannum$coef * datMeth2[as.vector(hannum$cg),],na.rm=T)
-mScore$mAge_Hannum=mAge[as.vector(mScore$SampleID)]
+mScore$HannumAge=mAge[as.vector(mScore$SampleID)]
 #PhenoAge
 intercept=phenoage$coef[phenoage$cg=="intercept"]
 phenoage=phenoage[phenoage$cg %in% rownames(datMeth2),]
@@ -256,7 +267,7 @@ datMeth2=norm_imputing(datMeth,refdat=refdat,normalize,missedcg)
 intercept=frailty_model$coef[frailty_model$cg=="intercept"]
 frailty_model=frailty_model[frailty_model$cg %in% rownames(datMeth2),]
 eFRS=colSums(frailty_model$coef * datMeth2[as.vector(frailty_model$cg),],na.rm=T)+intercept
-mScore$eFRS=eFRS[as.vector(mScore$SampleID)]
+mScore$Frailty=eFRS[as.vector(mScore$SampleID)]
 
 
 #########################################
@@ -490,6 +501,14 @@ out$'Epigenetic Age (Zhang)' <- out$'Epigenetic Age (Zhang)' + 65.79295
 
 mScore=merge(mScore,out,by="SampleID")
 
+#####################################
+#DNAmFitAge
+FitAge=calc_DNAmFitAge(datMeth,datPheno,mScore,GrimAgeComponent,DNAmFitnessModels)
+mScore=merge(mScore,FitAge,by="SampleID")
+
+#column order
+mScore=mScore[,c("SampleID",as.vector(methscore_dict$predictor))]
+###################Age residuals
 if(!is.null(datPheno)){
     rownames(datPheno)=datPheno$SampleID
     datPheno=datPheno[as.vector(mScore$SampleID),]
@@ -499,7 +518,6 @@ if(!is.null(datPheno)){
         mScore[,paste0(i,"Resid")] = resid(lm(mScore[,i] ~ datPheno$Age))
     }
 }
-
 return(mScore)
 }
 
@@ -701,4 +719,130 @@ return(pred)
 }
 
 
- 
+#######DNAmFitAge begin
+calc_DNAmFitAge<-function(datMeth,datPheno,mScore,GrimAgeComponent,DNAmFitnessModels){
+
+	if(!is.null(GrimAgeComponent)){grim1=GrimAgeComponent[,c("SampleID","DNAmGrimAge")]}else{
+        grim1=mScore[,c("SampleID","PCGrimAge")];names(grim1)[2]="DNAmGrimAge"}
+	pheno=merge(datPheno,grim1,by="SampleID")
+	pheno=pheno[,c("SampleID","Age","Female","DNAmGrimAge")]
+	rownames(pheno)=pheno$SampleID
+	pheno=pheno[colnames(datMeth),]
+
+data_prep <- function(dataset,pheno){
+  dataset <- dataset[rownames(dataset) %in% DNAmFitnessModels$AllCpGs,]
+  if(nrow(dataset) != length(DNAmFitnessModels$AllCpGs)){
+      cpgs_toadd <- DNAmFitnessModels$AllCpGs[!DNAmFitnessModels$AllCpGs %in% rownames(dataset)]
+
+      #separate by sex to impute missing CpGs
+      output=NULL
+      rownames(pheno)=pheno$SampleID
+      cid=intersect(colnames(dataset), rownames(pheno))
+      dataset=dataset[,cid];pheno=pheno[cid,]
+      if(sum(pheno$Female==1)>0){
+         dat <- dataset[,pheno$Female == 1]
+         dat=rbind(dat,matrix(rep(DNAmFitnessModels$Female_Medians_All[cpgs_toadd],ncol(dat)),ncol=ncol(dat),dimnames=list(cpgs_toadd,colnames(dat))))
+         output=cbind(output,dat)
+      }
+      if(sum(pheno$Female==0)>0){
+         dat <- dataset[,pheno$Female == 0]
+         dat=rbind(dat,matrix(rep(DNAmFitnessModels$Male_Medians_All[cpgs_toadd],ncol(dat)),ncol=ncol(dat),dimnames=list(cpgs_toadd,colnames(dat))))
+         output=cbind(output,dat)
+      }
+
+#      print(paste0("Total ", length(cpgs_toadd)," Missing CpGs that are assigned median values from training data"))
+      dataset=output
+  }
+  return(dataset)
+}
+# Function to provide estimates for any 1 DNAm fitness models
+# TidyModel is a specific model in DNAmFitnessModels list
+DNAmEstimatorAnyModel <- function(dataset, TidyModel){
+  intercept=matrix(rep(1.0, ncol(dataset)),ncol=ncol(dataset),dimnames=list("(Intercept)",colnames(dataset)))
+  dataset=rbind(intercept,dataset)
+  dataset <- dataset[as.vector(TidyModel$term),]
+  dm=dimnames(dataset)
+  dataset=matrix(as.numeric(dataset),nrow=nrow(dataset))
+  dimnames(dataset)=dm
+  estimate <- colSums(TidyModel$estimate  * dataset)
+  return(estimate)
+}
+
+# Function to calculate all DNAm fitness estimates #
+DNAmFitnessEstimators <- function(data, pheno){
+  rownames(pheno)=pheno$SampleID
+  pheno=pheno[colnames(data),]
+  data=rbind(t(pheno),data)
+
+  if(sum(pheno$Female ==1)>0){
+  data_fem <- data[,pheno$Female ==1]
+  fem_est1 <- DNAmEstimatorAnyModel(dataset = data_fem, TidyModel = DNAmFitnessModels$Gait_noAge_Females) # gait without age
+  fem_est2 <- DNAmEstimatorAnyModel(dataset = data_fem, TidyModel = DNAmFitnessModels$Grip_noAge_Females) # grip
+  fem_est3 <- DNAmEstimatorAnyModel(dataset = data_fem, TidyModel = DNAmFitnessModels$VO2maxModel) # vo2max
+  fem_est4 <- DNAmEstimatorAnyModel(dataset = data_fem, TidyModel = DNAmFitnessModels$Gait_wAge_Females) # gait w age
+  fem_est5 <- DNAmEstimatorAnyModel(dataset = data_fem, TidyModel = DNAmFitnessModels$Grip_wAge_Females) # grip w age
+  fem_est6 <- DNAmEstimatorAnyModel(dataset = data_fem, TidyModel = DNAmFitnessModels$FEV1_wAge_Females) # fev1 w age
+  }
+  if(sum(pheno$Female ==0)>0){
+  data_male <- data[,pheno$Female ==0]
+  male_est1 <- DNAmEstimatorAnyModel(dataset = data_male, TidyModel = DNAmFitnessModels$Gait_noAge_Males) # gait
+  male_est2 <- DNAmEstimatorAnyModel(dataset = data_male, TidyModel = DNAmFitnessModels$Grip_noAge_Males) # grip
+  male_est3 <- DNAmEstimatorAnyModel(dataset = data_male, TidyModel = DNAmFitnessModels$VO2maxModel) # vo2max
+  male_est4 <- DNAmEstimatorAnyModel(dataset = data_male, TidyModel = DNAmFitnessModels$Gait_wAge_Males) # gait
+  male_est5 <- DNAmEstimatorAnyModel(dataset = data_male, TidyModel = DNAmFitnessModels$Grip_wAge_Males) # grip
+  male_est6 <- DNAmEstimatorAnyModel(dataset = data_male, TidyModel = DNAmFitnessModels$FEV1_wAge_Males) # fev1
+  }
+  if(sum(pheno$Female ==1)==0){est1=male_est1;est2=male_est2;est3=male_est3;est4=male_est4;est5=male_est5;est6=male_est6
+    }else if(sum(pheno$Female ==0)==0){est1=fem_est1;est2=fem_est2;est3=fem_est3;est4=fem_est4;est5=fem_est5;est6=fem_est6
+    }else{
+          est1 <- c(fem_est1, male_est1)
+          est2 <- c(fem_est2, male_est2)
+          est3 <- c(fem_est3, male_est3)
+          est4 <- c(fem_est4, male_est4)
+          est5 <- c(fem_est5, male_est5)
+          est6 <- c(fem_est6, male_est6)
+    }
+  data_and_est=data.frame(DNAmGait_noAge=est1,DNAmGrip_noAge=est2,DNAmVO2max=est3,DNAmGait_wAge=est4,DNAmGrip_wAge=est5,DNAmFEV1_wAge=est6)
+  data_and_est$SampleID=rownames(data_and_est)
+  return(data_and_est)
+}
+
+
+# Function to calculate DNAmFitAge
+FitAgeEstimator <- function(data){
+  # prep dataset for fitage- dataset by sex
+  fem <- data[data$Female == 1,]
+  male <- data[data$Female == 0,]
+
+  # can only estimate FitAge if all variables are present, remove those without them #
+  fem_comcase <- fem[complete.cases(fem), ]
+  male_comcase <- male[complete.cases(male), ]
+
+  # Female FitAge
+  female_fitest <- 0.1044232 * ((fem_comcase$DNAmVO2max - 46.825091) / (-0.13620215)) +
+                0.1742083 * ((fem_comcase$DNAmGrip_noAge - 39.857718) / (-0.22074456)) +
+                0.2278776 * ((fem_comcase$DNAmGait_noAge - 2.508547) / (-0.01245682))  +
+                0.4934908 * ((fem_comcase$DNAmGrimAge - 7.978487) / (0.80928530))
+
+  # Male FitAge
+  male_fitest <- 0.1390346 * ((male_comcase$DNAmVO2max - 49.836389) / (-0.141862925)) +
+                0.1787371 * ((male_comcase$DNAmGrip_noAge - 57.514016) / (-0.253179827)) +
+                0.1593873 * ((male_comcase$DNAmGait_noAge - 2.349080) / (-0.009380061))  +
+                0.5228411 * ((male_comcase$DNAmGrimAge - 9.549733) / (0.835120557))
+
+  fem <- data.frame(fem_comcase, DNAmFitAge = female_fitest)
+  male <- data.frame(male_comcase, DNAmFitAge = male_fitest)
+
+  resu <- rbind(fem, male)
+  resu=resu[,!names(resu) %in% c("Age","Female","DNAmGrimAge")]
+  return(resu)
+}
+
+sample_data_prep <- data_prep(dataset = datMeth,pheno=pheno)
+sample_data_FitnessEst <- DNAmFitnessEstimators(sample_data_prep, pheno)
+sample_data_FitAge_prep <- merge(pheno, sample_data_FitnessEst, by = "SampleID")
+FitAge <- FitAgeEstimator(sample_data_FitAge_prep)
+return(FitAge)
+}
+##### end DNAmFitAge
+

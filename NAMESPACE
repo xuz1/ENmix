@@ -27,6 +27,7 @@ importFrom(genefilter,rowFtests,rowttests)
 importFrom(gplots,heatmap.2)
 importFrom(quadprog,solve.QP)
 importFrom(gtools,mixedsort)
+importFrom(irlba,prcomp_irlba)
 
 exportClasses(rgDataSet,methDataSet)
 

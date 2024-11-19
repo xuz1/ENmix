@@ -7,26 +7,38 @@ DNA Methylation predictors
 To calculate various methylation predictors, including DNA methylation age, plasma protein levels, exposures etc.
 }
 \usage{
-methscore(datMeth,datPheno=NULL,fastImputation=FALSE,normalize=TRUE,GrimAgeComponent=NULL,UserRef=NULL,ForceUserRef=FALSE)
+methscore(datMeth,datPheno=NULL,fastImputation=FALSE,normalize=TRUE,
+	  GrimAgeComponent=NULL,UserRef=NULL,ForceUserRef=FALSE)
 }
 \arguments{
   \item{datMeth}{Methylation beta value matrix with CpG names(row names) and sample ids(column names).}
-  \item{datPheno}{Phenotype data, must included columns SampleID, Age (year) and Female (0:male,1:female)}
+  \item{datPheno}{Phenotype data, must include columns SampleID, Age (year) and Female (0:male,1:female).
+       Age and Female information are required to calculate DNAmFitAge and PCClocks}
   \item{fastImputation}{If "TRUE" mean methylation values will used
       for imputation, if "FALSE", KNN nearest neighbor method will be used.}
   \item{normalize}{TRUE or FALSE, if TRUE, user data will be normalized to a reference data using a modified RCP method}
   \item{GrimAgeComponent}{A data frame of grimage component from methylation age online calculator 
-	  (https://dnamage.clockfoundation.org/user/login). It must include the following variables:
-	 ("SampleID","DNAmADM", "DNAmB2M", "DNAmCystatinC", "DNAmGDF15", "DNAmLeptin", "DNAmPACKYRS", "DNAmPAI1", "DNAmTIMP1"). 
-         If the file is not provided, bAge will be calculated using PC Grimage components}
+	  (https://dnamage.clockfoundation.org/user/login). It must include the following variables,
+	 ("SampleID","DNAmADM", "DNAmB2M", "DNAmCystatinC", 
+	 "DNAmGDF15", "DNAmLeptin", "DNAmPACKYRS", "DNAmPAI1",  
+	 "DNAmTIMP1","DNAmGrimAge"). 
+         If the file is not provided, bAge and DNAmFitAge will be calculated using PC Grimage components}
  \item{UserRef}{User provided methylation reference data will be used for some predictors (see details), must include variables cg and meth_mean}
  \item{ForceUserRef}{If TRUE, UserRef will be forced to use in normalization and imputation for all estimates}
 }
 \details{
-	The original publications (see references) provided reference methylation mean values for all methylation predictors except for the following predictors: 
-	PEDBE,EpiToc,EpiToc2,Zhang10CpG,Horvath2,MiAge,DNAmTL,PEDBE,GACPC,GARPC,GARRPC,Bohlin,Knight. Reference methylatin derived from Sister Study data were used 
-	for these predictors by default. If UserRef was provided, it will be used to replace the default reference data. If set ForceUserRef=TRUE, UserRef will be 
-	used for all predictors in normalization and CpG imputation. 
+        The original publications (see references) provided reference methylation
+       	mean values for most methylation predictors, and thus these values were
+       	used directly for normalization and imputations. For the following 
+	predictors without reference value in their original publications,
+
+        PEDBE,EpiToc,EpiToc2,Zhang10CpG,Horvath2,MiAge,DNAmTL,PEDBE,GACPC,
+	GARPC,GARRPC,Bohlin and Knight, we used Sister Study data
+       	(~5000 samples) to derive a set of reference methylatin values.
+       	If UserRef was provided, it will be used to replace the Sister
+       	Study reference values for these predictors. If set
+       	ForceUserRef=TRUE, UserRef will be
+        used for all predictors in normalization and CpG imputation.
 }
 \value{
   A data frame with rows for samples and columns for methylation predictors. 
@@ -59,6 +71,8 @@ Li et al. \emph{Derivation and validation of an epigenetic frailty risk score in
 Lu et al. \emph{DNA methylation-based estimator of telomere length}.Aging (Albany NY). 2019 Aug 31; 11(16): 5895–5923. 
 
 McCartney et al. \emph{Epigenetic prediction of complex traits and death}.Genome Biol. 2018 Sep 27;19(1):136. doi: 10.1186/s13059-018-1514-1.
+
+McGreevy et al. \emph{DNAmFitAge: biological age indicator incorporating physical fitness}. Aging(Albany NY). 2023 Feb 22;15(10):3904-3938. doi: 10.18632/aging.204538.
 
 McEwen et al. \emph{The PedBE clock accurately estimates DNA methylation age in pediatric buccal cells}.Proc Natl Acad Sci U S A. 2020 Sep 22; 117(38): 23329–23335.
 

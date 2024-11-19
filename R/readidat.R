@@ -1,13 +1,17 @@
 .guessArrayTypes <- function(nProbes) {
-    if (nProbes >= 620000 && nProbes <= 625000) {
+    if (nProbes >= 622000 && nProbes <= 623000) {
         arrayAnnotation <- c(
             array = "IlluminaHumanMethylation450k",
             annotation = "ilmn12.hg19")
-    } else if (nProbes >= 1030000 && nProbes <= 1055000) {
+    } else if (nProbes >= 1032000 && nProbes <= 1033000) {
         arrayAnnotation <- c(
             array = "IlluminaHumanMethylationEPIC",
             annotation = "ilm10b2.hg19")
-    } else if (nProbes >= 53000 && nProbes <= 57000) {
+    } else if (nProbes >= 1105000 && nProbes <= 1105300) {
+        arrayAnnotation <- c(
+            array = "IlluminaHumanMethylationEPICv2",
+            annotation = "20a1.hg38")
+    } else if (nProbes >= 55200 && nProbes <= 55400) {
         arrayAnnotation <- c(
             array = "IlluminaHumanMethylation27k",
             annotation = "ilmn12.hg19")
@@ -41,7 +45,8 @@ readidat <- function(path = NULL,manifestfile=NULL,recursive = TRUE, verbose = F
     names(R.files) <- basename(basenames)
 
     G.Quants <- lapply(G.files, function(xx) {
-        Quants <- readIDAT(xx)[["Quants"]]
+        tr=try(Quants <- readIDAT(xx)[["Quants"]])
+	if(class(tr)[1] == "try-error"){stop(paste0("ERROR: file reading error, check or exclude/remove file: ",xx))}
         if (verbose) message("[readidat] Loaded ", basename(xx), ", ",nrow(Quants)," probes")
         Quants[,c("Mean","NBeads")]
     })
@@ -101,7 +106,8 @@ readidat <- function(path = NULL,manifestfile=NULL,recursive = TRUE, verbose = F
     rm(G.Quants)
     
     R.Quants <- lapply(R.files, function(xx) {
-        Quants <- readIDAT(xx)[["Quants"]]
+        tr=try(Quants <- readIDAT(xx)[["Quants"]])
+	if(class(tr)[1] == "try-error"){stop(paste0("ERROR: file reading error, check or exclude/remove file: ",xx))}
         if (verbose) message("[readidat] Loaded ", basename(xx), ", ",nrow(Quants)," probes")
         Quants[,c("Mean")]
     })

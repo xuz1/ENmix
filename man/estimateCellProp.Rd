@@ -64,8 +64,8 @@ FlowSorted.DLPFC.450k: consisting of 450K methylation data for 58 brain tissue
 
 FlowSorted.CordBloodCombined.450k: consisting of 289 combined umbilical cord blood 
  cells samples assayed by Bakulski et al, Gervin et al., de Goede et al., and 
- Lin et al. see https://github.com/immunomethylomics/FlowSorted.CordBloodCombined.450k.
- details.
+ Lin et al. see https://github.com/immunomethylomics/
+ FlowSorted.CordBloodCombined.450k. for details.
 }
 \value{
   The output is a data frame composed of the estimates of cell type proportions with 

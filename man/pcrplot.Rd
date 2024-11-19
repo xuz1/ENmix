@@ -12,7 +12,7 @@ plotted for exploration of methylation data variance structure or identification
 of possible confounding variables in association analysis.
 }
 \usage{
-pcrplot(beta, cov,npc=50,subset=TRUE,subsetsize=50000)
+pcrplot(beta, cov,npc=50)
 }
 \arguments{
   \item{beta}{A methylation beta value matrix with rows for probes and columns for
@@ -20,8 +20,6 @@ pcrplot(beta, cov,npc=50,subset=TRUE,subsetsize=50000)
   \item{cov}{A data frame of covariates. Categorical variables should be converted
  to factors. The number of rows should equal to the number of columns in beta matrix}
   \item{npc}{The number of top ranked principal components to be plotted}
-  \item{subset}{If TRUE, a random subset probes will be used for the calculation}
-  \item{subsetsize}{The size of a subset probes}
 }
 \value{
 A jpeg figure "svdscreeplot.jpg" to show the variations explained by each principal

@@ -40,28 +40,23 @@ plotp<-function(jpgfile,p,yaxis,xmax,title)
     dev.off()
 }
 
-pcrplot<-function(beta,cov,npc=50,subset=TRUE,subsetsize=50000)
+pcrplot<-function(beta,cov,npc=50)
 {
     if(!is.matrix(beta)){stop("beta is not a data matirx")}
     if(!is.data.frame(cov)){stop("cov is not a data frame")}
     if(ncol(beta)!=nrow(cov))
     {stop("number of columns in beta is not equal to number of rows in cov")}
     cat("Analysis is running, please wait...!","\n")
-
-    if(nrow(beta)<subsetsize){subset=FALSE}
-    if(subset){
-      beta=beta[sample(1:nrow(beta),subsetsize),]
-    }
-
     npc <- min(ncol(beta),npc)
-    svd <- prcomp(t(beta),center=TRUE,scale=TRUE,retx=TRUE)
+
+#    library("irlba")
+    svd<- prcomp_irlba(t(beta), n=npc, center=TRUE,scale.=TRUE,retx=TRUE)
     jpeg(filename="svdscreeplot.jpg",width=1000,height=500,quality = 100)
     screeplot(svd,npc,type="barplot")
     dev.off()
     cat("svdscreeplot.jpg was plotted","\n")
-    eigenvalue <- svd[["sdev"]]**2
-    prop <- (sum(eigenvalue[1:npc])/sum(eigenvalue))*100
-    cat("Top ",npc," principal components can explain ", prop, "% of data 
+    prop=summary(svd)$importance["Cumulative Proportion", npc]*100
+    cat("Top ",npc," principal components explain ", prop, "% of data
     variation","\n")
     p <- lmmatrix(svd$x[,1:npc],cov)
     yaxis <- colnames(p)
@@ -69,4 +64,5 @@ pcrplot<-function(beta,cov,npc=50,subset=TRUE,subsetsize=50000)
     title="Principal Component Regression Analysis")
     cat("pcr_diag.jpg was plotted","\n")
 }
+
 

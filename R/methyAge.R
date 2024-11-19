@@ -10,20 +10,21 @@ methyAge<-function(beta,fastImputation=FALSE,normalize=TRUE,nCores=2)
 if(min(beta,na.rm=TRUE)<0 | max(beta,na.rm=TRUE)>1){
 stop("Warning: Methylation beta value input should be within [0,1]")}
 
-hovath=data.frame()
+horvath=data.frame()
 hannum=data.frame()
 phenoage=data.frame()
 
 load(system.file("mage_ref.RData",package="ENmix"))
+names(refmeth)[which(names(refmeth)=="meth_mean")]="goldstandard"
 #load(system.file("mPOA_Models.RData",package="ENmix"))
 PACE=DunedinPACE(betas=beta, proportionOfProbesRequired = 0.8)
 
-missing_hovath=as.vector(hovath$cg[-1])[!(as.vector(hovath$cg[-1]) %in% rownames(beta))]
+missing_horvath=as.vector(horvath$cg[-1])[!(as.vector(horvath$cg[-1]) %in% rownames(beta))]
 missing_hannum=as.vector(hannum$cg)[!(as.vector(hannum$cg) %in% rownames(beta))]
 missing_phenoage=as.vector(phenoage$cg[-1])[!(as.vector(phenoage$cg[-1]) %in% rownames(beta))]
 missing=FALSE
-if(length(missing_hovath)>0){missing=TRUE
-cat(length(missing_hovath), "CpG missed methy age calculation using Hovath method: ",missing_hovath)}
+if(length(missing_horvath)>0){missing=TRUE
+cat(length(missing_horvath), "CpG missed methy age calculation using Horvath method: ",missing_horvath)}
 if(length(missing_hannum)>0){missing=TRUE
 cat(length(missing_hannum), "CpG missed methy age calculation using Hannum method: ",missing_hannum)}
 if(length(missing_phenoage)>0){missing=TRUE
@@ -32,7 +33,7 @@ cat(length(missing_phenoage), "CpG missed methy age calculation using phenoage m
 tmp=NULL
 if(missing){
 cat("Warning: Methylation values for missing CpGs will be imputed with reference values, but the results will be less acurate")
-clockcg=unique(c(as.vector(hovath$cg)[-1],as.vector(hannum$cg),as.vector(phenoage$cg)[-1]))
+clockcg=unique(c(as.vector(horvath$cg)[-1],as.vector(hannum$cg),as.vector(phenoage$cg)[-1]))
 missedcg=clockcg[!(clockcg %in%  rownames(beta))]
 if(length(missedcg)>0){
   reference=refmeth[as.vector(refmeth$cg) %in% missedcg,]
@@ -69,7 +70,7 @@ beta[i,selectMissing1] = as.numeric(refmeth$goldstandard[selectMissing1])
 dimnames(beta)=dimnames1
 }}
 
-#normalization using Hovath modified BMIQ method
+#normalization using Horvath modified BMIQ method
 if(normalize){
 nCores=min(floor(nrow(beta)/2),nCores)
 if(nCores>detectCores()){nCores <- detectCores()}
@@ -86,12 +87,12 @@ beta=as.matrix(do.call(rbind, resu))
 beta=cbind(beta,tmp)
 
 methyAge=data.frame(SampleID=rownames(beta))
-datMethClock=beta[,as.character(hovath$cg[-1])]
+datMethClock=beta[,as.character(horvath$cg[-1])]
 #Age transformation and probe annotation functions
 trafo= function(x,adult.age=20) { x=(x+1)/(1+adult.age); y=ifelse(x<=1, log( x),x-1);y }
 anti.trafo= function(x,adult.age=20) { ifelse(x<0, (1+adult.age)*exp(x)-1, (1+adult.age)*x+adult.age) }
-mAge=anti.trafo(hovath$coef[1]+as.matrix(datMethClock)%*% as.numeric(hovath$coef[-1]))
-methyAge$mAge_Hovath=mAge
+mAge=anti.trafo(horvath$coef[1]+as.matrix(datMethClock)%*% as.numeric(horvath$coef[-1]))
+methyAge$mAge_Horvath=mAge
 
 datMethClock=beta[,as.character(hannum$cg)]
 mAge=as.matrix(datMethClock) %*% as.numeric(hannum$coef)
