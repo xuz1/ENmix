@@ -1,4 +1,5 @@
-c(bibentry(bibtype = "Article",
+c(
+  bibentry(bibtype = "Article",
            key = "ENmix",
            title = "ENmix: a novel background correction method for Illumina HumanMethylation450 BeadChip",
            author = c(
@@ -13,10 +14,23 @@ c(bibentry(bibtype = "Article",
 	   header = "ENmix R pacakge"),
 
   bibentry(bibtype = "Article",
-           key = "RCP",
+           key = "methylation pipeline evaluation",
            author = c(
            person("Zongli", "Xu"),
            person("Liang", "Niu"),
+           person("Jack,A.", "Taylor")
+                ),
+           title = "The ENmix DNA methylation analysis pipeline for Illumina BeadChip and comparisons to 7 other preprocessing pipelines",
+           journal = "Clinical Epigenetics",
+           year = "2022",
+           pubmed = "---",
+           header = "methylation pipeline evaluation"),
+
+  bibentry(bibtype = "Article",
+           key = "RCP",
+           author = c(
+           person("Liang", "Niu"),
+           person("Zongli", "Xu"),
            person("Jack,A.", "Taylor")
                 ),
            title = "RCP: a novel probe design bias correction method for Illumina Methylation BeadChip",
@@ -35,8 +49,9 @@ c(bibentry(bibtype = "Article",
            person("Liang", "Niu")
                 ),
            title = "oxBS-MLE: An efficient method to estimate 5-methylcytosine and 5-hydroxymethylcytosine in paired bisulfite and oxidative bisulfite treated DNA",
-           journal = "In review",
+           journal = "Bioinformatics",
            year = "2016",
+           pubmed = "27522082",
            header = "oxBS-MLE to estimate 5-hydroxymethylcytosine"),
 
   bibentry(bibtype = "Article",
@@ -49,8 +64,50 @@ c(bibentry(bibtype = "Article",
            person("Liang", "Niu")
                 ),
            title = "RELIC: a novel dye-bias correction method for Illumina Methylation BeadChip",
-           journal = "In review",
-           year = "2016",
-           header = "RELIC dye-bias correction")
+           journal = "BMC Genomics",
+           year = "2017",
+           pubmed = "28049437",
+           header = "RELIC dye-bias correction"),
+
+  bibentry(bibtype = "Article",
+           key = "dupicc",
+           author = c(
+           person("Zongli", "Xu"),
+           person("Jack,A.", "Taylor")
+                ),
+           title = "Reliability of DNA methylation measures using Illumina methylation BeadChip",
+           journal = "Epigenetics",
+           year = "2020",
+           pubmed = "32749174",
+           header = "Intraclass correlation"),
+
+  bibentry(bibtype = "Article",
+           key = "ipDMR",
+           author = c(
+           person("Zongli", "Xu"),
+           person("Changchun", "Xie"),
+           person("Jack,A.", "Taylor"),
+           person("Liang", "Niu")
+                ),
+           title = "ipDMR: Identification of differentially methyl-ated regions with interval P values",
+           journal = "Bioinformatics",
+           year = "2020",
+           pubmed = "32805005",
+           header = "DMR analysis"),
+
+  bibentry(bibtype = "Article",
+           key = "methscore",
+           author = c(
+           person("Zongli", "Xu"),
+           person("Liang", "Niu"),
+           person("Jacob,K.", "Kresovich"),
+           person("Jack,A.", "Taylor")
+                ),
+           title = "Methscore: a comprehensive R function for DNA methylation-based health predictors",
+           journal = "Bioinformatics",
+           year = "2024",
+           pubmed = "38702768",
+           header = "methscore")
+
 )
 

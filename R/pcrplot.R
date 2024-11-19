@@ -48,14 +48,15 @@ pcrplot<-function(beta,cov,npc=50)
     {stop("number of columns in beta is not equal to number of rows in cov")}
     cat("Analysis is running, please wait...!","\n")
     npc <- min(ncol(beta),npc)
-    svd <- prcomp(t(beta),center=TRUE,scale=TRUE,retx=TRUE,na.action="na.omit")
+
+#    library("irlba")
+    svd<- prcomp_irlba(t(beta), n=npc, center=TRUE,scale.=TRUE,retx=TRUE)
     jpeg(filename="svdscreeplot.jpg",width=1000,height=500,quality = 100)
     screeplot(svd,npc,type="barplot")
     dev.off()
     cat("svdscreeplot.jpg was plotted","\n")
-    eigenvalue <- svd[["sdev"]]**2
-    prop <- (sum(eigenvalue[1:npc])/sum(eigenvalue))*100
-    cat("Top ",npc," principal components can explain ", prop, "% of data 
+    prop=summary(svd)$importance["Cumulative Proportion", npc]*100
+    cat("Top ",npc," principal components explain ", prop, "% of data
     variation","\n")
     p <- lmmatrix(svd$x[,1:npc],cov)
     yaxis <- colnames(p)
@@ -63,4 +64,5 @@ pcrplot<-function(beta,cov,npc=50)
     title="Principal Component Regression Analysis")
     cat("pcr_diag.jpg was plotted","\n")
 }
+
 

@@ -130,8 +130,33 @@ enmix <- function(meth,bg,bgParaEst,nCores)
     gc(); meth.o
 }
 
-huber_mus <- function(x){ests <- huber(x);c(mu=ests$mu,s=ests$s)}
-huber_mu <- function(x){ests <- huber(x);ests$mu}
+#copy from MASS package
+huber<-function (y, k = 1.5, tol = 1e-06)
+{
+    y <- y[!is.na(y)]
+    n <- length(y)
+    mu <- median(y)
+    s <- mad(y)
+    if (s == 0)
+        stop("cannot estimate scale: MAD is zero for this sample")
+    repeat {
+        yy <- pmin(pmax(mu - k * s, y), mu + k * s)
+        mu1 <- sum(yy)/n
+        if (abs(mu - mu1) < tol * s)
+            break
+        mu <- mu1
+    }
+    list(mu = mu, s = s)
+}
+
+huber_mus <- function(x){ests <- try(huber(x)); if(class(ests)[1]=="try-error"){
+    cat("Warning:Check negtive control data, or do quality control before ENmix\n");
+    c(mu=median(x,na.rm=TRUE),s=sd(x,na.rm=TRUE))
+    }else{c(mu=ests$mu,s=ests$s)}}
+huber_mu <- function(x){ests <- try(huber(x));if(class(ests)[1]=="try-error"){
+    cat("Warning: Check NORM control data, or do quality control before ENmix\n");
+    median(x,na.rm=TRUE)
+    }else{ests$mu}}
 
 estBG  <- function(meth_i)
 {
@@ -154,7 +179,15 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
     QCinfo=NULL, exQCsample=TRUE,
     exQCcpg=TRUE, exSample=NULL, exCpG=NULL, nCores=2)
 {
-    if(is(rgSet, "RGChannelSet")){
+    if(is(rgSet, "rgDataSet")){
+    if(!is.null(QCinfo)){exSample=unique(c(QCinfo$badsample, exSample))}
+    exSample=exSample[exSample %in% colnames(rgSet)]
+    if(length(exSample)>0){
+    rgSet=rgSet[,!(colnames(rgSet) %in% exSample)]
+    cat(length(exSample), " samples were excluded before ENmix correction\n")
+    }
+    mdat <- getmeth(rgSet)
+    }else if(is(rgSet, "RGChannelSet")){
     if(!is.null(QCinfo)){exSample=unique(c(QCinfo$badsample, exSample))}
     exSample=exSample[exSample %in% colnames(rgSet)]
     if(length(exSample)>0){
@@ -162,7 +195,7 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
     cat(length(exSample), " samples were excluded before ENmix correction\n")
     }
     mdat <- preprocessRaw(rgSet)
-    }else if(is(mdat, "MethylSet")){
+    }else if(is(rgSet, "methDataSet") | is(rgSet, "MethylSet")){
     if(!is.null(QCinfo) & exQCsample){exSample=unique(c(QCinfo$badsample,
      exSample))}
     exSample=exSample[exSample %in% colnames(rgSet)]
@@ -171,8 +204,8 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
     cat(length(exSample), " samples were excluded before ENmix correction\n")
     }
     mdat=rgSet; bgParaEst="est"; 
-    if(!(dyeCorr=="none")){cat("Warning: Input data need to be a RGChannelSet for dye bias
-     correction\n");
+    if(!(dyeCorr=="none")){cat("Warning: Input data need to be a rgDataSet or 
+        RGChannelSet to perform dye-bias correction\n");
        cat("Warning: dye-bias correction will not be performed\n")}
     dyeCorr="none"
     }else{stop("Error: object needs to be of class 'RGChannelSet' or 
@@ -189,16 +222,29 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
     cat(length(exCpG), " CpGs were excluded before ENmix correction\n")
     }
     rm(QCinfo)
-    probe_type <- getProbeType(mdat, withColor=TRUE)
+    
+    if(is(mdat, "methDataSet")){
+      probe_type=rowData(mdat)$Infinium_Design_Type
+      col=rowData(mdat)$Color_Channel
+      probe_type[probe_type %in% c("I","snpI") & col=="Grn"]="IGrn"
+      probe_type[probe_type %in% c("I","snpI") & col=="Red"]="IRed"
+      probe_type[probe_type %in% c("snpII")]="II"
+    }else if(is(mdat, "MethylSet")){
+    probe_type <- getProbeType(mdat, withColor=TRUE)}
     cat("Analysis is running, please wait...!\n")
 ##estimate background parameters
     if(bgParaEst == "neg" | bgParaEst == "subtract_neg")
     {
-    ctrls <- getProbeInfo(rgSet,type="Control")
+    if(is(rgSet,"rgDataSet")){
+        ctrls <- getCGinfo(rgSet,type="ctrl")
+    }else if(is(rgSet,"RGChannelSet")){
+        ctrls <- getProbeInfo(rgSet,type="Control")}
+
     ctrls <- ctrls[ctrls$Address %in% rownames(rgSet),]
     ctrl_address <- as.vector(ctrls$Address[ctrls$Type %in% "NEGATIVE"])
-    ctrl_r <- getRed(rgSet)[ctrl_address,]
-    ctrl_g <- getGreen(rgSet)[ctrl_address,]
+
+    ctrl_r <- assays(rgSet)$Red[ctrl_address,]
+    ctrl_g <- assays(rgSet)$Green[ctrl_address,]
     ctrl_r[ctrl_r<=0]=1e-06;ctrl_g[ctrl_g<=0]=1e-06
     temp <- apply(ctrl_r,2,huber_mus)
     mu <- temp["mu",];sigma <- temp["s",]
@@ -209,13 +255,21 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
     bgRII <- bgRI;bgGII <- bgGI
     }else if (bgParaEst == "oob" | bgParaEst == "subtract_oob")
     {
-    I_probe <- getProbeInfo(rgSet, type="I-Red")
-    I_green_bg_M <-  getGreen(rgSet)[I_probe$AddressB,]
-    I_green_bg_U <-  getGreen(rgSet)[I_probe$AddressA,]
+    if(is(rgSet,"rgDataSet")){
+        I_probe <- getCGinfo(rgSet,type="I")
+        I_probe=I_probe[I_probe$Color_Channel=="Red",]
+    }else if(is(rgSet,"RGChannelSet")){
+        I_probe <- getProbeInfo(rgSet, type="I-Red")}
+    I_green_bg_M <-  assays(rgSet)$Green[I_probe$AddressB,]
+    I_green_bg_U <-  assays(rgSet)$Green[I_probe$AddressA,]
     ctrl_g <- rbind(I_green_bg_M,I_green_bg_U)
-    I_probe <- getProbeInfo(rgSet, type="I-Green")
-    I_red_bg_M <-  getRed(rgSet)[I_probe$AddressB,]
-    I_red_bg_U <-  getRed(rgSet)[I_probe$AddressA,]
+    if(is(rgSet,"rgDataSet")){
+        I_probe <- getCGinfo(rgSet,type="I")
+        I_probe=I_probe[I_probe$Color_Channel=="Grn",]
+    }else if(is(rgSet,"RGChannelSet")){
+        I_probe <- getProbeInfo(rgSet, type="I-Green")}
+    I_red_bg_M <-  assays(rgSet)$Red[I_probe$AddressB,]
+    I_red_bg_U <-  assays(rgSet)$Red[I_probe$AddressA,]
     ctrl_r <- rbind(I_red_bg_M,I_red_bg_U)
     ctrl_r[ctrl_r<=0]=1e-06;ctrl_g[ctrl_g<=0]=1e-06
     temp <- apply(ctrl_r,2,huber_mus)
@@ -229,11 +283,15 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
      "ctrl_r"))
 
     }else if (bgParaEst == "subtract_q5neg"){
-    ctrls <- getProbeInfo(rgSet,type="Control")
+    if(is(rgSet,"rgDataSet")){
+        ctrls <- getCGinfo(rgSet,type="ctrl")
+    }else if(is(rgSet,"RGChannelSet")){
+        ctrls <- getProbeInfo(rgSet,type="Control")}
+
     ctrls <- ctrls[ctrls$Address %in% rownames(rgSet),]
     ctrl_address <- as.vector(ctrls$Address[ctrls$Type %in% "NEGATIVE"])
-    ctrl_r <- getRed(rgSet)[ctrl_address,]
-    ctrl_g <- getGreen(rgSet)[ctrl_address,]
+    ctrl_r <- assays(rgSet)$Red[ctrl_address,]
+    ctrl_g <- assays(rgSet)$Green[ctrl_address,]
     ctrl_r[ctrl_r<=0]=1e-06;ctrl_g[ctrl_g<=0]=1e-06  ## may not need this
     mu <- apply(ctrl_r,2,function(x) quantile(x,probs=0.05,na.rm=TRUE));
     sigma <- apply(ctrl_r,2,function(x)sd(x,na.rm=TRUE));
@@ -280,10 +338,13 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
     registerDoParallel(c1)
 
     if (dyeCorr == "mean"){
-      ctrls <- getProbeInfo(rgSet, type="Control")
-      ctrls <- ctrls[ctrls$Address %in% featureNames(rgSet),]
-      ctrl_r <- getRed(rgSet)[ctrls$Address,]
-      ctrl_g <- getGreen(rgSet)[ctrls$Address,]
+    if(is(rgSet,"rgDataSet")){
+        ctrls <- getCGinfo(rgSet,type="ctrl")
+    }else if(is(rgSet,"RGChannelSet")){
+        ctrls <- getProbeInfo(rgSet,type="Control")}
+      ctrls <- ctrls[ctrls$Address %in% rownames(rgSet),]
+      ctrl_r <- assays(rgSet)$Red[ctrls$Address,]
+      ctrl_g <- assays(rgSet)$Green[ctrls$Address,]
       CG.controls <- ctrls$Type %in% c("NORM_C", "NORM_G")
       AT.controls <- ctrls$Type %in% c("NORM_A", "NORM_T")
 
@@ -298,10 +359,14 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
       Grn.factor <- ref/Green.avg
       Red.factor <- ref/Red.avg
       }else if(dyeCorr =="RELIC"){
-    ctrls<-getProbeInfo(rgSet,type="Control")
-    ctrls<-ctrls[ctrls$Address %in% featureNames(rgSet),]
-    ctrl_r<-getRed(rgSet)[ctrls$Address,]
-    ctrl_g<-getGreen(rgSet)[ctrls$Address,]
+    if(is(rgSet,"rgDataSet")){
+        ctrls <- getCGinfo(rgSet,type="ctrl")
+    }else if(is(rgSet,"RGChannelSet")){
+        ctrls <- getProbeInfo(rgSet,type="Control")}
+
+    ctrls<-ctrls[ctrls$Address %in% rownames(rgSet),]
+    ctrl_r<-assays(rgSet)$Red[ctrls$Address,]
+    ctrl_g<-assays(rgSet)$Green[ctrls$Address,]
     CG.controls<-ctrls$Type %in% c("NORM_C","NORM_G")
     AT.controls<-ctrls$Type %in% c("NORM_A","NORM_T")
     cg_grn<-ctrl_g[CG.controls,];rownames(cg_grn)=
@@ -313,7 +378,7 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
       }
     rm(rgSet)
 
-    methData <- getMeth(mdat)
+    methData <- assays(mdat)$Meth
     N=ceiling(ncol(methData)/(nCores*10))
     parts=rep(1:N,each = ceiling(ncol(methData)/N))[1:ncol(methData)]
     for(i in 1:N){
@@ -338,7 +403,7 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
     assays(mdat)$Meth <- methData
     rm(methData)
 
-    unmethData <- getUnmeth(mdat)
+    unmethData <- assays(mdat)$Unmeth
     for(i in 1:N){
     id=which(parts==i)
     unmethD=unmethData[,id]
@@ -362,7 +427,14 @@ preprocessENmix  <- function(rgSet, bgParaEst="oob", dyeCorr="RELIC",
     rm(unmethData)
     stopCluster(c1)
     if(dyeCorr =="RELIC"){mdat=relic(mdat,at_red,cg_grn)}
-    mdat@preprocessMethod <- c(mu.norm = sprintf("ENmix, dyeCorr=%s", dyeCorr))
+
+    annotation=c(paste("Backgroud_corr: ENmix,",bgParaEst,sep=""),
+         paste("dyeBiasCorrection: ",dyeCorr,sep=""))
+    if(is(mdat, "methDataSet")){
+      metadata(mdat)$preprocessMethod=annotation
+    }else if(is(mdat, "MethylSet")){
+    mdat@preprocessMethod <- annotation
+    }
     mdat
 }
 

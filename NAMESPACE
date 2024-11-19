@@ -1,18 +1,42 @@
-import(parallel,doParallel,foreach,SummarizedExperiment,minfi)
-importFrom(MASS,huber)
-importFrom(preprocessCore,normalize.quantiles)
-importFrom(wateRmelon,BMIQ)
-importFrom(sva,ComBat)
+import(parallel)
+import(doParallel)
+import(foreach)
+import(stats)
+import(SummarizedExperiment)
+importFrom(IRanges,IRanges,reduce,start,end,width)
+importFrom(S4Vectors,metadata,SimpleList)
+importFrom(illuminaio,readIDAT)
+importFrom(matrixStats, colMedians,colMads)
+importFrom(grDevices,dev.off,jpeg,colorRampPalette, pdf)
+importFrom("grDevices", "postscript")
+importFrom(graphics,abline,axis,boxplot,hist,legend,
+    lines,par,plot,polygon,text,points,mtext)
+importFrom(methods, as, callNextMethod, is, new)
+importFrom(utils, read.table,write.table,head,tail,write.csv)
 importFrom(geneplotter,multidensity)
 importFrom(impute,impute.knn)
-importFrom("grDevices","dev.off","jpeg")
-importFrom("graphics","abline","axis","boxplot","hist","legend",
-    "lines","par","plot","polygon","text")
-    importFrom("stats","density","dexp","dnorm","lm","na.omit","pf",
-    "pnorm","prcomp","quantile","screeplot","sd")
+importFrom(RPMM,blc,betaObjf)
+importFrom(dynamicTreeCut,printFlush)
+importFrom(minfi,getProbeInfo,getManifestInfo,getControlAddress,
+    detectionP,preprocessRaw,getAnnotation,featureNames,
+    getProbeType)
+importFrom(Biobase,featureNames,rowMedians)
+importFrom(ExperimentHub,ExperimentHub)
+importFrom(AnnotationHub,query)
+importFrom(genefilter,rowFtests,rowttests)
+importFrom(gplots,heatmap.2)
+importFrom(quadprog,solve.QP)
+importFrom(gtools,mixedsort)
+importFrom(irlba,prcomp_irlba)
 
-export(preprocessENmix,bmiq.mc,ComBat.mc,
-    nmode.mc,normalize.quantile.450k,norm.quantile,plotCtrl,
-    QCinfo,QCfilter,pcrplot,freqpoly,multifreqpoly,
-    rm.outlier,rcp,oxBS.MLE,ctrlsva,relic,mpreprocess)
+exportClasses(rgDataSet,methDataSet)
+
+export(preprocessENmix,
+    nmode,norm.quantile,plotCtrl,
+    QCinfo,pcrplot,freqpoly,multifreqpoly,
+    qcfilter,rcp,oxBS.MLE,ctrlsva,relic,mpreprocess,
+    getB,B2M,M2B,rgDataSet,methDataSet,repicc,
+    calcdetP,getCGinfo,getmeth,readidat,dupicc,
+    readmanifest,estimateCellProp,predSex,methyAge,
+    combp,ipdmr,mhtplot,p.qqplot,simubed,methscore,rm.cgsuffix,rcp2)
 

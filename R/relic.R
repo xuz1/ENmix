@@ -1,7 +1,7 @@
 relic <- function(mdat,at_red=NULL,cg_grn=NULL)
 {
-    if(!is(mdat, "MethylSet"))
-    {stop("The input must be an object of MethylSet\n")}
+    if(!is(mdat, "methDataSet") & !is(mdat, "MethylSet"))
+    {stop("The input must be an object of methDataSet or MethylSet\n")}
     if(is.null(at_red) | is.null(cg_grn))
     {stop("Internal control intensity matrics at_red and cg_grn must be
      provided\n")}
@@ -15,7 +15,15 @@ relic <- function(mdat,at_red=NULL,cg_grn=NULL)
      for matrics at_red and cg_grn\n")}
     at_red=at_red[common,];cg_grn=cg_grn[match(common,name_grn),]
 
-    probe_type <- getProbeType(mdat, withColor=TRUE)
+    if(is(mdat, "methDataSet")){
+      probe_type=rowData(mdat)$Infinium_Design_Type
+      col=rowData(mdat)$Color_Channel
+      probe_type[probe_type %in% c("I","snpI") & col=="Grn"]="IGrn"
+      probe_type[probe_type %in% c("I","snpI") & col=="Red"]="IRed"
+      probe_type[probe_type %in% c("snpII")]="II"
+    }else if(is(mdat, "MethylSet")){
+    probe_type <- getProbeType(mdat, withColor=TRUE)}
+
     m_grn=assays(mdat)$Meth[probe_type %in% c("IGrn","II"),]
     um_grn=assays(mdat)$Unmeth[probe_type %in% c("IGrn"),]
     for(i in 1:ncol(cg_grn))

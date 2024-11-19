@@ -1,7 +1,7 @@
 plotCtrl <- function(rgSet,IDorder=NULL)
 {
-    if(!is(rgSet, "RGChannelSet")){stop("object needs to be of class 
-    'RGChannelSet'")}
+    if(!is(rgSet,"rgDataSet") & !is(rgSet, "RGChannelSet")){
+      stop("object needs to be of class 'rgDataSet' or 'RGChannelSet'")}
     if(!is.null(IDorder))
     {
     if(sum(!(IDorder %in% colnames(rgSet)))>0)
@@ -13,10 +13,15 @@ plotCtrl <- function(rgSet,IDorder=NULL)
     rgSet=rgSet[,IDorder]
     }
     }
-    ctrls<-getProbeInfo(rgSet,type="Control")
-    ctrls <- ctrls[ctrls$Address %in% featureNames(rgSet),]
-    ctrl_r <- getRed(rgSet)[ctrls$Address,]
-    ctrl_g <- getGreen(rgSet)[ctrls$Address,]
+
+    if(is(rgSet,"rgDataSet")){
+        ctrls <- getCGinfo(rgSet,type="ctrl")
+    }else if(is(rgSet,"RGChannelSet")){
+        ctrls <- getProbeInfo(rgSet,type="Control")}
+
+    ctrls <- ctrls[ctrls$Address %in% rownames(rgSet),]
+    ctrl_r <- assays(rgSet)$Red[ctrls$Address,]
+    ctrl_g <- assays(rgSet)$Green[ctrls$Address,]
     contlid <- c("STAINING","EXTENSION","HYBRIDIZATION","TARGET REMOVAL",
      "BISULFITE CONVERSION I", "BISULFITE CONVERSION II","SPECIFICITY I",
      "SPECIFICITY II","NON-POLYMORPHIC","NEGATIVE",

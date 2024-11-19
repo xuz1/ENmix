@@ -1,44 +1,27 @@
 Package: ENmix
-Version: 1.13.8
-Date: 2017-05-17
-Title: Data preprocessing and quality control for Illumina
-   HumanMethylation450 and MethylationEPIC BeadChip
 Type: Package
-Authors@R: c(person("Zongli","Xu",role=c("cre","aut"),email="xuz@niehs.nih.gov"),
-    person("Liang","Niu",role=c("aut"),email="niulg@ucmail.uc.edu"),
-    person("Leping","Li",role=c("ctb"),email="li3@niehs.nih.gov"),
-    person("Jack","Taylor",role=c("ctb"),email="taylor@niehs.nih.gov"))
-Description: The ENmix package provides a set of quality control and data
-    pre-processing tools for Illumina
-    HumanMethylation450 and MethylationEPIC Beadchips. It includes ENmix background
-    correction, RELIC dye bias correction, RCP probe-type bias adjustment,
-    along with a number of additional tools.
-    These functions can be used to remove unwanted experimental noise and thus to
-    improve accuracy and reproducibility of methylation measures.
-    ENmix functions
-    are flexible and transparent. Users have option to choose a single pipeline
-    command to finish all data pre-processing steps (including background correction,
-    dye-bias adjustment, inter-array normalization and probe-type bias correction) or
-    to use individual functions sequentially to perform data pre-processing in a more
-    customized manner. In addition the ENmix package has selectable
-    complementary functions for efficient data visualization (such as data
-    distribution plots); quality control (identifing and filtering
-    low quality data points, samples, probes, and outliers, along with
-    imputation of missing values); identification of probes with multimodal
-    distributions due to SNPs or other factors; exploration of data variance
-    structure using principal component regression analysis plot; preparation
-    of experimental factors related surrogate control variables
-    to be adjusted in downstream
-    statistical analysis; and an efficient algorithm oxBS-MLE to estimate
-    5-methylcytosine and 5-hydroxymethylcytosine level.
-Depends: parallel,doParallel,foreach,
-         SummarizedExperiment (>= 1.1.6),minfi (>= 1.22.0)
-Imports: MASS,preprocessCore,wateRmelon,sva,geneplotter,impute,grDevices,graphics,stats
-Suggests: minfiData (>= 0.4.1), RPMM, RUnit, BiocGenerics
-biocViews: DNAMethylation, Preprocessing, QualityControl, TwoChannel, Microarray,
-    OneChannel, MethylationArray, BatchEffect, Normalization, DataImport,
-    Regression, PrincipalComponent
+Title: Quality control and analysis tools for Illumina DNA methylation BeadChip
+Version: 1.43.2
+Authors@R:
+  c(person("Zongli","Xu",email="xuz@niehs.nih.gov",role=c("cre","aut")),
+    person("Liang", "Niu", role="aut",email="niulg@ucmail.uc.edu"),
+    person("Jack", "Taylor",role="ctb",email="taylor@niehs.nih.gov"))
+Description: Tools for quanlity control, analysis and visulization
+             of Illumina DNA methylation array data. 
 License: Artistic-2.0
+biocViews: DNAMethylation, Preprocessing, QualityControl, TwoChannel,
+        Microarray, OneChannel, MethylationArray, BatchEffect,
+        Normalization, DataImport, Regression,
+        PrincipalComponent,Epigenetics, MultiChannel,
+        DifferentialMethylation, ImmunoOncology
+Depends: parallel,doParallel,foreach,SummarizedExperiment,stats,R (>= 3.5.0)
+Imports: grDevices,graphics,matrixStats,methods,utils,irlba,
+        geneplotter,impute,minfi,RPMM,illuminaio,dynamicTreeCut,IRanges,gtools,
+        Biobase,ExperimentHub,AnnotationHub,genefilter,gplots,quadprog,S4Vectors
+Suggests: minfiData, RUnit, BiocGenerics, BiocStyle, knitr, rmarkdown
+VignetteBuilder: knitr
+Encoding: UTF-8
+URL: https://github.com/Bioconductor/ENmix
+BugReports: https://github.com/Bioconductor/ENmix/issues
+git_url: https://git.bioconductor.org/packages/ENmix
 NeedsCompilation: no
-Maintainer: Zongli Xu <xuz@niehs.nih.gov>
-

@@ -104,4 +104,21 @@
   \itemize{
     \item updated User's guide
 }}
+\section{Version 1.13.9}{
+  \itemize{
+    \item getBeta: bugfix for handling large dataset
+}}
+\section{Version 1.22.2}{
+  \itemize{
+    \item removed function bmiq.mc and ComBat.mc 
+}}
+\section{Version 1.22.6}{
+  \itemize{
+    \item add function: combp,ipdmr,mhtplot,p.qqplot 
+}}
+\section{Version 1.25.9}{
+  \itemize{
+    \item bugfix, updated user manual
+}}
+
 

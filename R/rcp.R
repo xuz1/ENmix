@@ -1,23 +1,37 @@
 rcp <- function(mdat,dist=25,quantile.grid=seq(0.001,0.999,by=0.001),
     qcscore=NULL,nbthre=3, detPthre=0.000001)
 {
-    if(!is(mdat, "MethylSet")){stop("the input needs to be of class 
-    'MethylSet'")}
+    if(!is(mdat, "methDataSet") & !is(mdat, "MethylSet")){
+       stop("the input needs to be of class 'methDataSet' or 'MethylSet'")}
 
-    beta<-getBeta(mdat,type="Illumina")
-    raw.M<-logit2(beta)
+    beta<-getB(mdat,type="Illumina")
+    raw.M<-B2M(beta)
 
 # find therby pairs of type I probes and type II probes
-    annotation<-getAnnotation(mdat)
-    annotation=annotation[intersect(rownames(beta),rownames(annotation)),]
+    if(is(mdat, "methDataSet")){
+      annotation=rowData(mdat)
+      names(annotation)[which(names(annotation)=="Infinium_Design_Type")]="Type"
+      annotation=annotation[annotation$Type %in% c("I","II"),]
+      rownames(annotation)=annotation$Name
+    }else if(is(mdat, "MethylSet")){
+      annotation<-getAnnotation(mdat)
+    }
+ 
+    annotation=annotation[as.vector(annotation$Name) %in% rownames(beta),]
 
     probe.II.Name=annotation$Name[annotation$Type=="II"]
     annotation=annotation[order(annotation$chr,annotation$pos),]
     anno1=annotation[1:(nrow(annotation)-1),]
     anno2=annotation[2:nrow(annotation),]
+
+    if("anno1$Relation_to_Island" %in% names(anno1)){
     flag=(abs(anno1$pos-anno2$pos)<dist & anno1$chr==anno2$chr & 
      anno1$Relation_to_Island==anno2$Relation_to_Island & anno1$Type !=
      anno2$Type)
+    }else{
+    flag=(abs(anno1$pos-anno2$pos)<dist & anno1$chr==anno2$chr &
+     anno1$Type !=  anno2$Type)
+    }
     anno1=anno1[flag,]
     anno2=anno2[flag,]
     probe.I=anno1$Name
@@ -61,7 +75,7 @@ rcp <- function(mdat,dist=25,quantile.grid=seq(0.001,0.999,by=0.001),
     }
     M.II.new[M.II.all==Inf]<-Inf; M.II.new[M.II.all==-Inf]<-(-Inf)
 
-    beta[probe.II.Name,]<-ilogit2(M.II.new)
+    beta[probe.II.Name,]<-M2B(M.II.new)
     beta
 }
 
