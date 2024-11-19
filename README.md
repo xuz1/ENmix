@@ -1,21 +1,22 @@
-# ENmix: Quality control and analysis tools for Illumina DNA methylation BeadChip
+# ENmix
+## Quality control and analysis tools for Illumina DNA methylation BeadChip
 
-# Introduction
+## Introduction
 
-The `r Biocpkg("ENmix")` package provides a set of quality control,
+The Bioconductor R package ENmix package provides a set of quality control,
 preprocessing/correction and data analysis tools for Illumina Methylation Beadchips.
 It includes functions to read in raw idat data,
 background correction, dye bias correction, probe-type bias adjustment,
  along with a number of additional tools.
 These functions can be used to remove unwanted experimental noise and thus to
 improve accuracy and reproducibility of methylation measures.
-`r Biocpkg("ENmix")` functions
+ENmix functions
 are flexible and transparent. Users have option to choose a single pipeline
 command to finish all data pre-processing steps (including quality control,
 background correction,
 dye-bias adjustment, between-array normalization and probe-type bias correction) or
 to use individual functions sequentially to perform data pre-processing in a more
-customized manner. In addition the `r Biocpkg("ENmix")` package has selectable
+customized manner. In addition the ENmix package has selectable
 complementary functions for efficient data visualization (such as QC plots, data
 distribution plot, manhattan plot and Q-Q plot), quality control (identifing and filtering
 low quality data points, samples, probes, and outliers, along with
@@ -29,13 +30,13 @@ statistical analysis, an efficient algorithm oxBS-MLE to estimate
 proporitons; methlation age calculation and differentially methylated
 region (DMR) analysis.
 
-Most `r Biocpkg("ENmix")` package can also support the data structure used by
-several other related R packages, such as `r Biocpkg("minfi")`,
-`r Biocpkg("wateRmelon")` and `r Biocpkg("ChAMP")`,
+Most ENmix package can also support the data structure used by
+several other related R packages, such as minfi,
+wateRmelon and ChAMP,
 providing straightforward integration of
 ENmix-corrected datasets for subsequent data analysis.
 
-`r Biocpkg("ENmix")` readidat function does not depend on array annotation R packages.
+ENmix readidat function does not depend on array annotation R packages.
 It can directly read in Illuminal manifest file, which makes it easier to work with
 newer array, such as MethylationEPICv2.0 and  mouse Beadchip.
 
@@ -43,7 +44,7 @@ The software is designed to support large scale data analysis, and provides
  multi-processor parallel computing options for most functions.
 
 
-# List of functions
+## List of functions
 
 <b>Data acquisition</b>
 
