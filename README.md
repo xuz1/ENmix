@@ -3,7 +3,7 @@
 
 ## Introduction
 
-The Bioconductor R package ENmix package provides a set of quality control,
+The Bioconductor R package <b>ENmix</b> package provides a set of quality control,
 preprocessing/correction and data analysis tools for Illumina Methylation Beadchips.
 It includes functions to read in raw idat data,
 background correction, dye bias correction, probe-type bias adjustment,
